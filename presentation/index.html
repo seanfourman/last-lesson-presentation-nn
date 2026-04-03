@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Geometry of Digits</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-glow"></div>
+  <header class="hero">
+    <p class="eyebrow">Interactive Story Deck</p>
+    <h1>The Geometry of Digits</h1>
+    <p class="hero-copy">
+      A presentation concept that treats <strong>MNIST</strong> as a map-making problem:
+      neural networks do not just memorize digits, they carve <strong>solution space</strong>.
+    </p>
+    <div class="hero-tags">
+      <span>Unique angle</span>
+      <span>Gamified</span>
+      <span>Live demo</span>
+      <span>No reused lecture slides</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel intro-panel">
+      <div class="section-head">
+        <p class="eyebrow">Opening Lens</p>
+        <h2>Frame the whole talk through one of three audience lenses</h2>
+      </div>
+      <div class="lens-grid">
+        <div class="lens-controls">
+          <button class="lens-btn active" data-lens="geometry">Geometry Lens</button>
+          <button class="lens-btn" data-lens="dataset">Dataset Lens</button>
+          <button class="lens-btn" data-lens="history">History Lens</button>
+          <div class="lens-note">
+            Same talk, different doorway: choose the framing that fits your audience in the room.
+          </div>
+        </div>
+        <div class="lens-stage">
+          <div class="card-head">
+            <h3 id="lensTitle">Geometry: the network sculpts regions in space</h3>
+            <p id="lensCopy">
+              Use this when you want the class to feel that MNIST is not about digits first.
+              It is about decision boundaries becoming smarter.
+            </p>
+          </div>
+          <canvas id="lensCanvas" width="700" height="260" aria-label="Presentation lens visual"></canvas>
+          <div class="lens-stat-grid">
+            <div class="lens-stat">
+              <span id="lensStatLabel1">Hook</span>
+              <strong id="lensStatValue1">A digit is a point in space</strong>
+            </div>
+            <div class="lens-stat">
+              <span id="lensStatLabel2">Angle</span>
+              <strong id="lensStatValue2">Boundary carving</strong>
+            </div>
+            <div class="lens-stat">
+              <span id="lensStatLabel3">Why it feels fresh</span>
+              <strong id="lensStatValue3">Same topic, unusual framing</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel orbital-panel">
+      <div class="section-head">
+        <p class="eyebrow">Act I</p>
+        <h2>Mission Control: can one straight rule keep the colony safe?</h2>
+      </div>
+      <div class="orbital-grid">
+        <div class="canvas-shell">
+          <canvas id="orbitalCanvas" width="620" height="420"></canvas>
+        </div>
+        <div class="control-shell">
+          <div class="button-row">
+            <button id="linearBtn" class="mode-btn active">Test Straight Rule</button>
+            <button id="nonLinearBtn" class="mode-btn">Unlock Hidden Layer</button>
+          </div>
+          <div class="button-row compact-row">
+            <button id="resetLineBtn" class="minor-btn">Reset Line</button>
+            <button id="resetCurveBtn" class="minor-btn">Reset Curve</button>
+          </div>
+          <div class="readout">
+            <p class="readout-label">Scenario</p>
+            <p class="readout-value">Landing zone vs. asteroid belt</p>
+          </div>
+          <div class="readout">
+            <p class="readout-label">Interaction</p>
+            <p id="orbitalInstruction" class="readout-value"></p>
+          </div>
+          <div class="readout">
+            <p class="readout-label">What this means</p>
+            <p id="orbitalMessage" class="readout-value readout-long"></p>
+          </div>
+          <div class="metrics">
+            <div class="metric-box">
+              <span>Linear Accuracy</span>
+              <strong id="linearScore"></strong>
+            </div>
+            <div class="metric-box">
+              <span>Non-linear Accuracy</span>
+              <strong id="nonLinearScore"></strong>
+            </div>
+          </div>
+          <p class="body-copy">
+            Talking point: one weighted sum creates one flat cut. A hidden layer can build richer
+            features, so the decision border can bend, wrap, or close around a region.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel mnist-panel">
+      <div class="section-head">
+        <p class="eyebrow">Act II</p>
+        <h2>From orbit to digits: every image becomes a point in a giant decision map</h2>
+      </div>
+      <div class="mnist-grid">
+        <div class="draw-card">
+          <div class="card-head">
+            <h3>Sketch a digit</h3>
+            <p id="modelStatus">Loading real MNIST model...</p>
+          </div>
+          <canvas id="drawCanvas" width="280" height="280" aria-label="Draw a digit"></canvas>
+          <div class="button-row compact-row">
+            <button id="clearBtn" class="minor-btn">Clear</button>
+            <button id="sampleBtn" class="minor-btn">Random MNIST Sample</button>
+          </div>
+          <div class="stamp-grid" id="stampGrid"></div>
+        </div>
+
+        <div class="map-card">
+          <div class="card-head">
+            <h3>Digit Territory Map</h3>
+            <p>A real MNIST model with a teaching visualization of solution space</p>
+          </div>
+          <canvas id="digitMapCanvas" width="520" height="320" aria-label="Digit map"></canvas>
+          <div class="insight-strip">
+            <div>
+              <span class="insight-label">Model</span>
+              <strong id="modelName">-</strong>
+            </div>
+            <div>
+              <span class="insight-label">Test Accuracy</span>
+              <strong id="modelAccuracy">-</strong>
+            </div>
+            <div>
+              <span class="insight-label">Training Set</span>
+              <strong id="trainingSamples">-</strong>
+            </div>
+          </div>
+          <div class="insight-strip">
+            <div>
+              <span class="insight-label">Top guess</span>
+              <strong id="topGuess">-</strong>
+            </div>
+            <div>
+              <span class="insight-label">Confidence</span>
+              <strong id="topConfidence">-</strong>
+            </div>
+            <div>
+              <span class="insight-label">Filled pixels</span>
+              <strong id="filledPixels">-</strong>
+            </div>
+          </div>
+          <div id="probabilityList" class="probability-list"></div>
+        </div>
+      </div>
+      <div class="mnist-explain">
+        <div class="note-card">
+          <h3>What the audience should feel</h3>
+          <p>
+            MNIST is not magical because digits are hard. It is magical because it gave the field a
+            simple, visual, shared benchmark.
+          </p>
+        </div>
+        <div class="note-card">
+          <h3>What this demo shows</h3>
+          <p>
+            Your drawing is converted into 784 numbers, compared against digit regions, and pushed to
+            the territory that best matches it.
+          </p>
+        </div>
+        <div class="note-card">
+          <h3>What to say out loud</h3>
+          <p>
+            "A neural network is really a machine for sculpting space so that similar inputs land in the
+            same region."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel training-panel">
+      <div class="section-head">
+        <p class="eyebrow">Act III</p>
+        <h2>Training Observatory: watch a model turn raw guesses into structure</h2>
+      </div>
+      <div class="training-grid">
+        <div class="chart-card">
+          <canvas id="trainingChartCanvas" width="720" height="340" aria-label="Training history chart"></canvas>
+          <div class="epoch-slider-shell">
+            <div class="slider-head">
+              <span>Scrub the training process</span>
+              <strong id="epochValue">Epoch 1</strong>
+            </div>
+            <input id="epochSlider" type="range" min="1" max="1" value="1">
+          </div>
+        </div>
+        <div class="training-control-card">
+          <div class="pipeline-strip" id="pipelineStrip">
+            <div class="pipeline-step" data-step="load">Load Data</div>
+            <div class="pipeline-step" data-step="forward">Forward Pass</div>
+            <div class="pipeline-step" data-step="loss">Measure Loss</div>
+            <div class="pipeline-step" data-step="update">Update Weights</div>
+            <div class="pipeline-step" data-step="repeat">Repeat</div>
+          </div>
+          <div class="readout">
+            <p class="readout-label">Current Stage</p>
+            <p id="epochStageTitle" class="readout-value"></p>
+          </div>
+          <div class="readout">
+            <p class="readout-label">What is happening</p>
+            <p id="epochStageCopy" class="readout-value readout-long"></p>
+          </div>
+          <div class="metrics">
+            <div class="metric-box">
+              <span>Loss</span>
+              <strong id="lossValue">-</strong>
+            </div>
+            <div class="metric-box">
+              <span>Validation</span>
+              <strong id="validationValue">-</strong>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric-box">
+              <span>Parameters</span>
+              <strong id="parameterCount">-</strong>
+            </div>
+            <div class="metric-box">
+              <span>Key Idea</span>
+              <strong id="trainingIdea">-</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="section-head">
+        <p class="eyebrow">Act IV</p>
+        <h2>MNIST Launchpad: why this tiny benchmark changed the field</h2>
+      </div>
+      <div class="history-stage-grid">
+        <div class="history-switcher">
+          <button class="history-btn active" data-history="benchmark">Common Ruler</button>
+          <button class="history-btn" data-history="feedback">Fast Feedback</button>
+          <button class="history-btn" data-history="visibility">Visible Task</button>
+          <button class="history-btn" data-history="gateway">Hello World</button>
+        </div>
+        <div class="history-display">
+          <canvas id="historyCanvas" width="760" height="320" aria-label="MNIST history visual"></canvas>
+          <div class="history-copy-grid">
+            <div class="readout">
+              <p class="readout-label">Current Reason</p>
+              <p id="historyTitle" class="readout-value"></p>
+            </div>
+            <div class="readout">
+              <p class="readout-label">Why it mattered</p>
+              <p id="historyCopy" class="readout-value readout-long"></p>
+            </div>
+          </div>
+          <div class="insight-strip">
+            <div>
+              <span class="insight-label" id="historyMetricLabel1">-</span>
+              <strong id="historyMetricValue1">-</strong>
+            </div>
+            <div>
+              <span class="insight-label" id="historyMetricLabel2">-</span>
+              <strong id="historyMetricValue2">-</strong>
+            </div>
+            <div>
+              <span class="insight-label" id="historyMetricLabel3">-</span>
+              <strong id="historyMetricValue3">-</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel script-panel">
+      <div class="section-head">
+        <p class="eyebrow">Showtime Console</p>
+        <h2>Rehearse the presentation as scenes, cues, and payoffs</h2>
+      </div>
+      <div class="director-grid">
+        <div class="scene-list" id="sceneList">
+          <button class="scene-btn active" data-scene="0">Scene 1</button>
+          <button class="scene-btn" data-scene="1">Scene 2</button>
+          <button class="scene-btn" data-scene="2">Scene 3</button>
+          <button class="scene-btn" data-scene="3">Scene 4</button>
+          <button class="scene-btn" data-scene="4">Scene 5</button>
+        </div>
+        <div class="scene-stage">
+          <div class="scene-progress-track">
+            <div id="sceneProgressBar" class="scene-progress-bar"></div>
+          </div>
+          <div class="scene-hero">
+            <p id="sceneTime" class="eyebrow">0:00 - 1:00</p>
+            <h3 id="sceneTitle">Hook the room with the geometry framing</h3>
+            <p id="sceneGoal" class="hero-copy"></p>
+          </div>
+          <div class="scene-card-grid">
+            <div class="scene-card">
+              <span>On Screen</span>
+              <p id="sceneOnScreen"></p>
+            </div>
+            <div class="scene-card">
+              <span>Say This</span>
+              <p id="sceneSay"></p>
+            </div>
+            <div class="scene-card">
+              <span>Why It Lands</span>
+              <p id="sceneWhy"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <blockquote class="closer">
+        "Solution space is not an abstract formula. It is the geometry a model creates so that a messy world
+        becomes classifiable."
+      </blockquote>
+    </section>
+  </main>
+
+  <script src="data/mnist_model.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
