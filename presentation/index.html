@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>איך המוח והמכונה רואים ספרה?</title>
+    <meta
+      name="description"
+      content="פתיח אינטראקטיבי בעברית: הספרה 3, רשת 28x28 והסבר ראשוני על איך המוח מזהה ספרות."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&family=Heebo:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="data/mnist_model.js"></script>
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro-section" id="top">
+        <p class="intro-kicker">פרק 1</p>
+
+        <div class="pixel-hero" tabindex="0" aria-label="הספרה 3. מעבר עכבר חושף את רשת 28 על 28">
+          <div class="digit-stage" id="digitStage">
+            <div class="dimension dimension-top" aria-hidden="true">
+              <div class="dimension-label">28px</div>
+              <svg viewBox="0 0 120 28" preserveAspectRatio="none">
+                <path d="M4 24 C4 10 10 10 18 10 L52 10 C58 10 60 3 60 3 C60 3 62 10 68 10 L102 10 C110 10 116 10 116 24" />
+              </svg>
+            </div>
+
+            <div class="dimension dimension-left" aria-hidden="true">
+              <div class="dimension-label">28px</div>
+              <svg viewBox="0 0 28 120" preserveAspectRatio="none">
+                <path d="M24 4 C10 4 10 10 10 18 L10 52 C10 58 3 60 3 60 C3 60 10 62 10 68 L10 102 C10 110 10 116 24 116" />
+              </svg>
+            </div>
+
+            <div class="digit-frame">
+              <canvas
+                id="heroDigitCanvas"
+                width="28"
+                height="28"
+                aria-label="ספרה 3 ברזולוציה של 28 על 28 פיקסלים"
+              ></canvas>
+              <canvas
+                id="heroGridOverlay"
+                class="digit-grid-overlay"
+                aria-hidden="true"
+              ></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="intro-copy">
+          <h1>הספרה 3</h1>
+          <p>
+            זו ספרה 3. היא כתובה בצורה קצת מרושלת, וברזולוציה נמוכה מאוד של
+            <strong>28×28 פיקסלים</strong>, אבל המוח שלנו כמעט לא מתאמץ כדי להבין שזו 3.
+          </p>
+          <p>
+            זה בדיוק המקום שממנו מתחילים: בני אדם מזהים מיד את הרעיון שמאחורי התמונה,
+            גם כשכל ציור נראה קצת אחרת. למכונה, לעומת זאת, זו לא "ספרה", אלא מטריצה של
+            ערכי פיקסלים.
+          </p>
+          <p class="intro-note">העבר את העכבר על התמונה כדי לחשוף את רשת ה־28×28.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

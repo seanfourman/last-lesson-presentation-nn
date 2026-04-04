@@ -1,0 +1,240 @@
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --text: #f5f5f5;
+  --muted: #cfcfcf;
+  --yellow: #ffee00;
+  --cyan: #68d9ff;
+  --line: rgba(255, 255, 255, 0.72);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Heebo", sans-serif;
+}
+
+canvas,
+svg {
+  display: block;
+}
+
+.page {
+  min-height: 100vh;
+}
+
+.intro-section {
+  min-height: 100vh;
+  width: min(1200px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 20px 0 48px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1rem;
+}
+
+.intro-kicker {
+  margin: 0;
+  color: var(--yellow);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 1.35rem;
+}
+
+.pixel-hero {
+  position: relative;
+  width: min(380px, calc(100vw - 72px));
+  margin-top: 0.25rem;
+  padding-top: 72px;
+  padding-left: 72px;
+  outline: none;
+  cursor: pointer;
+}
+
+.digit-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.digit-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255, 255, 255, 0.78);
+  background: #000;
+  overflow: hidden;
+}
+
+#heroDigitCanvas {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.digit-grid-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.dimension {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 700ms ease, transform 700ms ease;
+  pointer-events: none;
+}
+
+.pixel-hero:hover .dimension,
+.pixel-hero:focus .dimension,
+.pixel-hero.is-revealed .dimension {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.pixel-hero:focus-visible .digit-frame {
+  box-shadow: 0 0 0 1px rgba(255, 238, 0, 0.55);
+}
+
+.dimension-top {
+  top: -96px;
+  left: -2px;
+  width: calc(100% + 4px);
+  transform: translateY(10px);
+}
+
+.dimension-left {
+  left: -108px;
+  top: -2px;
+  height: calc(100% + 4px);
+  width: 92px;
+  transform: translateX(10px);
+}
+
+.dimension-label {
+  color: var(--text);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  line-height: 1;
+  white-space: nowrap;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.dimension-top .dimension-label {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.dimension-left .dimension-label {
+  position: absolute;
+  left: auto;
+  right: 40px;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.dimension svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dimension path {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dimension-top svg {
+  height: 28px;
+}
+
+.dimension-left svg {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 100%;
+}
+
+.intro-copy {
+  width: min(760px, 100%);
+  text-align: center;
+}
+
+.intro-copy h1 {
+  margin: 0 0 1rem;
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1;
+}
+
+.intro-copy p {
+  margin: 0.55rem auto 0;
+  max-width: 48rem;
+  color: var(--muted);
+  font-size: 1.03rem;
+  line-height: 1.75;
+}
+
+.intro-copy strong {
+  color: var(--text);
+}
+
+.intro-note {
+  color: var(--yellow) !important;
+  font-size: 1rem !important;
+}
+
+@media (max-width: 760px) {
+  .intro-section {
+    width: min(100vw - 20px, 1200px);
+    padding-top: 28px;
+  }
+
+  .pixel-hero {
+    width: min(100%, 560px);
+    padding-top: 70px;
+    padding-left: 70px;
+  }
+
+  .dimension-top {
+    top: -84px;
+  }
+
+  .dimension-left {
+    left: -94px;
+    width: 82px;
+  }
+
+  .dimension-label {
+    font-size: clamp(1.55rem, 8vw, 2.2rem);
+  }
+
+  .intro-copy p {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
