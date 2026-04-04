@@ -672,7 +672,7 @@ function createDigitDrawPad(canvas, callbacks = {}) {
     inkCtx.lineCap = "round";
     inkCtx.lineJoin = "round";
     inkCtx.strokeStyle = "rgba(255, 255, 255, 0.98)";
-    inkCtx.lineWidth = 3.6;
+    inkCtx.lineWidth = 2.8;
     inkCtx.beginPath();
     inkCtx.moveTo(from.x, from.y);
     inkCtx.lineTo(to.x, to.y);
@@ -830,15 +830,18 @@ function buildVisibleNetworkSnapshot(model, inference) {
   const hidden1Indices = pickTopNeuronIndices(inference.hidden1, 12);
   const hidden2Indices = pickTopNeuronIndices(inference.hidden2, 12);
   const outputIndices = Array.from({ length: 10 }, (_, index) => index);
+  const displaySeed = inference.predictedDigit * 37 + Math.round(inference.confidence * 1000);
 
   const inputNorms = inputIndices.map((index) => inference.input[index]);
-  const hidden1Norms = normalizeSelectedActivations(
+  const hidden1Norms = buildHiddenLayerDisplayNorms(
     inference.hidden1,
     hidden1Indices,
+    displaySeed + 11,
   );
-  const hidden2Norms = normalizeSelectedActivations(
+  const hidden2Norms = buildHiddenLayerDisplayNorms(
     inference.hidden2,
     hidden2Indices,
+    displaySeed + 29,
   );
   const outputScores = outputIndices.map((index) => inference.displayOutput[index]);
   const outputNorms = outputScores.map((value) => Math.pow(value, 0.52));
@@ -1028,7 +1031,8 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
       const emphasis = options.emphasisIndex === index ? localProgress : 0;
       const glowColor = mixColor([255, 223, 90], [255, 241, 122], intensity);
       const fillColor = mixColor([7, 12, 16], [125, 104, 18], Math.pow(intensity, 0.88));
-      const ringOpacity = 0.36 + intensity * 0.58 + emphasis * 0.24;
+      const idleRingOpacity = options.idleRingOpacity ?? 0.16;
+      const ringOpacity = idleRingOpacity + intensity * 0.58 + emphasis * 0.24;
 
       node.fill.style.fill =
         `rgb(${fillColor[0]}, ${fillColor[1]}, ${fillColor[2]})`;
@@ -1100,17 +1104,21 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
 
     renderNodes(scene.nodeLayers.input, snapshot?.input?.norms, progressState.input, {
       stagger: 0.12,
+      idleRingOpacity: 0.12,
     });
     renderNodes(scene.nodeLayers.hidden1, snapshot?.hidden1?.norms, progressState.h1, {
       stagger: 0.2,
+      idleRingOpacity: 0.06,
     });
     renderNodes(scene.nodeLayers.hidden2, snapshot?.hidden2?.norms, progressState.h2, {
       stagger: 0.2,
+      idleRingOpacity: 0.06,
     });
     renderNodes(scene.nodeLayers.output, snapshot?.output?.norms, progressState.out, {
       emphasisIndex: snapshot?.output?.predictedDigit,
       scoreValues: snapshot?.output?.scores,
       stagger: 0.12,
+      idleRingOpacity: 0.14,
     });
 
     if (!snapshot?.output) {
@@ -2191,6 +2199,25 @@ function normalizeSelectedActivations(values, indices) {
   return indices.map((index) => values[index] / maxValue);
 }
 
+function buildHiddenLayerDisplayNorms(values, indices, seed = 0) {
+  const normalized = normalizeSelectedActivations(values, indices);
+
+  return normalized.map((value, slot) => {
+    const noise = pseudoRandom01(indices[slot] * 0.173 + slot * 1.917 + seed * 0.071);
+    const rankProgress = slot / Math.max(1, indices.length - 1);
+    const rankWeight = 1 - rankProgress * 0.32;
+    let gate = 0.72 + noise * 0.38;
+
+    if (slot > 2 && noise < 0.18) {
+      gate = 0.02 + noise * 0.18;
+    } else if (slot > 1 && noise < 0.42) {
+      gate = 0.16 + noise * 0.55;
+    }
+
+    return clamp01(Math.pow(value, 0.9) * gate * rankWeight);
+  });
+}
+
 function buildVisibleEdgeSnapshot(layer, sourceIndices, targetIndices, sourceNorms, targetNorms) {
   const strengths = [];
   const delays = [];
@@ -2227,6 +2254,11 @@ function softmax(values) {
 function softmaxWithTemperature(values, temperature = 1) {
   const safeTemperature = Math.max(0.001, temperature);
   return softmax(values.map((value) => value / safeTemperature));
+}
+
+function pseudoRandom01(value) {
+  const result = Math.sin(value * 12.9898 + 78.233) * 43758.5453;
+  return result - Math.floor(result);
 }
 
 function drawSampleDigitToCanvas(canvas, pixels) {
