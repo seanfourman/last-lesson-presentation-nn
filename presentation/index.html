@@ -272,7 +272,7 @@
       </section>
 
       <section class="mnist-history-section" id="mnist-history">
-        <div class="mnist-slide-shell">
+        <div class="mnist-slide-shell mnist-history-shell">
           <div class="mnist-intro">
             <p class="mnist-kicker">היסטוריה וחשיבות</p>
             <p class="mnist-english-name">
@@ -417,28 +417,56 @@
             </div>
 
             <div class="mnist-stat-board" aria-label="מספרי המפתח של MNIST">
-              <article class="mnist-stat-card">
+              <article class="mnist-stat-card mnist-stat-card-grid">
+                <span class="mnist-stat-node" aria-hidden="true"></span>
+                <span class="mnist-stat-icon mnist-stat-icon-grid" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </span>
                 <span class="mnist-stat-value">28×28</span>
                 <span class="mnist-stat-label"
-                  >קטן מספיק כדי להבין כל פיקסל</span
+                  >קלט קטן וברור שאפשר ממש לראות בעיניים</span
                 >
               </article>
-              <article class="mnist-stat-card">
+              <article class="mnist-stat-card mnist-stat-card-train">
+                <span class="mnist-stat-node" aria-hidden="true"></span>
+                <span
+                  class="mnist-stat-icon mnist-stat-icon-stack"
+                  aria-hidden="true"
+                >
+                  <span></span><span></span><span></span>
+                </span>
                 <span class="mnist-stat-value">60,000</span>
                 <span class="mnist-stat-label"
-                  >דוגמאות אימון כדי שבאמת יהיה ממה ללמוד</span
+                  >דוגמאות אימון שנותנות לרשת באמת ממה ללמוד</span
                 >
               </article>
-              <article class="mnist-stat-card">
+              <article class="mnist-stat-card mnist-stat-card-test">
+                <span class="mnist-stat-node" aria-hidden="true"></span>
+                <span
+                  class="mnist-stat-icon mnist-stat-icon-check"
+                  aria-hidden="true"
+                >
+                  <span></span><span></span><span></span>
+                </span>
                 <span class="mnist-stat-value">10,000</span>
                 <span class="mnist-stat-label"
-                  >דוגמאות בדיקה למבחן שלא רואים מראש</span
+                  >דוגמאות בדיקה לקלט שהרשת לא ראתה מראש</span
                 >
               </article>
-              <article class="mnist-stat-card">
+              <article class="mnist-stat-card mnist-stat-card-digits">
+                <span class="mnist-stat-node" aria-hidden="true"></span>
+                <span
+                  class="mnist-stat-icon mnist-stat-icon-digits"
+                  aria-hidden="true"
+                >
+                  <span></span><span></span><span></span><span></span>
+                </span>
                 <span class="mnist-stat-value">0–9</span>
                 <span class="mnist-stat-label"
-                  >בעיה ברורה שאפשר גם לראות וגם למדוד</span
+                  >עשר קטגוריות ברורות שקל לבדוק ולמדוד</span
                 >
               </article>
             </div>
