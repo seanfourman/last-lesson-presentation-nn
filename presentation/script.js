@@ -234,7 +234,7 @@ function setupValueSection(pixels) {
   let selectorDirection = 1;
   let selectorTimerId = 0;
   const copyByState = [
-    "מבחינת המחשב, זאת לא באמת ספרה אלא מטריצה של 28×28 ערכים. כל תא מחזיק מספר בין 0 ל־1 שמתאר את עוצמת האפור של הפיקסל שלו.",
+    "מבחינת המחשב, זאת לא באמת ספרה אלא מטריצה של 28×28 ערכים.<br>כל תא מחזיק מספר בין 0 ל־1 שמתאר את עוצמת האפור של הפיקסל שלו.",
     "אחרי ההמרה הזאת, הקלט כבר איננו ציור אלא 784 מספרים. זה החומר הגולמי שהרשת מקבלת לפני שהיא מתחילה להבין מה מופיע בתמונה.",
     "בשלב הבא הרשת משווה את הדפוס הזה לכל אחת מהספרות 0 עד 9, ומנסה להבין לאיזו ספרה הקלט הכי קרוב כרגע.",
   ];
@@ -323,7 +323,7 @@ function setupValueSection(pixels) {
     output.setAttribute("aria-hidden", String(!showInference));
     figure.setAttribute("aria-pressed", String(showValues));
     figure.setAttribute("aria-label", labelByState[stateIndex]);
-    copy.textContent = copyByState[stateIndex];
+    copy.innerHTML = copyByState[stateIndex];
 
     if (showInference) {
       setSelectorIndex(5);
