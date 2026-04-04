@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCompareSection(pixels);
   setupValueSection(pixels);
   setupNetworkDemoSection(model);
+  setupMnistHistorySection(model);
 
   const canvas = document.getElementById("heroDigitCanvas");
   if (canvas && pixels) {
@@ -367,6 +368,43 @@ function setupValueSection(pixels) {
 
   setSelectorIndex(5);
   applyState();
+}
+
+function setupMnistHistorySection(model) {
+  const rawCanvases = [
+    document.getElementById("mnistRawDigitA"),
+    document.getElementById("mnistRawDigitB"),
+    document.getElementById("mnistRawDigitC"),
+  ];
+  const standardCanvas = document.getElementById("mnistStandardDigit");
+
+  if (rawCanvases.some((canvas) => !canvas) || !standardCanvas) {
+    return;
+  }
+
+  const examples = model?.digitExamples || {};
+  const fallbackPixels =
+    examples["3"] || Object.values(examples).find((pixels) => Array.isArray(pixels));
+
+  if (!fallbackPixels) {
+    return;
+  }
+
+  const rawSamples = [
+    examples["2"] || fallbackPixels,
+    examples["3"] || fallbackPixels,
+    examples["7"] || fallbackPixels,
+  ];
+
+  const renderAll = () => {
+    renderMnistHistoryDigit(rawCanvases[0], rawSamples[0], "pixelated");
+    renderMnistHistoryDigit(rawCanvases[1], rawSamples[1], "smooth");
+    renderMnistHistoryDigit(rawCanvases[2], rawSamples[2], "sharp");
+    renderMnistHistoryDigit(standardCanvas, examples["3"] || fallbackPixels, "standard");
+  };
+
+  renderAll();
+  window.addEventListener("resize", renderAll);
 }
 
 function setupNetworkDemoSection(model) {
@@ -1916,6 +1954,84 @@ function renderScaledDigit(canvas, pixels, options = {}) {
 
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(sourceCanvas, 0, 0, width, height);
+}
+
+function renderMnistHistoryDigit(canvas, pixels, profile = "pixelated") {
+  resizeCanvasToDisplaySize(canvas);
+
+  const ctx = canvas.getContext("2d");
+  const width = canvas.width;
+  const height = canvas.height;
+  const inset = Math.round(Math.min(width, height) * 0.14);
+  const drawWidth = Math.max(1, width - inset * 2);
+  const drawHeight = Math.max(1, height - inset * 2);
+  const displayPixels = stylizeMnistHistoryPixels(pixels, profile);
+
+  const sourceCanvas = document.createElement("canvas");
+  sourceCanvas.width = 28;
+  sourceCanvas.height = 28;
+  const sourceCtx = sourceCanvas.getContext("2d");
+  const image = sourceCtx.createImageData(28, 28);
+
+  for (let i = 0; i < displayPixels.length; i += 1) {
+    const alpha = clamp(Math.round(displayPixels[i]), 0, 255);
+    image.data[i * 4] = 255;
+    image.data[i * 4 + 1] = 255;
+    image.data[i * 4 + 2] = 255;
+    image.data[i * 4 + 3] = alpha;
+  }
+
+  sourceCtx.putImageData(image, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  if (profile === "smooth") {
+    ctx.imageSmoothingEnabled = true;
+    ctx.filter = "blur(0.35px)";
+    ctx.drawImage(sourceCanvas, inset, inset, drawWidth, drawHeight);
+    ctx.filter = "none";
+    return;
+  }
+
+  if (profile === "standard") {
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(sourceCanvas, inset, inset, drawWidth, drawHeight);
+    return;
+  }
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(sourceCanvas, inset, inset, drawWidth, drawHeight);
+}
+
+function stylizeMnistHistoryPixels(pixels, profile) {
+  return pixels.map((value) => {
+    const normalized = value / 255;
+
+    if (profile === "smooth") {
+      return clamp(Math.round(Math.pow(normalized, 0.92) * 255), 0, 255);
+    }
+
+    if (profile === "sharp") {
+      if (normalized > 0.62) {
+        return 255;
+      }
+
+      if (normalized < 0.12) {
+        return 0;
+      }
+
+      return clamp(
+        Math.round(((normalized - 0.12) / (0.62 - 0.12)) * 255),
+        0,
+        255,
+      );
+    }
+
+    if (profile === "standard") {
+      return clamp(Math.round(Math.pow(normalized, 0.96) * 255), 0, 255);
+    }
+
+    return value;
+  });
 }
 
 function drawValueMatrix(canvas, pixels) {

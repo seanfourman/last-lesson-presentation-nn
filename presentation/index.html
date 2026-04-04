@@ -302,9 +302,15 @@
               <article class="mnist-step mnist-step-raw">
                 <p class="mnist-step-label">לפני MNIST</p>
                 <div class="mnist-step-visual mnist-step-visual-raw" aria-hidden="true">
-                  <span class="mnist-mini-card mnist-mini-card-a">2</span>
-                  <span class="mnist-mini-card mnist-mini-card-b">3</span>
-                  <span class="mnist-mini-card mnist-mini-card-c">7</span>
+                  <span class="mnist-mini-card mnist-mini-card-a">
+                    <canvas class="mnist-mini-canvas" id="mnistRawDigitA"></canvas>
+                  </span>
+                  <span class="mnist-mini-card mnist-mini-card-b">
+                    <canvas class="mnist-mini-canvas" id="mnistRawDigitB"></canvas>
+                  </span>
+                  <span class="mnist-mini-card mnist-mini-card-c">
+                    <canvas class="mnist-mini-canvas" id="mnistRawDigitC"></canvas>
+                  </span>
                 </div>
                 <h3 class="mnist-step-title">
                   הדאטה המקורי לא היה מדד ייחוס נוח באמת
@@ -320,7 +326,9 @@
               <article class="mnist-step mnist-step-standard">
                 <p class="mnist-step-label">המהלך</p>
                 <div class="mnist-step-visual mnist-step-visual-standard" aria-hidden="true">
-                  <span class="mnist-standard-before">3</span>
+                  <span class="mnist-standard-before">
+                    <canvas class="mnist-standard-canvas" id="mnistStandardDigit"></canvas>
+                  </span>
                   <span class="mnist-standard-arrow"></span>
                   <span class="mnist-standard-grid">
                     <span></span><span></span><span></span><span></span>
