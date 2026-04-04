@@ -1353,27 +1353,56 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
         return;
       }
 
+      const dissolveStart = 0.3;
+      const dissolveEnd = 0.54;
+      if (localProgress >= dissolveEnd) {
+        return;
+      }
+
       const start = pointInRectForPixel(ghostRect, particle.pixelIndex);
       const end = particle.target;
       const mid = {
         x: lerp(start.x, end.x, 0.58) + particle.arcX,
         y: lerp(start.y, end.y, 0.36) + particle.arcY,
       };
+      const travelProgress = easeInOutCubic(
+        clamp01(localProgress / dissolveEnd),
+      );
       const position = quadraticBezierPoint(
         start,
         mid,
         end,
-        easeInOutCubic(localProgress),
+        travelProgress,
       );
-      const alpha =
-        particle.intensity * (1 - Math.abs(localProgress - 0.5) * 1.72) * 1.35;
+      const fadeIn = easeOutCubic(clamp01(localProgress / 0.1));
+      const dissolve =
+        1 -
+        easeOutCubic(
+          clamp01(
+            (localProgress - dissolveStart) / (dissolveEnd - dissolveStart),
+          ),
+        );
+      const alpha = particle.intensity * fadeIn * dissolve * 1.18;
+      if (alpha <= 0.01) {
+        return;
+      }
+
+      const shrink =
+        1 -
+        0.84 *
+          easeOutCubic(
+            clamp01(
+              (localProgress - dissolveStart) / (dissolveEnd - dissolveStart),
+            ),
+          );
+      const drawSize = Math.max(0.65, particle.size * shrink);
 
       ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, alpha)})`;
       ctx.fillRect(
-        position.x - particle.size * 0.5,
-        position.y - particle.size * 0.5,
-        particle.size,
-        particle.size,
+        position.x - drawSize * 0.5,
+        position.y - drawSize * 0.5,
+        drawSize,
+        drawSize,
       );
     });
   };
