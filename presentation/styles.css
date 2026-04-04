@@ -1036,20 +1036,20 @@ svg {
 }
 
 .mnist-kicker {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.52rem;
   color: rgba(255, 238, 0, 0.92);
   font-family: "Rubik", "Heebo", sans-serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
 .mnist-english-name {
-  margin: 0 0 0.95rem;
+  margin: 0 0 1.12rem;
   color: rgba(255, 255, 255, 0.54);
   font-family: "Rubik", "Heebo", sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 500;
   letter-spacing: 0.09em;
   line-height: 1.45;
@@ -1060,10 +1060,10 @@ svg {
 
 .mnist-context {
   max-width: 52rem;
-  margin: 1.02rem auto 0.92rem;
+  margin: 1.18rem auto 1.02rem;
   color: rgba(255, 255, 255, 0.86);
-  font-size: 0.98rem;
-  line-height: 1.72;
+  font-size: 1.08rem;
+  line-height: 1.78;
 }
 
 .mnist-context strong {
@@ -1075,8 +1075,8 @@ svg {
   margin: 0;
   color: var(--text);
   font-family: "Rubik", "Heebo", sans-serif;
-  font-size: clamp(1.48rem, 2.45vw, 2.34rem);
-  line-height: 1.14;
+  font-size: clamp(1.72rem, 2.8vw, 2.7rem);
+  line-height: 1.1;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
