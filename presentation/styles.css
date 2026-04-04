@@ -400,8 +400,9 @@ svg {
   margin-top: 0 !important;
   color: var(--text) !important;
   font-family: "Rubik", "Heebo", sans-serif;
-  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  font-size: clamp(1.12rem, 1.8vw, 1.45rem) !important;
   font-weight: 700;
+  line-height: 1.08;
   letter-spacing: -0.02em;
 }
 
@@ -776,7 +777,7 @@ svg {
   }
 
   .compare-lead {
-    font-size: clamp(1.35rem, 6vw, 1.9rem);
+    font-size: clamp(1.05rem, 4.2vw, 1.28rem) !important;
   }
 
   .values-section {
