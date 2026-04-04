@@ -650,7 +650,10 @@ function createDigitDrawPad(canvas, callbacks = {}) {
   };
 
   const syncInkCanvas = () => {
-    drawDigit(inkCanvas, state.pixels);
+    const displayPixels = state.sampleMode
+      ? boostSampleContrast(state.pixels)
+      : state.pixels;
+    drawDigit(inkCanvas, displayPixels);
   };
 
   const renderGrid = (geometry) => {
@@ -727,7 +730,7 @@ function createDigitDrawPad(canvas, callbacks = {}) {
   };
 
   const stampBrush = (point) => {
-    const radius = 0.92;
+    const radius = 2.35;
     const minX = Math.max(0, Math.floor(point.x - radius - 1));
     const maxX = Math.min(27, Math.ceil(point.x + radius + 1));
     const minY = Math.max(0, Math.floor(point.y - radius - 1));
@@ -738,15 +741,18 @@ function createDigitDrawPad(canvas, callbacks = {}) {
         const dx = x + 0.5 - point.x;
         const dy = y + 0.5 - point.y;
         const distance = Math.hypot(dx, dy);
-        const influence = clamp01(1 - distance / (radius + 0.18));
-        if (influence <= 0) {
+        if (distance > radius) {
           continue;
         }
 
-        const strength = Math.pow(influence, 1.18);
-        const nextValue = Math.round(255 * strength);
+        const influence = clamp01(1 - distance / (radius + 0.12));
+        const nextValue = Math.round(255 * Math.pow(influence, 0.82));
+
         const pixelIndex = y * 28 + x;
-        state.pixels[pixelIndex] = Math.max(state.pixels[pixelIndex], nextValue);
+        state.pixels[pixelIndex] = Math.max(
+          state.pixels[pixelIndex],
+          nextValue,
+        );
       }
     }
   };
@@ -851,6 +857,34 @@ function createDigitDrawPad(canvas, callbacks = {}) {
 
 function preprocessDrawPixels(pixels) {
   return pixels.map((value) => clamp(Math.round(value), 0, 255));
+}
+
+function boostSampleContrast(pixels) {
+  let maxValue = 0;
+
+  for (const value of pixels) {
+    maxValue = Math.max(maxValue, value);
+  }
+
+  if (maxValue <= 0) {
+    return [...pixels];
+  }
+
+  return pixels.map((value) => {
+    const normalized = clamp(value / maxValue, 0, 1);
+    if (normalized <= 0.05) {
+      return 0;
+    }
+
+    const contrasted = clamp01((normalized - 0.05) / 0.95);
+    if (contrasted >= 0.72) {
+      return 255;
+    }
+
+    const lifted = Math.pow(contrasted, 0.36);
+    const boosted = Math.min(1, lifted * 1.08);
+    return Math.round(boosted * 255);
+  });
 }
 
 function inferWithMnistModel(model, pixels) {
@@ -1288,7 +1322,9 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
       ghostTarget,
       easeOutCubic(Math.min(1, progress * 0.9)),
     );
-    const pixelCanvas = createPixelCanvas(processedPixels);
+    const pixelCanvas = createPixelCanvas(processedPixels, {
+      transparentBackground: true,
+    });
 
     ctx.save();
     ctx.imageSmoothingEnabled = false;
@@ -2431,10 +2467,27 @@ function drawSampleDigitToCanvas(canvas, pixels) {
   ctx.restore();
 }
 
-function createPixelCanvas(pixels) {
+function createPixelCanvas(pixels, options = {}) {
   const canvas = document.createElement("canvas");
   canvas.width = 28;
   canvas.height = 28;
+  const ctx = canvas.getContext("2d");
+
+  if (options.transparentBackground) {
+    const image = ctx.createImageData(28, 28);
+
+    for (let i = 0; i < pixels.length; i += 1) {
+      const value = clamp(Math.round(pixels[i]), 0, 255);
+      image.data[i * 4] = 255;
+      image.data[i * 4 + 1] = 255;
+      image.data[i * 4 + 2] = 255;
+      image.data[i * 4 + 3] = value;
+    }
+
+    ctx.putImageData(image, 0, 0);
+    return canvas;
+  }
+
   drawDigit(canvas, pixels);
   return canvas;
 }
@@ -2494,12 +2547,28 @@ function quadraticBezierPoint(start, control, end, amount) {
 }
 
 function sampleBrightPixelParticles(pixels, targets, stageWidth) {
-  const activePixels = pixels
-    .map((value, index) => ({
-      index,
-      value: value / 255,
-    }))
-    .filter((entry) => entry.value > 0.18)
+  const normalizedPixels = pixels.map((value, index) => ({
+    index,
+    value: value / 255,
+  }));
+  const brightestValue = normalizedPixels.reduce(
+    (maxValue, entry) => Math.max(maxValue, entry.value),
+    0,
+  );
+  const primaryThreshold = Math.max(0.72, brightestValue * 0.8);
+  const fallbackThreshold = Math.max(0.5, brightestValue * 0.62);
+
+  let activePixels = normalizedPixels.filter(
+    (entry) => entry.value >= primaryThreshold,
+  );
+
+  if (activePixels.length < 14) {
+    activePixels = normalizedPixels.filter(
+      (entry) => entry.value >= fallbackThreshold,
+    );
+  }
+
+  activePixels = activePixels
     .sort((left, right) => right.value - left.value)
     .slice(0, 42);
 
