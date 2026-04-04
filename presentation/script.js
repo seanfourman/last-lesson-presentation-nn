@@ -509,7 +509,7 @@ function setupNetworkDemoSection(model) {
         phaseLabel.textContent = "Output · 0–9";
       }
       result.textContent =
-        "עכשיו 10 נוירוני ה־output משווים בין כל הספרות האפשריות.";
+        "עכשיו 10 נוירוני ה-output משווים בין כל הספרות האפשריות.";
       return;
     }
 
@@ -1368,12 +1368,7 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
       const travelProgress = easeInOutCubic(
         clamp01(localProgress / dissolveEnd),
       );
-      const position = quadraticBezierPoint(
-        start,
-        mid,
-        end,
-        travelProgress,
-      );
+      const position = quadraticBezierPoint(start, mid, end, travelProgress);
       const fadeIn = easeOutCubic(clamp01(localProgress / 0.1));
       const dissolve =
         1 -
