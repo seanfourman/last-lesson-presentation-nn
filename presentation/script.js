@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const pixels = window.MNIST_MODEL?.digitExamples?.["3"];
   setupCompareSection(pixels);
+  setupValueSection(pixels);
 
   if (!pixels) {
     return;
@@ -211,6 +212,32 @@ function setupCompareSection(basePixels) {
     },
   });
   window.addEventListener("resize", renderAll);
+}
+
+function setupValueSection(pixels) {
+  const figure = document.getElementById("valueFigure");
+  const digitCanvas = document.getElementById("valueDigitCanvas");
+  const matrixCanvas = document.getElementById("valueMatrixCanvas");
+
+  if (!figure || !digitCanvas || !matrixCanvas || !pixels) {
+    return;
+  }
+
+  drawDigit(digitCanvas, pixels);
+
+  const renderAll = () => {
+    drawValueMatrix(matrixCanvas, pixels);
+  };
+
+  renderAll();
+  window.addEventListener("resize", renderAll);
+  document.fonts?.ready.then(renderAll).catch(() => {});
+
+  figure.addEventListener("click", () => {
+    const showValues = !figure.classList.contains("is-values");
+    figure.classList.toggle("is-values", showValues);
+    figure.setAttribute("aria-pressed", String(showValues));
+  });
 }
 
 function setupOverlayDrag(stage, overlay, callbacks = {}) {
@@ -569,6 +596,38 @@ function renderScaledDigit(canvas, pixels, options = {}) {
 
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(sourceCanvas, 0, 0, width, height);
+}
+
+function drawValueMatrix(canvas, pixels) {
+  resizeCanvasToDisplaySize(canvas);
+
+  const ctx = canvas.getContext("2d");
+  const { width, height } = canvas;
+  const cellWidth = width / 28;
+  const cellHeight = height / 28;
+  const gap = Math.max(0.8, Math.min(cellWidth, cellHeight) * 0.03);
+  const fontSize = Math.max(8, Math.min(cellWidth, cellHeight) * 0.43);
+
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, width, height);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = `700 ${fontSize}px Rubik, Heebo, sans-serif`;
+
+  for (let index = 0; index < pixels.length; index += 1) {
+    const value = pixels[index] / 255;
+    const displayValue = (Math.round(value * 10) / 10).toFixed(1);
+    const x = (index % 28) * cellWidth;
+    const y = Math.floor(index / 28) * cellHeight;
+    const fill = Math.round(value * 255);
+
+    ctx.fillStyle = `rgb(${fill}, ${fill}, ${fill})`;
+    ctx.fillRect(x + gap * 0.5, y + gap * 0.5, cellWidth - gap, cellHeight - gap);
+
+    ctx.fillStyle = value > 0.5 ? "rgba(18, 18, 18, 0.92)" : "rgba(255, 255, 255, 0.92)";
+    ctx.fillText(displayValue, x + cellWidth * 0.5, y + cellHeight * 0.56);
+  }
 }
 
 function createOverlayDigitRenderer(canvas, pixels) {

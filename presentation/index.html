@@ -126,6 +126,37 @@
           </div>
         </div>
       </section>
+
+      <section class="values-section" id="values">
+        <div class="values-shell">
+          <button
+            class="values-figure"
+            id="valueFigure"
+            type="button"
+            aria-pressed="false"
+            aria-label="לחצו כדי להחליף בין תמונת הספרה לבין ערכי עוצמת האפור שלה"
+          >
+            <div class="values-frame">
+              <canvas
+                id="valueDigitCanvas"
+                class="values-view values-digit-view"
+                width="28"
+                height="28"
+                aria-hidden="true"
+              ></canvas>
+              <canvas
+                id="valueMatrixCanvas"
+                class="values-view values-matrix-view"
+                aria-hidden="true"
+              ></canvas>
+            </div>
+          </button>
+
+          <p class="values-copy">
+            לחצו על הספרה כדי לחשוף את 784 הערכים שהיא באמת מכילה: עוצמות אפור בין 0 ל־1.
+          </p>
+        </div>
+      </section>
     </main>
   </body>
 </html>
