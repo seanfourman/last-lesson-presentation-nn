@@ -1031,8 +1031,10 @@ svg {
 
 .mnist-history-shell {
   width: min(1460px, calc(100vw - 12px));
-  grid-template-rows: auto 1fr;
-  align-content: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.35rem;
 }
 
 .mnist-intro {
@@ -1108,7 +1110,7 @@ svg {
   gap: 1.35rem;
   align-items: center;
   min-height: 0;
-  height: 100%;
+  height: auto;
 }
 
 .mnist-timeline {
@@ -1440,7 +1442,7 @@ svg {
   width: 100%;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.5rem;
-  margin-top: auto;
+  margin-top: 0.2rem;
   padding: 1.15rem 0 0.35rem;
 }
 
@@ -1571,31 +1573,33 @@ svg {
 
 .mnist-stat-icon-check span:nth-child(1) {
   position: absolute;
-  inset: 6px auto auto 4px;
+  left: 50%;
+  top: 50%;
   width: 40px;
   height: 26px;
+  transform: translate(-50%, -50%);
   border: 1px solid rgba(255, 238, 0, 0.34);
   background: rgba(255, 255, 255, 0.03);
 }
 
 .mnist-stat-icon-check span:nth-child(2) {
   position: absolute;
-  left: 17px;
-  top: 16px;
-  width: 8px;
-  height: 16px;
-  border-right: 3px solid rgba(255, 238, 0, 0.92);
-  border-bottom: 3px solid rgba(255, 238, 0, 0.92);
-  transform: rotate(40deg);
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 238, 0, 0.96);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.mnist-stat-icon-check span:nth-child(2)::before {
+  content: "✓";
 }
 
 .mnist-stat-icon-check span:nth-child(3) {
-  position: absolute;
-  left: 7px;
-  top: 6px;
-  width: 40px;
-  height: 26px;
-  border: 1px solid rgba(255, 238, 0, 0.16);
+  display: none;
 }
 
 .mnist-stat-icon-digits {
