@@ -1219,7 +1219,7 @@ svg {
   height: 58px;
   display: grid;
   place-items: center;
-  border-radius: 16px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.9);
@@ -1276,7 +1276,7 @@ svg {
   height: 62px;
   display: grid;
   place-items: center;
-  border-radius: 16px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.92);
@@ -1321,7 +1321,7 @@ svg {
   grid-template-columns: repeat(4, 1fr);
   gap: 4px;
   padding: 7px;
-  border-radius: 16px;
+  border-radius: 0;
   border: 1px solid rgba(255, 238, 0, 0.34);
   background: rgba(255, 238, 0, 0.06);
   box-shadow:
