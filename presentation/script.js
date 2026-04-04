@@ -526,8 +526,8 @@ function createOverlayDigitRenderer(canvas, pixels) {
 
   const render = (now = performance.now()) => {
     const breath = state.dragging && !reduceMotion.matches ? (Math.sin(now * 0.0062) + 1) * 0.5 : 0;
-    const spread = state.spread + breath * 0.06;
-    const glow = state.glow + breath * 0.34;
+    const spread = state.spread + breath * 0.02;
+    const glow = state.glow + breath * 0.24;
     const dragMix = state.dragging ? Math.min(1, 0.7 + breath * 0.3) : 0;
     const color = mixColor([191, 181, 43], [255, 230, 84], dragMix);
 
@@ -546,15 +546,15 @@ function createOverlayDigitRenderer(canvas, pixels) {
       haloAlpha: 0.26 + glow * 0.18,
       pixelAlphaBoost: 0.92 + breath * 0.08,
       spread,
-      outerScale: 0.79 + breath * 0.03,
-      innerScale: 0.57 + breath * 0.03,
+      outerScale: 0.8 + breath * 0.015,
+      innerScale: 0.58 + breath * 0.015,
       glowBlur: 18 + glow * 24,
       glowAlpha: 0.18 + glow * 0.22,
       waveTime: now,
-      waveAmplitude: 0.82 + breath * 0.2,
+      waveAmplitude: 0.28 + breath * 0.08,
       waveFrequency: 0.015,
       wavePhase: 1.2,
-      swirlStrength: 0.34 + breath * 0.12,
+      swirlStrength: 0.1 + breath * 0.04,
     });
   };
 
@@ -583,7 +583,7 @@ function createOverlayDigitRenderer(canvas, pixels) {
     render,
     setDragging(isDragging) {
       state.dragging = isDragging;
-      state.targetSpread = isDragging ? 0.34 : 0;
+      state.targetSpread = isDragging ? 0.12 : 0;
       state.targetGlow = isDragging ? 1 : 0.16;
 
       if (reduceMotion.matches) {
