@@ -1025,7 +1025,7 @@ svg {
   min-height: calc(100vh - 56px);
   min-height: calc(100dvh - 56px);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: center;
   gap: 1.1rem;
 }
 
@@ -1097,28 +1097,33 @@ svg {
 
 .mnist-history-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.82fr);
-  gap: clamp(28px, 4vw, 62px);
-  align-items: center;
+  width: 100%;
+  grid-template-columns: 1fr;
+  gap: 1.35rem;
+  align-items: start;
+  justify-items: center;
 }
 
 .mnist-timeline {
   position: relative;
   display: grid;
+  width: min(1180px, 100%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  padding-right: 42px;
+  padding-top: 44px;
+  direction: rtl;
 }
 
 .mnist-timeline::before {
   content: "";
   position: absolute;
-  top: 18px;
-  bottom: 18px;
-  right: 10px;
-  width: 2px;
+  top: 16px;
+  right: 13%;
+  left: 13%;
+  height: 2px;
   background:
     linear-gradient(
-      180deg,
+      90deg,
       rgba(255, 238, 0, 0.12),
       rgba(255, 238, 0, 0.78),
       rgba(255, 238, 0, 0.12)
@@ -1128,6 +1133,7 @@ svg {
 .mnist-step {
   position: relative;
   padding: 1rem 1.05rem 1.05rem;
+  text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 22px;
   background:
@@ -1144,10 +1150,11 @@ svg {
 .mnist-step::before {
   content: "";
   position: absolute;
-  right: -38px;
-  top: 28px;
+  left: 50%;
+  top: -38px;
   width: 16px;
   height: 16px;
+  transform: translateX(-50%);
   border-radius: 999px;
   border: 3px solid rgba(255, 238, 0, 0.95);
   background: #000;
@@ -1156,6 +1163,7 @@ svg {
 
 .mnist-step-label {
   margin: 0;
+  text-align: center;
   color: rgba(255, 238, 0, 0.88);
   font-family: "Rubik", "Heebo", sans-serif;
   font-size: 0.82rem;
@@ -1173,6 +1181,10 @@ svg {
   line-height: 1.26;
 }
 
+.mnist-step-title {
+  text-align: center;
+}
+
 .mnist-step-copy,
 .mnist-reason-copy {
   margin: 0.42rem 0 0;
@@ -1180,8 +1192,9 @@ svg {
 
 .mnist-stat-board {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.95rem;
+  width: min(1180px, 100%);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .mnist-stat-card,
@@ -1527,11 +1540,43 @@ svg {
   }
 
   .mnist-timeline {
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding-top: 0;
     padding-right: 32px;
+    direction: rtl;
+  }
+
+  .mnist-timeline::before {
+    top: 18px;
+    bottom: 18px;
+    right: 10px;
+    left: auto;
+    width: 2px;
+    height: auto;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 238, 0, 0.12),
+        rgba(255, 238, 0, 0.78),
+        rgba(255, 238, 0, 0.12)
+      );
+  }
+
+  .mnist-step {
+    text-align: right;
   }
 
   .mnist-step::before {
+    left: auto;
     right: -28px;
+    top: 28px;
+    transform: none;
+  }
+
+  .mnist-step-label,
+  .mnist-step-title {
+    text-align: right;
   }
 
   .mnist-stat-board {
