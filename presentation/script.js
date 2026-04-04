@@ -473,7 +473,8 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "Pre-processing";
       }
-      result.textContent = "הציור נדחס עכשיו ל־28×28 לפני שהוא נכנס לרשת.";
+      result.textContent =
+        "הציור כבר יושב על גריד של 28×28, וכל תא בו הופך עכשיו לערך קלט לרשת.";
       return;
     }
 
@@ -623,18 +624,15 @@ function createDigitDrawPad(canvas, callbacks = {}) {
   const inkCanvas = document.createElement("canvas");
   inkCanvas.width = 28;
   inkCanvas.height = 28;
-  const inkCtx = inkCanvas.getContext("2d", { willReadFrequently: true });
   const state = {
     drawing: false,
     hasInk: false,
     sampleMode: false,
     lastPoint: null,
+    pixels: new Array(28 * 28).fill(0),
   };
 
-  const renderToDisplay = () => {
-    resizeCanvasToDisplaySize(canvas);
-    clearCanvas(ctx, canvas.width, canvas.height);
-
+  const getDisplayGeometry = () => {
     const cellSize = Math.max(
       1,
       Math.floor(Math.min(canvas.width, canvas.height) / 28),
@@ -643,14 +641,62 @@ function createDigitDrawPad(canvas, callbacks = {}) {
     const drawX = Math.round((canvas.width - drawSize) * 0.5);
     const drawY = Math.round((canvas.height - drawSize) * 0.5);
 
+    return {
+      cellSize,
+      drawSize,
+      drawX,
+      drawY,
+    };
+  };
+
+  const syncInkCanvas = () => {
+    drawDigit(inkCanvas, state.pixels);
+  };
+
+  const renderGrid = (geometry) => {
+    const { cellSize, drawX, drawY, drawSize } = geometry;
+
+    ctx.save();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.055)";
+    ctx.lineWidth = 1;
+
+    for (let index = 0; index <= 28; index += 1) {
+      const offset = Math.round(drawX + index * cellSize) + 0.5;
+      ctx.beginPath();
+      ctx.moveTo(offset, drawY);
+      ctx.lineTo(offset, drawY + drawSize);
+      ctx.stroke();
+    }
+
+    for (let index = 0; index <= 28; index += 1) {
+      const offset = Math.round(drawY + index * cellSize) + 0.5;
+      ctx.beginPath();
+      ctx.moveTo(drawX, offset);
+      ctx.lineTo(drawX + drawSize, offset);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  };
+
+  const renderToDisplay = () => {
+    resizeCanvasToDisplaySize(canvas);
+    clearCanvas(ctx, canvas.width, canvas.height);
+    syncInkCanvas();
+
+    const geometry = getDisplayGeometry();
+    const { drawX, drawY, drawSize } = geometry;
+
     ctx.save();
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(inkCanvas, drawX, drawY, drawSize, drawSize);
     ctx.restore();
+
+    renderGrid(geometry);
   };
 
   const paintBackground = () => {
-    clearCanvas(inkCtx, inkCanvas.width, inkCanvas.height);
+    state.pixels.fill(0);
     renderToDisplay();
   };
 
@@ -664,23 +710,60 @@ function createDigitDrawPad(canvas, callbacks = {}) {
 
   const getPoint = (event) => {
     const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const localX = (event.clientX - rect.left) * scaleX;
+    const localY = (event.clientY - rect.top) * scaleY;
+    const { drawX, drawY, cellSize } = getDisplayGeometry();
+
     return {
-      x: ((event.clientX - rect.left) / rect.width) * inkCanvas.width,
-      y: ((event.clientY - rect.top) / rect.height) * inkCanvas.height,
+      x: clamp((localX - drawX) / cellSize, 0, 27),
+      y: clamp((localY - drawY) / cellSize, 0, 27),
     };
   };
 
+  const updateInkState = () => {
+    state.hasInk = state.pixels.some((value) => value > 10);
+  };
+
+  const stampBrush = (point) => {
+    const radius = 0.92;
+    const minX = Math.max(0, Math.floor(point.x - radius - 1));
+    const maxX = Math.min(27, Math.ceil(point.x + radius + 1));
+    const minY = Math.max(0, Math.floor(point.y - radius - 1));
+    const maxY = Math.min(27, Math.ceil(point.y + radius + 1));
+
+    for (let y = minY; y <= maxY; y += 1) {
+      for (let x = minX; x <= maxX; x += 1) {
+        const dx = x + 0.5 - point.x;
+        const dy = y + 0.5 - point.y;
+        const distance = Math.hypot(dx, dy);
+        const influence = clamp01(1 - distance / (radius + 0.18));
+        if (influence <= 0) {
+          continue;
+        }
+
+        const strength = Math.pow(influence, 1.18);
+        const nextValue = Math.round(255 * strength);
+        const pixelIndex = y * 28 + x;
+        state.pixels[pixelIndex] = Math.max(state.pixels[pixelIndex], nextValue);
+      }
+    }
+  };
+
   const strokePoint = (from, to) => {
-    inkCtx.save();
-    inkCtx.lineCap = "round";
-    inkCtx.lineJoin = "round";
-    inkCtx.strokeStyle = "rgba(255, 255, 255, 0.98)";
-    inkCtx.lineWidth = 2.1;
-    inkCtx.beginPath();
-    inkCtx.moveTo(from.x, from.y);
-    inkCtx.lineTo(to.x, to.y);
-    inkCtx.stroke();
-    inkCtx.restore();
+    const distance = Math.hypot(to.x - from.x, to.y - from.y);
+    const steps = Math.max(1, Math.ceil(distance * 3));
+
+    for (let step = 0; step <= steps; step += 1) {
+      const t = step / steps;
+      stampBrush({
+        x: lerp(from.x, to.x, t),
+        y: lerp(from.y, to.y, t),
+      });
+    }
+
+    updateInkState();
     renderToDisplay();
   };
 
@@ -691,7 +774,6 @@ function createDigitDrawPad(canvas, callbacks = {}) {
 
     callbacks.onInkStart?.();
     state.drawing = true;
-    state.hasInk = true;
     state.lastPoint = getPoint(event);
     strokePoint(
       {
@@ -748,20 +830,15 @@ function createDigitDrawPad(canvas, callbacks = {}) {
     },
     loadPixels(pixels) {
       clearInternal();
-      drawDigit(inkCanvas, pixels);
-      state.hasInk = !isPixelArrayBlank(pixels, 0.02);
+      state.pixels = pixels
+        .slice(0, 28 * 28)
+        .map((value) => clamp(Math.round(value), 0, 255));
+      updateInkState();
       state.sampleMode = true;
       renderToDisplay();
     },
     getPixels() {
-      const { data } = inkCtx.getImageData(0, 0, 28, 28);
-      const pixels = new Array(28 * 28);
-
-      for (let i = 0; i < pixels.length; i += 1) {
-        pixels[i] = data[i * 4];
-      }
-
-      return pixels;
+      return [...state.pixels];
     },
     isBlank() {
       return !state.hasInk;
@@ -773,12 +850,7 @@ function createDigitDrawPad(canvas, callbacks = {}) {
 }
 
 function preprocessDrawPixels(pixels) {
-  return normalizeDigitPixels(pixels, {
-    threshold: 5,
-    paddingX: 4,
-    paddingY: 4,
-    scaleBoost: 0.96,
-  });
+  return pixels.map((value) => clamp(Math.round(value), 0, 255));
 }
 
 function inferWithMnistModel(model, pixels) {
