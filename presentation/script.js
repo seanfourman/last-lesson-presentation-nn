@@ -390,7 +390,6 @@ function setupNetworkDemoSection(model) {
     !drawFrame ||
     !clearButton ||
     !sampleButton ||
-    !phaseLabel ||
     !result ||
     !model?.layers?.length
   ) {
@@ -403,7 +402,9 @@ function setupNetworkDemoSection(model) {
       state.initialRunPlayed = true;
       stopPendingInference();
       scene.renderIdle();
-      phaseLabel.textContent = "קלט חדש";
+      if (phaseLabel) {
+        phaseLabel.textContent = "קלט חדש";
+      }
       result.textContent = "הציור החדש מחליף כרגע את התוצאה הקודמת.";
     },
     onChange() {
@@ -433,7 +434,9 @@ function setupNetworkDemoSection(model) {
   };
 
   const setIdleMessage = (message) => {
-    phaseLabel.textContent = drawPad.isBlank() ? "מחכה לקלט" : "דוגמת MNIST";
+    if (phaseLabel) {
+      phaseLabel.textContent = drawPad.isBlank() ? "מחכה לקלט" : "דוגמת MNIST";
+    }
     result.textContent = message;
   };
 
@@ -446,7 +449,9 @@ function setupNetworkDemoSection(model) {
     stopPendingInference();
     drawPad.loadPixels(sample);
     scene.renderIdle();
-    phaseLabel.textContent = "דוגמת MNIST";
+    if (phaseLabel) {
+      phaseLabel.textContent = "דוגמת MNIST";
+    }
     result.innerHTML = `כרגע מוצגת דוגמה של <strong>${digit}</strong> מתוך MNIST.`;
 
     if (autorun) {
@@ -465,39 +470,51 @@ function setupNetworkDemoSection(model) {
 
   const updatePhaseCopy = (phase) => {
     if (phase === "preprocess") {
-      phaseLabel.textContent = "Pre-processing";
+      if (phaseLabel) {
+        phaseLabel.textContent = "Pre-processing";
+      }
       result.textContent = "הציור נדחס עכשיו ל־28×28 לפני שהוא נכנס לרשת.";
       return;
     }
 
     if (phase === "input") {
-      phaseLabel.textContent = "שכבת input";
+      if (phaseLabel) {
+        phaseLabel.textContent = "שכבת input";
+      }
       result.textContent = "784 ערכי הבהירות נטענים לשכבת הקלט של הרשת.";
       return;
     }
 
     if (phase === "hidden-1") {
-      phaseLabel.textContent = "Hidden layer 1";
+      if (phaseLabel) {
+        phaseLabel.textContent = "Hidden layer 1";
+      }
       result.textContent =
         "הקשתות הראשונות מדליקות נוירונים שמתחילים לקלוט קווים ותבניות גסות.";
       return;
     }
 
     if (phase === "hidden-2") {
-      phaseLabel.textContent = "Hidden layer 2";
+      if (phaseLabel) {
+        phaseLabel.textContent = "Hidden layer 2";
+      }
       result.textContent =
         "הייצוג מתחדד בשכבה הבאה, כשהרשת מרכיבה דפוסים גדולים יותר.";
       return;
     }
 
     if (phase === "output") {
-      phaseLabel.textContent = "Output · 0–9";
+      if (phaseLabel) {
+        phaseLabel.textContent = "Output · 0–9";
+      }
       result.textContent =
         "עכשיו 10 נוירוני ה־output משווים בין כל הספרות האפשריות.";
       return;
     }
 
-    phaseLabel.textContent = "ההחלטה של הרשת";
+    if (phaseLabel) {
+      phaseLabel.textContent = "ההחלטה של הרשת";
+    }
   };
 
   const runInference = (sourceKind = "draw") => {
@@ -529,7 +546,9 @@ function setupNetworkDemoSection(model) {
           return;
         }
 
-        phaseLabel.textContent = "ההחלטה של הרשת";
+        if (phaseLabel) {
+          phaseLabel.textContent = "ההחלטה של הרשת";
+        }
         result.innerHTML =
           sourceKind === "sample"
             ? `על הדוגמה הזו הרשת הכי בטוחה שזה <strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
@@ -927,9 +946,9 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
   );
   const countText = createSvgElement("text", {
     class: "nn-count",
-    x: 86,
+    x: -62,
     y: 340,
-    "text-anchor": "middle",
+    "text-anchor": "start",
   });
   countText.textContent = "784";
   svg.append(countText);
@@ -967,9 +986,9 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
 
   scene.highlightRect = createSvgElement("rect", {
     class: "nn-highlight",
-    x: layout.output[0].x - 32,
+    x: layout.output[0].x - 38,
     y: layout.output[0].y - 30,
-    width: 132,
+    width: 184,
     height: 60,
     rx: 18,
     ry: 18,
@@ -1101,7 +1120,7 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
 
     const predictedSlot = snapshot.output.predictedDigit;
     const predictedPosition = layout.output[predictedSlot];
-    scene.highlightRect.setAttribute("x", String(predictedPosition.x - 32));
+    scene.highlightRect.setAttribute("x", String(predictedPosition.x - 38));
     scene.highlightRect.setAttribute("y", String(predictedPosition.y - 30));
     scene.highlightRect.style.opacity =
       String(progressState.highlight * (0.18 + snapshot.output.confidence * 0.9));
