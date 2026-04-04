@@ -1045,6 +1045,32 @@ svg {
   text-transform: uppercase;
 }
 
+.mnist-english-name {
+  margin: 0 0 0.95rem;
+  color: rgba(255, 255, 255, 0.54);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  line-height: 1.45;
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: center;
+}
+
+.mnist-context {
+  max-width: 52rem;
+  margin: 1.02rem auto 0.92rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.98rem;
+  line-height: 1.72;
+}
+
+.mnist-context strong {
+  color: rgba(255, 238, 0, 0.98);
+  font-weight: 700;
+}
+
 .mnist-title {
   margin: 0;
   color: var(--text);
@@ -1463,6 +1489,18 @@ svg {
 
   .mnist-title {
     font-size: clamp(1.28rem, 6vw, 1.72rem);
+  }
+
+  .mnist-english-name {
+    font-size: 0.72rem;
+    margin-bottom: 0.82rem;
+    letter-spacing: 0.06em;
+  }
+
+  .mnist-context {
+    font-size: 0.94rem;
+    line-height: 1.62;
+    margin-bottom: 0.72rem;
   }
 
   .network-copy,
