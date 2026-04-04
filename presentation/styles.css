@@ -431,16 +431,16 @@ svg {
 }
 
 .values-shell {
-  width: min(1240px, 100%);
+  width: min(1320px, 100%);
   display: grid;
   justify-items: center;
-  gap: 1rem;
+  gap: 1.85rem;
 }
 
 .values-stage {
   position: relative;
-  width: min(1180px, 100%);
-  min-height: clamp(560px, 72vh, 780px);
+  width: min(1320px, 100%);
+  min-height: clamp(860px, 92vh, 1080px);
   display: grid;
   place-items: center;
 }
@@ -574,7 +574,7 @@ svg {
   --slot-step: calc(var(--slot-height) + var(--slot-gap));
   position: absolute;
   top: 50%;
-  right: 24px;
+  right: 8px;
   z-index: 4;
   width: clamp(154px, 13vw, 196px);
   transform: translateY(-50%) translateX(24px);
@@ -615,13 +615,16 @@ svg {
   left: 50%;
   width: clamp(138px, 12vw, 168px);
   height: var(--slot-height);
-  transform: translateX(-50%) translateY(var(--slot-step));
+  transform: translateX(-50%) translateY(calc(var(--slot-step) * var(--selector-index, 5)));
   opacity: 0;
+  transition:
+    opacity 220ms ease,
+    transform 860ms cubic-bezier(0.22, 0.86, 0.28, 1);
+  will-change: transform;
 }
 
 .values-shell.is-inference .values-selector {
   opacity: 1;
-  animation: values-selector-scan 2900ms cubic-bezier(0.46, 0.04, 0.28, 0.98) infinite;
 }
 
 .values-selector-box {
@@ -649,6 +652,7 @@ svg {
 
 .values-copy {
   margin: 0;
+  margin-top: clamp(18px, 3vh, 38px);
   color: var(--muted);
   font-size: 1rem;
   line-height: 1.7;
@@ -683,33 +687,6 @@ svg {
   100% {
     opacity: 1;
     transform: scaleX(1);
-  }
-}
-
-@keyframes values-selector-scan {
-  0%,
-  10% {
-    transform: translateX(-50%) translateY(calc(var(--slot-step) * 1));
-  }
-
-  22%,
-  32% {
-    transform: translateX(-50%) translateY(calc(var(--slot-step) * 5));
-  }
-
-  44%,
-  54% {
-    transform: translateX(-50%) translateY(calc(var(--slot-step) * 2));
-  }
-
-  66%,
-  76% {
-    transform: translateX(-50%) translateY(calc(var(--slot-step) * 6));
-  }
-
-  88%,
-  100% {
-    transform: translateX(-50%) translateY(calc(var(--slot-step) * 4));
   }
 }
 
@@ -814,7 +791,7 @@ svg {
   }
 
   .values-stage {
-    min-height: 960px;
+    min-height: 1160px;
   }
 
   .values-figure {
@@ -852,6 +829,7 @@ svg {
 
   .values-copy {
     font-size: 0.98rem;
+    margin-top: 26px;
   }
 }
 

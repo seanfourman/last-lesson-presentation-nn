@@ -223,16 +223,20 @@ function setupValueSection(pixels) {
   const arrow = document.getElementById("valuesArrow");
   const output = document.getElementById("valuesOutput");
   const copy = document.getElementById("valuesCopy");
+  const selector = shell.querySelector(".values-selector");
 
-  if (!shell || !stage || !figure || !digitCanvas || !matrixCanvas || !arrow || !output || !copy || !pixels) {
+  if (!shell || !stage || !figure || !digitCanvas || !matrixCanvas || !arrow || !output || !copy || !selector || !pixels) {
     return;
   }
 
   let stateIndex = 0;
+  let selectorIndex = 5;
+  let selectorDirection = 1;
+  let selectorTimerId = 0;
   const copyByState = [
-    "לחצו על הספרה כדי לחשוף את 784 הערכים שהיא באמת מכילה: עוצמות אפור בין 0 ל־1.",
-    "עוד לחיצה אחת, והרשת תתחיל לחפש בין הספרות 0 עד 9 מה בעצם מופיע כאן.",
-    "עכשיו היא כבר לא רואה רק תמונה, אלא מנסה לנחש לאן מכל 0 עד 9 היא הכי קרובה.",
+    "מבחינת המחשב, זאת לא באמת ספרה אלא מטריצה של 28×28 ערכים. כל תא מחזיק מספר בין 0 ל־1 שמתאר את עוצמת האפור של הפיקסל שלו.",
+    "אחרי ההמרה הזאת, הקלט כבר איננו ציור אלא 784 מספרים. זה החומר הגולמי שהרשת מקבלת לפני שהיא מתחילה להבין מה מופיע בתמונה.",
+    "בשלב הבא הרשת משווה את הדפוס הזה לכל אחת מהספרות 0 עד 9, ומנסה להבין לאיזו ספרה הקלט הכי קרוב כרגע.",
   ];
   const labelByState = [
     "לחצו כדי לעבור מתמונת הספרה אל ערכי עוצמת האפור שלה",
@@ -247,23 +251,67 @@ function setupValueSection(pixels) {
     updateInferenceLayout();
   };
 
+  const setSelectorIndex = (index) => {
+    selectorIndex = clamp(index, 0, 9);
+    selector.style.setProperty("--selector-index", String(selectorIndex));
+  };
+
+  const stopSelectorLoop = () => {
+    if (selectorTimerId) {
+      window.clearTimeout(selectorTimerId);
+      selectorTimerId = 0;
+    }
+  };
+
+  const getNextSelectorIndex = () => {
+    if (selectorIndex >= 8) {
+      selectorDirection = -1;
+    } else if (selectorIndex <= 1) {
+      selectorDirection = 1;
+    } else if (Math.random() < 0.28) {
+      selectorDirection *= -1;
+    }
+
+    const step = Math.random() < 0.22 ? 2 : 1;
+    return clamp(selectorIndex + selectorDirection * step, 0, 9);
+  };
+
+  const runSelectorLoop = () => {
+    stopSelectorLoop();
+
+    if (stateIndex !== 2) {
+      return;
+    }
+
+    const delay = 720 + Math.random() * 220;
+    selectorTimerId = window.setTimeout(() => {
+      setSelectorIndex(getNextSelectorIndex());
+      runSelectorLoop();
+    }, delay);
+  };
+
   const updateInferenceLayout = () => {
     if (stateIndex !== 2) {
       figure.style.left = "50%";
       figure.style.transform = "translate(-50%, -50%)";
       arrow.style.left = "";
+      arrow.style.width = "";
       return;
     }
 
     const stageWidth = stage.clientWidth;
     const figureWidth = figure.getBoundingClientRect().width || Math.min(stageWidth * 0.92, 840);
+    const outputWidth = output.getBoundingClientRect().width || 180;
     const desiredLeft = stageWidth > 1180 ? 36 : Math.max(18, Math.round(stageWidth * 0.024));
-    const clampedLeft = Math.min(desiredLeft, Math.max(24, stageWidth - figureWidth - 280));
-    const arrowLeft = Math.min(stageWidth - 230, clampedLeft + figureWidth + 28);
+    const clampedLeft = Math.min(desiredLeft, Math.max(24, stageWidth - figureWidth - outputWidth - 180));
+    const outputLeft = stageWidth - outputWidth - 8;
+    const arrowLeft = clampedLeft + figureWidth + 26;
+    const arrowWidth = Math.max(76, outputLeft - arrowLeft - 42);
 
     figure.style.left = `${clampedLeft}px`;
     figure.style.transform = "translateY(-50%)";
     arrow.style.left = `${arrowLeft}px`;
+    arrow.style.width = `${arrowWidth}px`;
   };
 
   const applyState = () => {
@@ -276,6 +324,15 @@ function setupValueSection(pixels) {
     figure.setAttribute("aria-pressed", String(showValues));
     figure.setAttribute("aria-label", labelByState[stateIndex]);
     copy.textContent = copyByState[stateIndex];
+
+    if (showInference) {
+      setSelectorIndex(5);
+      selectorDirection = 1;
+      runSelectorLoop();
+    } else {
+      stopSelectorLoop();
+    }
+
     updateInferenceLayout();
     requestAnimationFrame(updateInferenceLayout);
     setTimeout(updateInferenceLayout, 0);
@@ -290,6 +347,7 @@ function setupValueSection(pixels) {
     applyState();
   });
 
+  setSelectorIndex(5);
   applyState();
 }
 
