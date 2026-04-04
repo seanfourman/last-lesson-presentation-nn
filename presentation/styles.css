@@ -386,6 +386,7 @@ svg {
 .compare-copy {
   width: min(1000px, 100%);
   text-align: center;
+  margin-top: clamp(18px, 4vh, 54px);
 }
 
 .compare-copy p {
