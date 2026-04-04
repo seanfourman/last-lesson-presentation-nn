@@ -50,7 +50,8 @@ svg {
 
 .intro-section,
 .compare-section,
-.values-section {
+.values-section,
+.network-section {
   min-height: 100vh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -672,6 +673,310 @@ svg {
   max-width: 46rem;
 }
 
+.network-section {
+  position: relative;
+  width: min(1460px, calc(100vw - 36px));
+  margin: 0 auto;
+  padding: 24px 0 24px;
+  display: grid;
+  justify-items: center;
+  align-content: stretch;
+}
+
+.network-section::before {
+  content: "";
+  position: absolute;
+  inset: 8% 2% 8%;
+  background:
+    radial-gradient(
+      ellipse 38% 34% at 26% 32%,
+      rgba(255, 238, 0, 0.08),
+      rgba(255, 238, 0, 0.03) 46%,
+      rgba(255, 238, 0, 0) 78%
+    ),
+    radial-gradient(
+      ellipse 36% 28% at 72% 56%,
+      rgba(255, 238, 0, 0.08),
+      rgba(255, 238, 0, 0.03) 44%,
+      rgba(255, 238, 0, 0) 82%
+    );
+  filter: blur(34px);
+  pointer-events: none;
+}
+
+.network-shell {
+  position: relative;
+  width: min(1400px, 100%);
+  min-height: calc(100vh - 48px);
+  min-height: calc(100dvh - 48px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+}
+
+.network-intro {
+  max-width: 62rem;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.network-kicker {
+  margin: 0;
+  color: rgba(255, 238, 0, 0.92);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.network-title {
+  margin: 0.45rem 0 0;
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: clamp(1.42rem, 2.35vw, 2.2rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.network-copy,
+.network-caption {
+  margin: 0.7rem auto 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.72;
+  max-width: 56rem;
+}
+
+.network-stage {
+  position: relative;
+  direction: ltr;
+  display: grid;
+  grid-template-areas: "draw viz";
+  grid-template-columns: minmax(280px, 324px) minmax(0, 1fr);
+  gap: clamp(26px, 3.8vw, 58px);
+  align-items: center;
+  min-height: 0;
+}
+
+.network-stage-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.draw-panel {
+  grid-area: draw;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  direction: rtl;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.draw-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.draw-panel-title {
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 1.06rem;
+  font-weight: 700;
+}
+
+.draw-panel-actions {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.network-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.72rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.network-btn:hover,
+.network-btn:focus-visible {
+  border-color: rgba(255, 238, 0, 0.42);
+  background: rgba(255, 238, 0, 0.08);
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.08);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.draw-panel-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background:
+    radial-gradient(
+      circle at 32% 28%,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0) 46%
+    ),
+    #000;
+  border: 3px solid rgba(255, 238, 0, 0.94);
+  box-shadow:
+    0 0 0 1px rgba(255, 238, 0, 0.14),
+    0 0 48px rgba(255, 238, 0, 0.08);
+  overflow: hidden;
+}
+
+#drawCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+  image-rendering: pixelated;
+}
+
+.draw-panel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.network-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.1rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.network-chip-live {
+  color: rgba(255, 238, 0, 0.98);
+  border-color: rgba(255, 238, 0, 0.32);
+  background: rgba(255, 238, 0, 0.08);
+}
+
+.network-viz {
+  grid-area: viz;
+  position: relative;
+  z-index: 1;
+  min-height: clamp(480px, 62vh, 680px);
+  height: clamp(480px, 62vh, 680px);
+}
+
+.network-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.network-svg .nn-edge {
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1.16;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-svg .nn-node-glow {
+  fill: rgba(255, 238, 0, 0.9);
+  opacity: 0;
+  filter: blur(8px);
+}
+
+.network-svg .nn-node-fill {
+  fill: rgba(7, 12, 16, 0.96);
+}
+
+.network-svg .nn-node-ring {
+  fill: none;
+  stroke: rgba(255, 238, 0, 0.94);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-svg .nn-output-label {
+  fill: rgba(255, 255, 255, 0.98);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 28px;
+  dominant-baseline: middle;
+}
+
+.network-svg .nn-output-score {
+  fill: rgba(255, 240, 120, 0.88);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  dominant-baseline: middle;
+}
+
+.network-svg .nn-ellipsis {
+  fill: rgba(255, 255, 255, 0.94);
+}
+
+.network-svg .nn-brace {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.82);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-svg .nn-count {
+  fill: rgba(255, 255, 255, 0.98);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: 52px;
+  dominant-baseline: middle;
+}
+
+.network-svg .nn-highlight {
+  fill: rgba(255, 238, 0, 0.06);
+  stroke: rgba(255, 238, 0, 0.94);
+  stroke-width: 3;
+  rx: 18px;
+  ry: 18px;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-footer {
+  text-align: center;
+}
+
+.network-result {
+  margin: 0.55rem 0 0;
+  color: rgba(255, 240, 120, 0.98);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: clamp(1rem, 1.55vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 @keyframes question-reveal {
   0% {
     opacity: 0;
@@ -870,6 +1175,67 @@ svg {
     line-height: 1.5;
     margin-top: 6px;
     padding-bottom: 0;
+  }
+
+  .network-section {
+    width: min(100vw - 20px, 1460px);
+    padding: 18px 0 24px;
+  }
+
+  .network-shell {
+    min-height: calc(100vh - 42px);
+    min-height: calc(100dvh - 42px);
+    gap: 0.85rem;
+  }
+
+  .network-title {
+    font-size: clamp(1.28rem, 6vw, 1.72rem);
+  }
+
+  .network-copy,
+  .network-caption {
+    font-size: 0.96rem;
+    line-height: 1.62;
+  }
+
+  .network-stage {
+    grid-template-areas:
+      "draw"
+      "viz";
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .draw-panel {
+    width: min(100%, 360px);
+    margin: 0 auto;
+  }
+
+  .draw-panel-head {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .draw-panel-actions {
+    justify-content: center;
+  }
+
+  .network-viz {
+    min-height: 420px;
+    height: 420px;
+  }
+
+  .network-svg .nn-output-label {
+    font-size: 24px;
+  }
+
+  .network-svg .nn-count {
+    font-size: 42px;
+  }
+
+  .network-result {
+    font-size: 0.98rem;
   }
 }
 

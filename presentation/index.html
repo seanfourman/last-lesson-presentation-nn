@@ -192,6 +192,92 @@
           </p>
         </div>
       </section>
+
+      <section class="network-section" id="network">
+        <div class="network-shell">
+          <div class="network-intro">
+            <p class="network-kicker">MNIST</p>
+            <h2 class="network-title">
+              אפשר ממש לאמן רשת כזו על מאגר של ספרות ידניות, ואז לתת לה להבין מה
+              אתם מציירים.
+            </h2>
+            <p class="network-copy">
+              כאן הציור שלכם נדחס ל־28×28, הופך ל־784 ערכים, זורם דרך שכבות הרשת,
+              ובסוף 10 נוירוני output מנסים להחליט איזו ספרה נמצאת מולן.
+            </p>
+          </div>
+
+          <div class="network-stage" id="networkStage">
+            <canvas
+              id="networkStageOverlay"
+              class="network-stage-overlay"
+              aria-hidden="true"
+            ></canvas>
+
+            <div class="draw-panel">
+              <div class="draw-panel-head">
+                <span class="draw-panel-title">ציירו ספרה</span>
+                <div class="draw-panel-actions">
+                  <button
+                    class="network-btn"
+                    id="networkSampleButton"
+                    type="button"
+                  >
+                    דוגמה
+                  </button>
+                  <button
+                    class="network-btn"
+                    id="networkClearButton"
+                    type="button"
+                  >
+                    נקה
+                  </button>
+                </div>
+              </div>
+
+              <div class="draw-panel-frame" id="drawPanelFrame">
+                <canvas
+                  id="drawCanvas"
+                  width="280"
+                  height="280"
+                  aria-label="אזור ציור ספרה עבור רשת הנוירונים"
+                ></canvas>
+              </div>
+
+              <div class="draw-panel-meta">
+                <span class="network-chip">MNIST · 28×28 → 784</span>
+                <span
+                  class="network-chip network-chip-live"
+                  id="networkPhaseLabel"
+                >
+                  מחכה לקלט
+                </span>
+              </div>
+            </div>
+
+            <div class="network-viz">
+              <svg
+                id="networkSvg"
+                class="network-svg"
+                viewBox="0 0 1040 680"
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
+              ></svg>
+            </div>
+          </div>
+
+          <div class="network-footer">
+            <p class="network-caption" id="networkCaption">
+              הרשת הזו אומנה על MNIST, מאגר של 60,000 ספרות בכתב יד. ברגע
+              שעוצרים לצייר, הקלט עובר preprocessing, נכנס ל־input, ממשיך דרך
+              השכבות החבויות, ובסוף מגיע ל־10 נוירוני output.
+            </p>
+            <p class="network-result" id="networkResult">
+              המודל מחכה כרגע לקלט.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
   </body>
 </html>
