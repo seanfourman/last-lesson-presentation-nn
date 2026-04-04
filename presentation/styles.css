@@ -51,7 +51,9 @@ svg {
 .intro-section,
 .compare-section,
 .values-section,
-.network-section {
+.network-section,
+.mnist-history-section,
+.mnist-why-section {
   min-height: 100vh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -969,6 +971,260 @@ svg {
   text-align: center;
 }
 
+.mnist-history-section,
+.mnist-why-section {
+  position: relative;
+  width: min(1460px, calc(100vw - 28px));
+  margin: 0 auto;
+  padding: 22px 0 30px;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+}
+
+.mnist-history-section::before,
+.mnist-why-section::before {
+  content: "";
+  position: absolute;
+  inset: 8% 4% 10%;
+  pointer-events: none;
+  filter: blur(38px);
+}
+
+.mnist-history-section::before {
+  background:
+    radial-gradient(
+      ellipse 32% 28% at 28% 54%,
+      rgba(255, 238, 0, 0.09),
+      rgba(255, 238, 0, 0) 74%
+    ),
+    radial-gradient(
+      ellipse 24% 22% at 76% 48%,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0) 76%
+    );
+}
+
+.mnist-why-section::before {
+  background:
+    radial-gradient(
+      ellipse 38% 32% at 50% 44%,
+      rgba(255, 238, 0, 0.08),
+      rgba(255, 238, 0, 0) 72%
+    ),
+    radial-gradient(
+      ellipse 30% 24% at 52% 72%,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0) 82%
+    );
+}
+
+.mnist-slide-shell {
+  position: relative;
+  width: min(1240px, 100%);
+  min-height: calc(100vh - 56px);
+  min-height: calc(100dvh - 56px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 1.1rem;
+}
+
+.mnist-intro {
+  max-width: 62rem;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.mnist-kicker {
+  margin: 0 0 0.4rem;
+  color: rgba(255, 238, 0, 0.92);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.mnist-title {
+  margin: 0;
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: clamp(1.48rem, 2.45vw, 2.34rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.mnist-copy,
+.mnist-note,
+.mnist-step-copy,
+.mnist-reason-copy {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.mnist-copy {
+  max-width: 56rem;
+  margin: 0.72rem auto 0;
+}
+
+.mnist-history-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.82fr);
+  gap: clamp(28px, 4vw, 62px);
+  align-items: center;
+}
+
+.mnist-timeline {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding-right: 42px;
+}
+
+.mnist-timeline::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  right: 10px;
+  width: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 238, 0, 0.12),
+      rgba(255, 238, 0, 0.78),
+      rgba(255, 238, 0, 0.12)
+    );
+}
+
+.mnist-step {
+  position: relative;
+  padding: 1rem 1.05rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.015)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 38px rgba(0, 0, 0, 0.24);
+}
+
+.mnist-step::before {
+  content: "";
+  position: absolute;
+  right: -38px;
+  top: 28px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 238, 0, 0.95);
+  background: #000;
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.28);
+}
+
+.mnist-step-label {
+  margin: 0;
+  color: rgba(255, 238, 0, 0.88);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.mnist-step-title,
+.mnist-reason-title {
+  margin: 0.32rem 0 0;
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 1.16rem;
+  line-height: 1.26;
+}
+
+.mnist-step-copy,
+.mnist-reason-copy {
+  margin: 0.42rem 0 0;
+}
+
+.mnist-stat-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.mnist-stat-card,
+.mnist-reason-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.015)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 38px rgba(0, 0, 0, 0.24);
+}
+
+.mnist-stat-card {
+  min-height: 180px;
+  padding: 1.1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mnist-stat-value {
+  color: rgba(255, 238, 0, 0.96);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+
+.mnist-stat-label {
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.mnist-reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.mnist-reason-card {
+  min-height: 220px;
+  padding: 1.1rem 1.05rem 1.2rem;
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+}
+
+.mnist-reason-index {
+  color: rgba(255, 238, 0, 0.9);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.94rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.mnist-note {
+  margin: 0 auto;
+  max-width: 50rem;
+  text-align: center;
+}
+
 .network-result {
   margin: 0.55rem 0 0;
   color: rgba(255, 240, 120, 0.98);
@@ -1183,7 +1439,19 @@ svg {
     padding: 18px 0 24px;
   }
 
+  .mnist-history-section,
+  .mnist-why-section {
+    width: min(100vw - 20px, 1460px);
+    padding: 18px 0 24px;
+  }
+
   .network-shell {
+    min-height: calc(100vh - 42px);
+    min-height: calc(100dvh - 42px);
+    gap: 0.85rem;
+  }
+
+  .mnist-slide-shell {
     min-height: calc(100vh - 42px);
     min-height: calc(100dvh - 42px);
     gap: 0.85rem;
@@ -1193,10 +1461,52 @@ svg {
     font-size: clamp(1.28rem, 6vw, 1.72rem);
   }
 
+  .mnist-title {
+    font-size: clamp(1.28rem, 6vw, 1.72rem);
+  }
+
   .network-copy,
   .network-caption {
     font-size: 0.96rem;
     line-height: 1.62;
+  }
+
+  .mnist-copy,
+  .mnist-note,
+  .mnist-step-copy,
+  .mnist-reason-copy {
+    font-size: 0.96rem;
+    line-height: 1.62;
+  }
+
+  .mnist-history-layout,
+  .mnist-reasons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mnist-history-layout {
+    gap: 1rem;
+  }
+
+  .mnist-timeline {
+    padding-right: 32px;
+  }
+
+  .mnist-step::before {
+    right: -28px;
+  }
+
+  .mnist-stat-board {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .mnist-stat-card {
+    min-height: 138px;
+  }
+
+  .mnist-reason-card {
+    min-height: 0;
   }
 
   .network-stage {
