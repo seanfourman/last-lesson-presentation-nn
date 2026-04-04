@@ -166,7 +166,7 @@ svg {
 }
 
 .intro-copy {
-  width: min(760px, 100%);
+  width: min(1120px, 100%);
   text-align: center;
 }
 
@@ -178,20 +178,39 @@ svg {
   line-height: 1.75;
 }
 
+.intro-lead {
+  margin-top: 0.2rem !important;
+  line-height: 1.35 !important;
+}
+
+.intro-lead span {
+  display: block;
+}
+
+.intro-lead span + span {
+  margin-top: 0.2rem;
+}
+
+.intro-lead strong {
+  font-size: 1.16em;
+}
+
 .intro-copy strong {
   color: var(--text);
 }
 
 .intro-question {
-  max-width: min(980px, 92vw) !important;
+  max-width: none !important;
+  width: 100%;
   margin-top: 1.45rem !important;
   color: var(--text) !important;
   font-family: "Rubik", "Heebo", sans-serif;
-  font-size: clamp(1.8rem, 3.35vw, 2.85rem) !important;
+  font-size: clamp(1.45rem, 2.45vw, 2.2rem) !important;
   font-weight: 700;
   line-height: 1.14 !important;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   text-wrap: balance;
+  white-space: nowrap;
   position: relative;
   opacity: 0;
   transform: translateY(18px) scale(0.985);
@@ -280,8 +299,10 @@ svg {
 
   .intro-question {
     max-width: 16ch !important;
+    width: auto;
     font-size: clamp(1.9rem, 8vw, 2.7rem) !important;
     margin-top: 1.15rem !important;
+    white-space: normal;
   }
 }
 
