@@ -1134,6 +1134,8 @@ svg {
   position: relative;
   padding: 1rem 1.15rem 1.12rem;
   min-height: 292px;
+  display: flex;
+  flex-direction: column;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 22px;
@@ -1203,6 +1205,17 @@ svg {
 .mnist-step-copy,
 .mnist-reason-copy {
   margin: 0.42rem 0 0;
+}
+
+.mnist-step-key {
+  margin: auto 0 0;
+  padding-top: 0.88rem;
+  border-top: 1px solid rgba(255, 238, 0, 0.12);
+  color: rgba(255, 238, 0, 0.94);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .mnist-step-visual {
@@ -1344,56 +1357,74 @@ svg {
     0 0 28px rgba(255, 238, 0, 0.14);
 }
 
-.mnist-impact-axis {
-  position: absolute;
-  right: 16px;
-  left: 16px;
-  bottom: 10px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.14);
+.mnist-compare-board {
+  width: min(100%, 246px);
+  margin: 0 auto;
+  display: grid;
+  gap: 0.58rem;
 }
 
-.mnist-impact-bar {
+.mnist-compare-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.58rem;
+  align-items: center;
+}
+
+.mnist-compare-model {
+  color: rgba(255, 255, 255, 0.68);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.mnist-compare-track {
+  position: relative;
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mnist-compare-fill {
   position: absolute;
-  bottom: 12px;
-  width: 34px;
-  border-radius: 12px 12px 6px 6px;
+  inset: 0 auto 0 0;
   background:
     linear-gradient(
-      180deg,
-      rgba(255, 238, 0, 0.92),
-      rgba(255, 238, 0, 0.26)
+      90deg,
+      rgba(255, 238, 0, 0.36),
+      rgba(255, 238, 0, 0.96)
     );
-  box-shadow: 0 0 18px rgba(255, 238, 0, 0.12);
-  transition: height 220ms ease, box-shadow 220ms ease;
+  box-shadow: 0 0 14px rgba(255, 238, 0, 0.18);
+  transition:
+    width 220ms ease,
+    box-shadow 220ms ease,
+    filter 220ms ease;
 }
 
-.mnist-impact-bar-a {
-  right: 40px;
-  height: 30px;
+.mnist-compare-fill-a {
+  width: 72%;
 }
 
-.mnist-impact-bar-b {
-  left: 50%;
-  transform: translateX(-50%);
-  height: 52px;
+.mnist-compare-fill-b {
+  width: 85%;
 }
 
-.mnist-impact-bar-c {
-  left: 40px;
-  height: 42px;
+.mnist-compare-fill-c {
+  width: 92%;
 }
 
-.mnist-step:hover .mnist-impact-bar-a {
-  height: 34px;
+.mnist-compare-score {
+  color: rgba(255, 238, 0, 0.9);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
 }
 
-.mnist-step:hover .mnist-impact-bar-b {
-  height: 58px;
-}
-
-.mnist-step:hover .mnist-impact-bar-c {
-  height: 46px;
+.mnist-step:hover .mnist-compare-fill {
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.28);
+  filter: saturate(1.08);
 }
 
 .mnist-stat-board {
