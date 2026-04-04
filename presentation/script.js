@@ -635,7 +635,10 @@ function createDigitDrawPad(canvas, callbacks = {}) {
     resizeCanvasToDisplaySize(canvas);
     clearCanvas(ctx, canvas.width, canvas.height);
 
-    const cellSize = Math.max(1, Math.floor(Math.min(canvas.width, canvas.height) / 28));
+    const cellSize = Math.max(
+      1,
+      Math.floor(Math.min(canvas.width, canvas.height) / 28),
+    );
     const drawSize = cellSize * 28;
     const drawX = Math.round((canvas.width - drawSize) * 0.5);
     const drawY = Math.round((canvas.height - drawSize) * 0.5);
@@ -672,7 +675,7 @@ function createDigitDrawPad(canvas, callbacks = {}) {
     inkCtx.lineCap = "round";
     inkCtx.lineJoin = "round";
     inkCtx.strokeStyle = "rgba(255, 255, 255, 0.98)";
-    inkCtx.lineWidth = 2.8;
+    inkCtx.lineWidth = 2.1;
     inkCtx.beginPath();
     inkCtx.moveTo(from.x, from.y);
     inkCtx.lineTo(to.x, to.y);
@@ -719,7 +722,10 @@ function createDigitDrawPad(canvas, callbacks = {}) {
 
     state.drawing = false;
     state.lastPoint = null;
-    if (event.pointerId !== undefined && canvas.hasPointerCapture(event.pointerId)) {
+    if (
+      event.pointerId !== undefined &&
+      canvas.hasPointerCapture(event.pointerId)
+    ) {
       canvas.releasePointerCapture(event.pointerId);
     }
   };
@@ -811,7 +817,9 @@ function inferWithMnistModel(model, pixels) {
 
   const output = activations[activations.length - 1];
   const predictedDigit = output.indexOf(Math.max(...output));
-  const displayOutput = logits ? softmaxWithTemperature(logits, 5.2) : [...output];
+  const displayOutput = logits
+    ? softmaxWithTemperature(logits, 5.2)
+    : [...output];
 
   return {
     input: activations[0],
@@ -830,7 +838,8 @@ function buildVisibleNetworkSnapshot(model, inference) {
   const hidden1Indices = pickTopNeuronIndices(inference.hidden1, 12);
   const hidden2Indices = pickTopNeuronIndices(inference.hidden2, 12);
   const outputIndices = Array.from({ length: 10 }, (_, index) => index);
-  const displaySeed = inference.predictedDigit * 37 + Math.round(inference.confidence * 1000);
+  const displaySeed =
+    inference.predictedDigit * 37 + Math.round(inference.confidence * 1000);
 
   const inputNorms = inputIndices.map((index) => inference.input[index]);
   const hidden1Norms = buildHiddenLayerDisplayNorms(
@@ -843,7 +852,9 @@ function buildVisibleNetworkSnapshot(model, inference) {
     hidden2Indices,
     displaySeed + 29,
   );
-  const outputScores = outputIndices.map((index) => inference.displayOutput[index]);
+  const outputScores = outputIndices.map(
+    (index) => inference.displayOutput[index],
+  );
   const outputNorms = outputScores.map((value) => Math.pow(value, 0.52));
 
   return {
@@ -1030,33 +1041,37 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
       const intensity = baseValue * eased;
       const emphasis = options.emphasisIndex === index ? localProgress : 0;
       const glowColor = mixColor([255, 223, 90], [255, 241, 122], intensity);
-      const fillColor = mixColor([7, 12, 16], [125, 104, 18], Math.pow(intensity, 0.88));
+      const fillColor = mixColor(
+        [7, 12, 16],
+        [125, 104, 18],
+        Math.pow(intensity, 0.88),
+      );
       const idleRingOpacity = options.idleRingOpacity ?? 0.16;
       const ringOpacity = idleRingOpacity + intensity * 0.58 + emphasis * 0.24;
 
-      node.fill.style.fill =
-        `rgb(${fillColor[0]}, ${fillColor[1]}, ${fillColor[2]})`;
-      node.glow.style.fill =
-        `rgb(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]})`;
-      node.glow.style.opacity =
-        String(
-          Math.min(
-            0.96,
-            Math.pow(intensity, 0.96) * (0.9 + emphasis * 0.42) + emphasis * 0.18,
-          ),
-        );
+      node.fill.style.fill = `rgb(${fillColor[0]}, ${fillColor[1]}, ${fillColor[2]})`;
+      node.glow.style.fill = `rgb(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]})`;
+      node.glow.style.opacity = String(
+        Math.min(
+          0.96,
+          Math.pow(intensity, 0.96) * (0.9 + emphasis * 0.42) + emphasis * 0.18,
+        ),
+      );
       node.glow.style.filter = `blur(${5 + intensity * 10 + emphasis * 4}px)`;
       node.fill.style.opacity = String(0.96);
-      node.ring.style.stroke =
-        emphasis
-          ? `rgba(255, 246, 179, ${Math.min(0.98, ringOpacity + 0.1)})`
-          : `rgba(255, 231, 92, ${Math.min(0.96, ringOpacity)})`;
-      node.ring.style.strokeWidth = String(2.8 + intensity * 1.2 + emphasis * 0.6);
+      node.ring.style.stroke = emphasis
+        ? `rgba(255, 246, 179, ${Math.min(0.98, ringOpacity + 0.1)})`
+        : `rgba(255, 231, 92, ${Math.min(0.96, ringOpacity)})`;
+      node.ring.style.strokeWidth = String(
+        2.8 + intensity * 1.2 + emphasis * 0.6,
+      );
 
       if (node.score) {
         const scoreValue = options.scoreValues?.[index] ?? norms?.[index] ?? 0;
         node.score.textContent = formatPercent(scoreValue);
-        node.score.style.opacity = String(localProgress * (0.18 + intensity * 0.82));
+        node.score.style.opacity = String(
+          localProgress * (0.18 + intensity * 0.82),
+        );
       }
 
       if (node.label) {
@@ -1087,39 +1102,72 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
         Math.min(1, strength * 0.55 + lineIntensity * 0.9),
       );
 
-      edge.style.stroke =
-        `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${0.05 + strength * 0.09 + lineIntensity * 0.86})`;
-      edge.style.strokeWidth =
-        String(0.92 + strength * 0.42 + lineIntensity * 1.76);
-      edge.style.filter = lineIntensity > 0.12
-        ? `drop-shadow(0 0 ${2 + lineIntensity * 6}px rgba(255, 235, 120, ${0.18 + lineIntensity * 0.42}))`
-        : "none";
+      edge.style.stroke = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${0.05 + strength * 0.09 + lineIntensity * 0.86})`;
+      edge.style.strokeWidth = String(
+        0.92 + strength * 0.42 + lineIntensity * 1.76,
+      );
+      edge.style.filter =
+        lineIntensity > 0.12
+          ? `drop-shadow(0 0 ${2 + lineIntensity * 6}px rgba(255, 235, 120, ${0.18 + lineIntensity * 0.42}))`
+          : "none";
     });
   };
 
   const renderSnapshot = (snapshot, progressState) => {
-    renderEdges(scene.edgeGroups[0].lines, snapshot?.edges?.[0], progressState.h1);
-    renderEdges(scene.edgeGroups[1].lines, snapshot?.edges?.[1], progressState.h2);
-    renderEdges(scene.edgeGroups[2].lines, snapshot?.edges?.[2], progressState.out);
+    renderEdges(
+      scene.edgeGroups[0].lines,
+      snapshot?.edges?.[0],
+      progressState.h1,
+    );
+    renderEdges(
+      scene.edgeGroups[1].lines,
+      snapshot?.edges?.[1],
+      progressState.h2,
+    );
+    renderEdges(
+      scene.edgeGroups[2].lines,
+      snapshot?.edges?.[2],
+      progressState.out,
+    );
 
-    renderNodes(scene.nodeLayers.input, snapshot?.input?.norms, progressState.input, {
-      stagger: 0.12,
-      idleRingOpacity: 0.12,
-    });
-    renderNodes(scene.nodeLayers.hidden1, snapshot?.hidden1?.norms, progressState.h1, {
-      stagger: 0.2,
-      idleRingOpacity: 0.06,
-    });
-    renderNodes(scene.nodeLayers.hidden2, snapshot?.hidden2?.norms, progressState.h2, {
-      stagger: 0.2,
-      idleRingOpacity: 0.06,
-    });
-    renderNodes(scene.nodeLayers.output, snapshot?.output?.norms, progressState.out, {
-      emphasisIndex: snapshot?.output?.predictedDigit,
-      scoreValues: snapshot?.output?.scores,
-      stagger: 0.12,
-      idleRingOpacity: 0.14,
-    });
+    renderNodes(
+      scene.nodeLayers.input,
+      snapshot?.input?.norms,
+      progressState.input,
+      {
+        stagger: 0.12,
+        idleRingOpacity: 0.12,
+      },
+    );
+    renderNodes(
+      scene.nodeLayers.hidden1,
+      snapshot?.hidden1?.norms,
+      progressState.h1,
+      {
+        stagger: 0.2,
+        idleRingOpacity: 0.06,
+      },
+    );
+    renderNodes(
+      scene.nodeLayers.hidden2,
+      snapshot?.hidden2?.norms,
+      progressState.h2,
+      {
+        stagger: 0.2,
+        idleRingOpacity: 0.06,
+      },
+    );
+    renderNodes(
+      scene.nodeLayers.output,
+      snapshot?.output?.norms,
+      progressState.out,
+      {
+        emphasisIndex: snapshot?.output?.predictedDigit,
+        scoreValues: snapshot?.output?.scores,
+        stagger: 0.12,
+        idleRingOpacity: 0.14,
+      },
+    );
 
     if (!snapshot?.output) {
       scene.highlightRect.style.opacity = "0";
@@ -1130,11 +1178,17 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
     const predictedPosition = layout.output[predictedSlot];
     scene.highlightRect.setAttribute("x", String(predictedPosition.x - 38));
     scene.highlightRect.setAttribute("y", String(predictedPosition.y - 30));
-    scene.highlightRect.style.opacity =
-      String(progressState.highlight * (0.18 + snapshot.output.confidence * 0.9));
+    scene.highlightRect.style.opacity = String(
+      progressState.highlight * (0.18 + snapshot.output.confidence * 0.9),
+    );
   };
 
-  const renderIngestOverlay = (processedPixels, snapshot, drawFrame, progress) => {
+  const renderIngestOverlay = (
+    processedPixels,
+    snapshot,
+    drawFrame,
+    progress,
+  ) => {
     resizeCanvasToDisplaySize(overlayCanvas);
     const ctx = overlayCanvas.getContext("2d");
     const width = overlayCanvas.width;
@@ -1147,7 +1201,9 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
 
     const stageRect = stage.getBoundingClientRect();
     const sourceRect = relativeRectToContainer(drawFrame, stage);
-    const inputTargets = layout.input.map((position) => getStagePoint(position));
+    const inputTargets = layout.input.map((position) =>
+      getStagePoint(position),
+    );
     const targetCenter = averagePoints(inputTargets);
     const ghostTarget = {
       x: targetCenter.x - 120,
@@ -1164,7 +1220,8 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
 
     ctx.save();
     ctx.imageSmoothingEnabled = false;
-    ctx.globalAlpha = 0.98 * (1 - easeInOutCubic(clamp01((progress - 0.18) / 0.48)));
+    ctx.globalAlpha =
+      0.98 * (1 - easeInOutCubic(clamp01((progress - 0.18) / 0.48)));
     ctx.shadowColor = "rgba(255, 255, 255, 0.16)";
     ctx.shadowBlur = 28;
     ctx.drawImage(
@@ -1201,9 +1258,7 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
         easeInOutCubic(localProgress),
       );
       const alpha =
-        particle.intensity *
-        (1 - Math.abs(localProgress - 0.5) * 1.72) *
-        1.35;
+        particle.intensity * (1 - Math.abs(localProgress - 0.5) * 1.72) * 1.35;
 
       ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, alpha)})`;
       ctx.fillRect(
@@ -1236,7 +1291,14 @@ function createNetworkVisualizer(svg, stage, overlayCanvas) {
       });
       clearOverlay();
     },
-    animate({ drawFrame, processedPixels, snapshot, shouldContinue, onPhaseChange, onComplete }) {
+    animate({
+      drawFrame,
+      processedPixels,
+      snapshot,
+      shouldContinue,
+      onPhaseChange,
+      onComplete,
+    }) {
       const startedAt = performance.now();
       let currentPhase = "";
 
@@ -2034,7 +2096,14 @@ function createColumnPositions(x, count, top, bottom) {
   }));
 }
 
-function createSplitColumnPositions(x, topCount, topStart, topEnd, bottomStart, bottomEnd) {
+function createSplitColumnPositions(
+  x,
+  topCount,
+  topStart,
+  topEnd,
+  bottomStart,
+  bottomEnd,
+) {
   const topPositions = createColumnPositions(x, topCount, topStart, topEnd);
   const bottomPositions = createColumnPositions(
     x,
@@ -2047,7 +2116,10 @@ function createSplitColumnPositions(x, topCount, topStart, topEnd, bottomStart, 
 }
 
 function createSvgElement(tagName, attributes = {}) {
-  const element = document.createElementNS("http://www.w3.org/2000/svg", tagName);
+  const element = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    tagName,
+  );
 
   Object.entries(attributes).forEach(([key, value]) => {
     element.setAttribute(key, String(value));
@@ -2203,7 +2275,9 @@ function buildHiddenLayerDisplayNorms(values, indices, seed = 0) {
   const normalized = normalizeSelectedActivations(values, indices);
 
   return normalized.map((value, slot) => {
-    const noise = pseudoRandom01(indices[slot] * 0.173 + slot * 1.917 + seed * 0.071);
+    const noise = pseudoRandom01(
+      indices[slot] * 0.173 + slot * 1.917 + seed * 0.071,
+    );
     const rankProgress = slot / Math.max(1, indices.length - 1);
     const rankWeight = 1 - rankProgress * 0.32;
     let gate = 0.72 + noise * 0.38;
@@ -2218,7 +2292,13 @@ function buildHiddenLayerDisplayNorms(values, indices, seed = 0) {
   });
 }
 
-function buildVisibleEdgeSnapshot(layer, sourceIndices, targetIndices, sourceNorms, targetNorms) {
+function buildVisibleEdgeSnapshot(
+  layer,
+  sourceIndices,
+  targetIndices,
+  sourceNorms,
+  targetNorms,
+) {
   const strengths = [];
   const delays = [];
   let maxStrength = 0.00001;
@@ -2227,7 +2307,9 @@ function buildVisibleEdgeSnapshot(layer, sourceIndices, targetIndices, sourceNor
     targetIndices.forEach((targetIndex, targetSlot) => {
       const weight = layer.weights[sourceIndex * layer.output + targetIndex];
       const strength =
-        Math.abs(weight) * (sourceNorms[sourceSlot] + 0.02) * (targetNorms[targetSlot] + 0.04);
+        Math.abs(weight) *
+        (sourceNorms[sourceSlot] + 0.02) *
+        (targetNorms[targetSlot] + 0.04);
       strengths.push(strength);
       delays.push(
         (sourceSlot / Math.max(1, sourceIndices.length - 1)) * 0.48 +
