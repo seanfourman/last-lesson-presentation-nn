@@ -214,6 +214,7 @@ function setupCompareSection(basePixels) {
 }
 
 function setupOverlayDrag(stage, overlay, callbacks = {}) {
+  const scrollRoot = document.querySelector(".page");
   const state = {
     x: 0,
     y: 0,
@@ -221,6 +222,7 @@ function setupOverlayDrag(stage, overlay, callbacks = {}) {
     offsetY: 0,
     dragging: false,
     initialized: false,
+    hasUserMoved: false,
   };
 
   const placeOverlay = (x, y) => {
@@ -232,11 +234,48 @@ function setupOverlayDrag(stage, overlay, callbacks = {}) {
     overlay.style.top = `${state.y}px`;
   };
 
+  const getViewportRect = () => {
+    if (scrollRoot) {
+      return scrollRoot.getBoundingClientRect();
+    }
+
+    return {
+      left: 0,
+      top: 0,
+      right: window.innerWidth,
+      bottom: window.innerHeight,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+  };
+
   const resetOverlay = () => {
-    const startX = stage.clientWidth * 0.62 - overlay.offsetWidth / 2;
-    const startY = stage.clientHeight * 0.18;
+    const stageRect = stage.getBoundingClientRect();
+    const viewportRect = getViewportRect();
+    const centerX = viewportRect.left + viewportRect.width * 0.5;
+    const centerY = viewportRect.top + viewportRect.height * 0.5;
+    const startX = centerX - stageRect.left - overlay.offsetWidth / 2;
+    const startY = centerY - stageRect.top - overlay.offsetHeight / 2;
     placeOverlay(startX, startY);
     state.initialized = true;
+  };
+
+  const maybeCenterOverlay = () => {
+    if (state.hasUserMoved) {
+      return;
+    }
+
+    const stageRect = stage.getBoundingClientRect();
+    const viewportRect = getViewportRect();
+    const visibleTop = Math.max(stageRect.top, viewportRect.top);
+    const visibleBottom = Math.min(stageRect.bottom, viewportRect.bottom);
+    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+    const visibilityRatio = visibleHeight / Math.min(stageRect.height, viewportRect.height || stageRect.height);
+
+    if (visibilityRatio >= 0.5) {
+      resetOverlay();
+      callbacks.onResize?.();
+    }
   };
 
   const syncOnResize = () => {
@@ -261,6 +300,7 @@ function setupOverlayDrag(stage, overlay, callbacks = {}) {
   overlay.addEventListener("pointerdown", (event) => {
     const rect = overlay.getBoundingClientRect();
     state.dragging = true;
+    state.hasUserMoved = true;
     state.offsetX = event.clientX - rect.left;
     state.offsetY = event.clientY - rect.top;
     overlay.classList.add("is-dragging");
@@ -290,7 +330,27 @@ function setupOverlayDrag(stage, overlay, callbacks = {}) {
   window.addEventListener("resize", () => {
     syncOnResize();
     callbacks.onResize?.();
+    maybeCenterOverlay();
   });
+
+  const visibilityObserver = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (!entry?.isIntersecting || entry.intersectionRatio < 0.55 || state.hasUserMoved) {
+        return;
+      }
+
+      resetOverlay();
+      callbacks.onResize?.();
+    },
+    {
+      root: scrollRoot ?? null,
+      threshold: [0.55],
+    },
+  );
+
+  visibilityObserver.observe(stage);
+  scrollRoot?.addEventListener("scroll", maybeCenterOverlay, { passive: true });
   requestAnimationFrame(resetOverlay);
 }
 

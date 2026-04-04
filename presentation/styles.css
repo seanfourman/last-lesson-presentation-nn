@@ -258,7 +258,7 @@ svg {
   padding: 28px 0 46px;
   display: grid;
   justify-items: center;
-  align-content: center;
+  align-content: start;
 }
 
 .compare-section::before {
@@ -277,18 +277,21 @@ svg {
   width: min(1180px, 100%);
   display: grid;
   justify-items: center;
-  align-content: center;
-  gap: 1.75rem;
+  align-content: start;
+  gap: 1.25rem;
 }
 
 .compare-stage {
   position: relative;
   width: min(1120px, 100%);
-  min-height: clamp(320px, 46vh, 460px);
+  min-height: clamp(560px, 74vh, 760px);
 }
 
 .compare-grid {
-  position: relative;
+  position: absolute;
+  top: clamp(12px, 4vh, 44px);
+  left: 0;
+  right: 0;
   z-index: 1;
   width: 100%;
   display: grid;
@@ -457,10 +460,11 @@ svg {
   }
 
   .compare-stage {
-    min-height: 480px;
+    min-height: 700px;
   }
 
   .compare-grid {
+    top: 14px;
     grid-template-columns: 1fr;
     gap: 10px;
   }
