@@ -1,0 +1,150 @@
+Chapter 1But what is a Neural Network?
+Published Oct 5, 2017
+Updated Apr 3, 2026
+
+Lesson by Grant Sanderson
+Text adaptation by Josh Pullen
+Source Code
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+Pre-processing...
+Clear
+Check digit
+
+The program above can identify hand-drawn digits 0-9 reasonably accurately. Give it a whirl if you haven’t already!
+
+Although it does generally work, it requires a bit of coaxing to get there. In particular, the digit images it receives need to be centered and about the right size, which is why there's a pre-processing step before the digit image gets passed along to the neural network.1
+
+While more modern neural networks can do a much better job at tasks like this, the network above is simple enough that you can understand exactly what it’s doing and how it was trained with almost no background. It’s also simple enough that you could train it on your own computer, while training more sophisticated networks can require a truly mind-boggling amount of computation.2
+
+On the surface, a machine recognizing handwritten digits may not seem particularly impressive. After all, you know how to identify digits, and I bet you don’t even find it very hard. For example, you can tell instantly that these are all images of the digit three:
+
+
+Each three is drawn differently, so the particular light-sensitive cells in your eye that fire are different for each, but something in that crazy smart visual cortex of yours resolves all these as representing the same idea, while recognizing images of other numbers as their own distinct ideas.
+
+But if I told you to sit down and write a program like the one shown above, that takes in a grid of 28x28 pixels, and outputs a single number between 0 and 9, the task goes from comically trivial to dauntingly difficult.
+
+Somehow identifying digits is incredibly easy for your brain to do, but almost impossible to describe how to do. The traditional methods of computer programming, with if statements and for loops and classes and objects and functions, just don’t seem suitable to tackle this problem.
+
+But what if we could write a program that mimics the structure of your brain? That’s the idea behind neural networks. The hope is that by writing brain-inspired software, we might be able to create programs that tackle the kinds of fuzzy and difficult-to-reason-about problems that your mind is so good at solving.3
+
+Moreover, just as you learn by seeing many examples, the “learning” part of machine learning comes from the fact that we never give the program any specific instructions for how to identify digits. Instead, we’ll show it many examples of hand-drawn digits together with labels for what they should be, and leave it up to the computer to adapt the network based on each new example.
+
+By the way, recognizing handwritten digits is a classic example for introducing this topic, and I’m happy to stick with the status quo here. Since it’s such a common starting point, there are plenty of other resources available that tackle the same subject matter in more depth for people who want to dig in deeper. If that sounds like you, take a look at this excellent online textbook by Michael Nielsen, which includes code that you can download and play with to really get your hands dirty.
+
+The Structure of a Neural Network
+This lesson is all about motivating and understanding the structure and mathematical description of a neural network, while the next lesson will focus on how to train it with labeled examples.
+
+There are many variants of neural networks, such as convolutional neural networks (CNN), recurrent neural networks (RNN), transformers, and countless others. In recent years there’s been a boom in research of these variants. But the first step to understanding any of them is to build up the simplest, plain vanilla form with no added frills.
+
+
+The simple network we’re using to identify digits is just a few layers of neurons linked together.
+
+Neurons
+Right now, when I say neuron, all I want you to think is “a thing that holds a number.” Specifically, a number between 0.0 and 1.0. Neural networks are really just a bunch of neurons connected together.
+
+This number inside the neuron is called the “activation” of that neuron, and the image you might have in your mind is that each neuron is lit up when its activation is a high number.
+
+
+Every neuron has an activation between 0.0 and 1.0, sort of analogous to how neurons in the brain can be active or inactive.
+
+All the information passing through our neural network is stored in these neurons. So we need to represent the inputs and outputs of our network (the images and digit predictions) in terms of these neuron values between 0.0 and 1.0.
+
+
+Each pixel in the original image has a value between 0.0 (black) and 1.0 (white).
+
+All of our digit images have 
+28
+×
+28
+=
+784
+28×28=784 pixels, each with a brightness value between 0.0 (black) and 1.0 (white). To represent this in the network, we’ll create a layer of 784 neurons, where each neuron corresponds to a particular pixel.
+
+
+Still
+
+Animation
+The input layer contains 784 neurons, each of which corresponds to a single pixel in the original image.
+
+When we want to feed the network an image, we’ll set each input neuron’s activation to the brightness of its corresponding pixel.4
+
+The last layer of our network will have 10 neurons, each representing one of the possible digits. The activation in these neurons, again some number between 0.0 and 1.0, will represent how much the system thinks an image corresponds to a given digit.
+
+
+The output layer of our network has 10 neurons. Each neuron corresponds to a particular digit that the image could contain.
+
+Take a look at the following image:
+
+
+Based on the output layer of the network shown above, what kind of digit does this network think it’s looking at? How certain does it feel?
+
+Your answer:
+Enter what you think here...
+
+Submit
+Our answer:
+
+The Hidden Layers
+
+There will also be some layers in between, called “hidden layers”, which for the time being should just be a giant question mark for how on earth this process of recognizing digits will be handled.
+
+In this network I have 2 hidden layers, each with 16 neurons, which is admittedly kind of an arbitrary choice. To be honest, I chose 2 layers based on how I want to motivate the structure in just a moment, and 16 was simply a nice number to fit on the screen. In practice, there’s a lot of room to experiment with the specific structure.
+
+Why Use Layers?
+You’ll notice how in these drawings each neuron from one layer is connected to each neuron of the next with a little line. This is meant to indicate how the activation of each neuron in one layer, the little number inside it, has some influence on the activation of each neuron in the next layer.
+
+Watching the activations in each layer propagate through to determine the activations in the next can be quite mesmerizing.
+
+However, not all these connections are equal. Some will be stronger than others, and as you’ll see shortly, determining how strong these connections are is really the heart of how a neural network operates, as an information processing mechanism.
+
+But before jumping into the math for how one layer influences the next, or how training works, let’s talk about why it’s even reasonable to expect a layered structure like this to behave intelligently. What are we expecting here? What’s the best hope for what those middle layers are doing? Why not just directly connect all the pixels to the final output we want?
+
+Well, when you or I recognize digits, we piece together various components like loops and lines.
+
+
+Each digit can be broken into smaller, recognizable subcomponents.
+
+In a perfect world, we might hope that each neuron in the second-to-last layer corresponds to one of these subcomponents. That anytime you feed in an image with, say, a loop up top, there is some specific neuron whose activation will be close to 1.0.
+
+
+And I don’t mean just this exact loop of pixels. The hope would be that any generally loopy pattern toward the top of the image sets off this neuron. That way, going from this third layer to the last one would only require learning which combinations of subcomponents correspond to which digits.
+
+Of course, this just kicks the problem down the road, because how would you recognize these subcomponents, or even learn what the right subcomponents should be? And I still haven’t talked about how exactly one layer influences the next! But run with me on this for a moment.
+
+Recognizing a loop can also break down into subproblems. One reasonable way to do that would be to first recognize the various edges that make it up.
+
+
+A loop can be broken down into several small edges.
+
+Similarly, a long line, as you might see in the digits 1, 4 or 7, is really just a long edge. Or maybe you think of it as a certain pattern of several smaller edges.
+
+
+A long line is also just a bunch of edges.
+
+So our hope might be that each neuron in the second layer of the network corresponds to some little edge. Maybe when an image comes in, it lights up neurons associated with all the specific little edges inside that image. This, in turn, would light up the neurons in the third layer associated with larger scale patterns like loops and long lines, which would then cause some neuron from the final layer to fire which corresponds to the appropriate digit.
+
+
+Whether or not this is how our final network actually works is another question. (One that we’ll revisit after seeing how to train this network.) But this is a hope that we might have.
+
+Layers Break Problems Into Bite-Sized Pieces
+You can imagine how being able to detect edges and patterns would also be useful for other image-recognition tasks.
+
+
+Edge detection isn’t just for digits! It’s a useful step for all kinds of image-recognition problems.
+Original lion image by Kevin Pluck, licensed under CC BY 2.0
+
+And beyond image recognition, there are all sorts of intelligent tasks that you can break down into layers of abstraction.
+
+Parsing speech, for example, involves parsing raw audio into distinct sounds, which combine to make certain syllables, which combine to form words, which combine to make up phrases and more abstract thoughts, etc.
+
+
+The layered structure of the neural network is great because it allows you to break down difficult problems into bite-size steps, so that moving from one layer to the next is relatively straightforward.
