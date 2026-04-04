@@ -486,17 +486,17 @@ svg {
   width: 100%;
   aspect-ratio: 1 / 1;
   background: #000;
-  border: 3px solid rgba(104, 217, 255, 0.95);
+  border: 3px solid rgba(255, 238, 0, 0.95);
   box-shadow:
-    0 0 0 1px rgba(104, 217, 255, 0.14),
-    0 0 42px rgba(104, 217, 255, 0.09);
+    0 0 0 1px rgba(255, 238, 0, 0.12),
+    0 0 42px rgba(255, 238, 0, 0.07);
   overflow: hidden;
 }
 
 .values-figure:focus-visible .values-frame {
   box-shadow:
-    0 0 0 1px rgba(104, 217, 255, 0.22),
-    0 0 56px rgba(104, 217, 255, 0.13);
+    0 0 0 1px rgba(255, 238, 0, 0.2),
+    0 0 56px rgba(255, 238, 0, 0.11);
 }
 
 .values-view {
@@ -561,9 +561,9 @@ svg {
   right: 26px;
   top: 50%;
   height: 7px;
-  background: rgba(104, 217, 255, 0.92);
+  background: rgba(255, 238, 0, 0.92);
   transform: translateY(-50%);
-  box-shadow: 0 0 16px rgba(104, 217, 255, 0.16);
+  box-shadow: 0 0 16px rgba(255, 238, 0, 0.16);
 }
 
 .values-arrow-head {
@@ -575,8 +575,8 @@ svg {
   transform: translateY(-50%);
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
-  border-left: 36px solid rgba(104, 217, 255, 0.92);
-  filter: drop-shadow(0 0 16px rgba(104, 217, 255, 0.18));
+  border-left: 36px solid rgba(255, 238, 0, 0.92);
+  filter: drop-shadow(0 0 16px rgba(255, 238, 0, 0.18));
 }
 
 .values-output {
