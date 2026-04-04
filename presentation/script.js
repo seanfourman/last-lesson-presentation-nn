@@ -125,7 +125,8 @@ function animateGridOverlay(state, target, instant = false) {
   const tick = (now) => {
     const elapsed = Math.min(1, (now - startedAt) / duration);
     const eased = 1 - Math.pow(1 - elapsed, 3);
-    state.revealFront = startReveal + (state.revealTarget - startReveal) * eased;
+    state.revealFront =
+      startReveal + (state.revealTarget - startReveal) * eased;
     state.hideFront = startHide + (state.hideTarget - startHide) * eased;
     renderGridOverlay(state);
 
@@ -188,7 +189,10 @@ function setupCompareSection(basePixels) {
     threshold: 10,
     scaleBoost: 1.01,
   });
-  const overlayRenderer = createOverlayDigitRenderer(overlayCanvas, overlayPixels);
+  const overlayRenderer = createOverlayDigitRenderer(
+    overlayCanvas,
+    overlayPixels,
+  );
 
   const renderAll = () => {
     compareCanvases.forEach((canvas, index) => {
@@ -225,7 +229,18 @@ function setupValueSection(pixels) {
   const copy = document.getElementById("valuesCopy");
   const selector = shell.querySelector(".values-selector");
 
-  if (!shell || !stage || !figure || !digitCanvas || !matrixCanvas || !arrow || !output || !copy || !selector || !pixels) {
+  if (
+    !shell ||
+    !stage ||
+    !figure ||
+    !digitCanvas ||
+    !matrixCanvas ||
+    !arrow ||
+    !output ||
+    !copy ||
+    !selector ||
+    !pixels
+  ) {
     return;
   }
 
@@ -234,8 +249,8 @@ function setupValueSection(pixels) {
   let selectorDirection = 1;
   let selectorTimerId = 0;
   const copyByState = [
-    "נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים,<br>ומחזירה מספר אחד בין 0 ל־9. פתאום זו כבר לא משימה טריוויאלית בכלל.",
-    "מבחינת המחשב, זה לא \"שלוש\" ולא כתב יד.<br>אלה רק 784 ערכים בין 0 ל־1, שכל אחד מהם מתאר כמה הפיקסל שלו בהיר.",
+    "נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים,<br>ומחזירה מספר אחד בין 0 ל-9.<br><strong>פתאום זו כבר לא משימה טריוויאלית בכלל.</strong>",
+    'מבחינת המחשב, זה לא "שלוש" ולא כתב יד.<br>אלה רק 784 ערכים בין 0 ל-1, שכל אחד מהם מתאר כמה הפיקסל שלו בהיר.',
     "מכאן הרשת צריכה לעשות את הצעד הקשה באמת:<br>לקחת ים של מספרים קטנים, ולהפוך אותם להחלטה אחת מתוך 0 עד 9.",
   ];
   const labelByState = [
@@ -300,10 +315,15 @@ function setupValueSection(pixels) {
     }
 
     const stageWidth = stage.clientWidth;
-    const figureWidth = figure.getBoundingClientRect().width || Math.min(stageWidth * 0.92, 840);
+    const figureWidth =
+      figure.getBoundingClientRect().width || Math.min(stageWidth * 0.92, 840);
     const outputWidth = output.getBoundingClientRect().width || 180;
-    const desiredLeft = stageWidth > 1180 ? 36 : Math.max(18, Math.round(stageWidth * 0.024));
-    const clampedLeft = Math.min(desiredLeft, Math.max(24, stageWidth - figureWidth - outputWidth - 180));
+    const desiredLeft =
+      stageWidth > 1180 ? 36 : Math.max(18, Math.round(stageWidth * 0.024));
+    const clampedLeft = Math.min(
+      desiredLeft,
+      Math.max(24, stageWidth - figureWidth - outputWidth - 180),
+    );
     const outputLeft = stageWidth - outputWidth - 8;
     const arrowLeft = clampedLeft + figureWidth + 26;
     const arrowWidth = Math.max(76, outputLeft - arrowLeft - 42);
@@ -408,7 +428,9 @@ function setupOverlayDrag(stage, overlay, callbacks = {}) {
     const visibleTop = Math.max(stageRect.top, viewportRect.top);
     const visibleBottom = Math.min(stageRect.bottom, viewportRect.bottom);
     const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-    const visibilityRatio = visibleHeight / Math.min(stageRect.height, viewportRect.height || stageRect.height);
+    const visibilityRatio =
+      visibleHeight /
+      Math.min(stageRect.height, viewportRect.height || stageRect.height);
 
     if (visibilityRatio >= 0.5) {
       resetOverlay();
@@ -474,7 +496,11 @@ function setupOverlayDrag(stage, overlay, callbacks = {}) {
   const visibilityObserver = new IntersectionObserver(
     (entries) => {
       const entry = entries[0];
-      if (!entry?.isIntersecting || entry.intersectionRatio < 0.55 || state.hasUserMoved) {
+      if (
+        !entry?.isIntersecting ||
+        entry.intersectionRatio < 0.55 ||
+        state.hasUserMoved
+      ) {
         return;
       }
 
@@ -646,12 +672,24 @@ function renderPixelDigit(canvas, pixels, options = {}) {
     const tangentX = -radialY;
     const tangentY = radialX;
     const shiftDistance = spread * cellSize * (0.72 + value * 0.9);
-    const phaseSeed = gridX * 0.62 + gridY * 0.48 + (distance / cellSize) * 0.14 + wavePhase;
+    const phaseSeed =
+      gridX * 0.62 + gridY * 0.48 + (distance / cellSize) * 0.14 + wavePhase;
     const waveCarrier = Math.sin(waveTime * waveFrequency - phaseSeed);
-    const waveLift = Math.max(0, waveCarrier) * waveAmplitude * cellSize * (0.34 + value * 1.18);
-    const swirlCarrier = Math.sin(waveTime * (waveFrequency * 1.65) + gridX * 0.93 - gridY * 0.71 + wavePhase);
-    const swirl = swirlCarrier * swirlStrength * cellSize * (0.22 + value * 0.52);
-    const shiftX = radialX * (shiftDistance + waveLift * 0.85) + tangentX * swirl;
+    const waveLift =
+      Math.max(0, waveCarrier) *
+      waveAmplitude *
+      cellSize *
+      (0.34 + value * 1.18);
+    const swirlCarrier = Math.sin(
+      waveTime * (waveFrequency * 1.65) +
+        gridX * 0.93 -
+        gridY * 0.71 +
+        wavePhase,
+    );
+    const swirl =
+      swirlCarrier * swirlStrength * cellSize * (0.22 + value * 0.52);
+    const shiftX =
+      radialX * (shiftDistance + waveLift * 0.85) + tangentX * swirl;
     const shiftY = radialY * (shiftDistance + waveLift) + tangentY * swirl;
 
     if (glowBlur > 0 && glowAlpha > 0) {
@@ -659,15 +697,30 @@ function renderPixelDigit(canvas, pixels, options = {}) {
       ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${glowAlpha * value})`;
       ctx.shadowBlur = glowBlur;
       ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(1, value * 0.4)})`;
-      ctx.fillRect(x + outerOffsetX + shiftX, y + outerOffsetY + shiftY, outerSize, outerSize);
+      ctx.fillRect(
+        x + outerOffsetX + shiftX,
+        y + outerOffsetY + shiftY,
+        outerSize,
+        outerSize,
+      );
       ctx.restore();
     }
 
     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${value * haloAlpha})`;
-    ctx.fillRect(x + outerOffsetX + shiftX, y + outerOffsetY + shiftY, outerSize, outerSize);
+    ctx.fillRect(
+      x + outerOffsetX + shiftX,
+      y + outerOffsetY + shiftY,
+      outerSize,
+      outerSize,
+    );
 
     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(1, value * pixelAlphaBoost)})`;
-    ctx.fillRect(x + innerOffsetX + shiftX, y + innerOffsetY + shiftY, innerSize, innerSize);
+    ctx.fillRect(
+      x + innerOffsetX + shiftX,
+      y + innerOffsetY + shiftY,
+      innerSize,
+      innerSize,
+    );
   }
 }
 
@@ -734,9 +787,15 @@ function drawValueMatrix(canvas, pixels) {
     const fill = Math.round(value * 255);
 
     ctx.fillStyle = `rgb(${fill}, ${fill}, ${fill})`;
-    ctx.fillRect(x + gap * 0.5, y + gap * 0.5, cellWidth - gap, cellHeight - gap);
+    ctx.fillRect(
+      x + gap * 0.5,
+      y + gap * 0.5,
+      cellWidth - gap,
+      cellHeight - gap,
+    );
 
-    ctx.fillStyle = value > 0.5 ? "rgba(18, 18, 18, 0.92)" : "rgba(255, 255, 255, 0.92)";
+    ctx.fillStyle =
+      value > 0.5 ? "rgba(18, 18, 18, 0.92)" : "rgba(255, 255, 255, 0.92)";
     ctx.fillText(displayValue, x + cellWidth * 0.5, y + cellHeight * 0.56);
   }
 }
@@ -755,7 +814,10 @@ function createOverlayDigitRenderer(canvas, pixels) {
   };
 
   const render = (now = performance.now()) => {
-    const breath = state.dragging && !reduceMotion.matches ? (Math.sin(now * 0.0062) + 1) * 0.5 : 0;
+    const breath =
+      state.dragging && !reduceMotion.matches
+        ? (Math.sin(now * 0.0062) + 1) * 0.5
+        : 0;
     const spread = state.spread + breath * 0.02;
     const glow = state.glow + breath * 0.24;
     const dragMix = state.dragging ? Math.min(1, 0.7 + breath * 0.3) : 0;
@@ -934,7 +996,9 @@ function normalizeDigitPixels(pixels, options = {}) {
   const sourceHeight = maxY - minY + 1;
   const targetWidth = 28 - paddingX * 2;
   const targetHeight = 28 - paddingY * 2;
-  const scale = Math.min(targetWidth / sourceWidth, targetHeight / sourceHeight) * scaleBoost;
+  const scale =
+    Math.min(targetWidth / sourceWidth, targetHeight / sourceHeight) *
+    scaleBoost;
   const drawWidth = sourceWidth * scale;
   const drawHeight = sourceHeight * scale;
   const drawX = (28 - drawWidth) * 0.5;
@@ -1013,7 +1077,14 @@ function tracePath(ctx, commands) {
     }
 
     if (type === "C") {
-      ctx.bezierCurveTo(values[0], values[1], values[2], values[3], values[4], values[5]);
+      ctx.bezierCurveTo(
+        values[0],
+        values[1],
+        values[2],
+        values[3],
+        values[4],
+        values[5],
+      );
     }
   }
 }
