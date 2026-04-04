@@ -1,21 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
   setupHeroInteraction();
 
-  if (!window.MNIST_MODEL) {
-    return;
-  }
+  const pixels = window.MNIST_MODEL?.digitExamples?.["3"];
+  setupCompareSection(pixels);
 
-  const canvas = document.getElementById("heroDigitCanvas");
-  if (!canvas) {
-    return;
-  }
-
-  const pixels = window.MNIST_MODEL.digitExamples["3"];
   if (!pixels) {
     return;
   }
 
-  drawDigit(canvas, pixels);
+  const canvas = document.getElementById("heroDigitCanvas");
+  if (canvas) {
+    drawDigit(canvas, pixels);
+  }
+
+  scrollToHashTarget();
 });
 
 function setupHeroInteraction() {
@@ -166,6 +164,136 @@ function resizeGridOverlay(state) {
   overlayCanvas.height = height;
 }
 
+function setupCompareSection(basePixels) {
+  const stage = document.getElementById("compareStage");
+  const overlay = document.getElementById("overlayDigit");
+  const overlayCanvas = document.getElementById("overlayDigitCanvas");
+  const compareCanvases = [
+    document.getElementById("compareDigit1"),
+    document.getElementById("compareDigit2"),
+    document.getElementById("compareDigit3"),
+  ].filter(Boolean);
+
+  if (!stage || !overlay || !overlayCanvas || compareCanvases.length !== 3) {
+    return;
+  }
+
+  const generatedDigits = generateCompareDigits().map((pixels) =>
+    normalizeDigitPixels(pixels, { padding: 2, threshold: 10 }),
+  );
+  const overlayPixels = normalizeDigitPixels(basePixels ?? generatedDigits[1], {
+    paddingX: 2,
+    paddingY: 3,
+    threshold: 10,
+    scaleBoost: 1.01,
+  });
+  const overlayRenderer = createOverlayDigitRenderer(overlayCanvas, overlayPixels);
+
+  const renderAll = () => {
+    compareCanvases.forEach((canvas, index) => {
+      renderScaledDigit(canvas, generatedDigits[index], {
+        color: [245, 245, 245],
+        glowAlpha: 0.08,
+        glowBlur: 12,
+      });
+    });
+
+    overlayRenderer.render();
+  };
+
+  renderAll();
+  setupOverlayDrag(stage, overlay, {
+    onDragChange: (isDragging) => {
+      overlayRenderer.setDragging(isDragging);
+    },
+    onResize: () => {
+      overlayRenderer.render();
+    },
+  });
+  window.addEventListener("resize", renderAll);
+}
+
+function setupOverlayDrag(stage, overlay, callbacks = {}) {
+  const state = {
+    x: 0,
+    y: 0,
+    offsetX: 0,
+    offsetY: 0,
+    dragging: false,
+    initialized: false,
+  };
+
+  const placeOverlay = (x, y) => {
+    const maxX = Math.max(0, stage.clientWidth - overlay.offsetWidth);
+    const maxY = Math.max(0, stage.clientHeight - overlay.offsetHeight);
+    state.x = clamp(x, 0, maxX);
+    state.y = clamp(y, 0, maxY);
+    overlay.style.left = `${state.x}px`;
+    overlay.style.top = `${state.y}px`;
+  };
+
+  const resetOverlay = () => {
+    const startX = stage.clientWidth * 0.62 - overlay.offsetWidth / 2;
+    const startY = stage.clientHeight * 0.18;
+    placeOverlay(startX, startY);
+    state.initialized = true;
+  };
+
+  const syncOnResize = () => {
+    if (!state.initialized) {
+      resetOverlay();
+      return;
+    }
+
+    placeOverlay(state.x, state.y);
+  };
+
+  const stopDragging = (pointerId) => {
+    state.dragging = false;
+    overlay.classList.remove("is-dragging");
+    callbacks.onDragChange?.(false);
+
+    if (pointerId !== undefined && overlay.hasPointerCapture(pointerId)) {
+      overlay.releasePointerCapture(pointerId);
+    }
+  };
+
+  overlay.addEventListener("pointerdown", (event) => {
+    const rect = overlay.getBoundingClientRect();
+    state.dragging = true;
+    state.offsetX = event.clientX - rect.left;
+    state.offsetY = event.clientY - rect.top;
+    overlay.classList.add("is-dragging");
+    callbacks.onDragChange?.(true);
+    overlay.setPointerCapture(event.pointerId);
+  });
+
+  overlay.addEventListener("pointermove", (event) => {
+    if (!state.dragging) {
+      return;
+    }
+
+    const stageRect = stage.getBoundingClientRect();
+    const nextX = event.clientX - stageRect.left - state.offsetX;
+    const nextY = event.clientY - stageRect.top - state.offsetY;
+    placeOverlay(nextX, nextY);
+  });
+
+  overlay.addEventListener("pointerup", (event) => {
+    stopDragging(event.pointerId);
+  });
+
+  overlay.addEventListener("pointercancel", (event) => {
+    stopDragging(event.pointerId);
+  });
+
+  window.addEventListener("resize", () => {
+    syncOnResize();
+    callbacks.onResize?.();
+  });
+  requestAnimationFrame(resetOverlay);
+}
+
 function renderGridOverlay(state) {
   const { overlayCanvas, frame, revealFront, hideFront } = state;
   const ctx = overlayCanvas.getContext("2d");
@@ -240,6 +368,20 @@ function clamp01(value) {
   return Math.min(1, Math.max(0, value));
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function scrollToHashTarget() {
+  const hash = window.location.hash;
+  if (!hash) {
+    return;
+  }
+
+  const target = document.querySelector(hash);
+  target?.scrollIntoView({ block: "start" });
+}
+
 function drawDigit(canvas, pixels) {
   const ctx = canvas.getContext("2d");
   const image = ctx.createImageData(28, 28);
@@ -253,4 +395,407 @@ function drawDigit(canvas, pixels) {
   }
 
   ctx.putImageData(image, 0, 0);
+}
+
+function renderPixelDigit(canvas, pixels, options = {}) {
+  resizeCanvasToDisplaySize(canvas);
+
+  const ctx = canvas.getContext("2d");
+  const { width, height } = canvas;
+  const color = options.color ?? [255, 255, 255];
+  const haloAlpha = options.haloAlpha ?? 0.18;
+  const pixelAlphaBoost = options.pixelAlphaBoost ?? 1;
+  const spread = options.spread ?? 0;
+  const glowBlur = options.glowBlur ?? 0;
+  const glowAlpha = options.glowAlpha ?? 0;
+  const waveTime = options.waveTime ?? 0;
+  const waveAmplitude = options.waveAmplitude ?? 0;
+  const waveFrequency = options.waveFrequency ?? 0.012;
+  const wavePhase = options.wavePhase ?? 0;
+  const swirlStrength = options.swirlStrength ?? 0;
+  const cellWidth = width / 28;
+  const cellHeight = height / 28;
+  const cellSize = Math.min(cellWidth, cellHeight);
+  const outerScale = options.outerScale ?? 0.86;
+  const innerScale = options.innerScale ?? 0.6;
+  const outerSize = cellSize * outerScale;
+  const innerSize = cellSize * innerScale;
+  const outerOffsetX = (cellWidth - outerSize) * 0.5;
+  const outerOffsetY = (cellHeight - outerSize) * 0.5;
+  const innerOffsetX = (cellWidth - innerSize) * 0.5;
+  const innerOffsetY = (cellHeight - innerSize) * 0.5;
+
+  ctx.clearRect(0, 0, width, height);
+
+  for (let index = 0; index < pixels.length; index += 1) {
+    const value = pixels[index] / 255;
+    if (value <= 0.03) {
+      continue;
+    }
+
+    const gridX = index % 28;
+    const gridY = Math.floor(index / 28);
+    const x = gridX * cellWidth;
+    const y = gridY * cellHeight;
+    const [r, g, b] = color;
+    const centerX = x + cellWidth * 0.5;
+    const centerY = y + cellHeight * 0.5;
+    const dirX = centerX - width * 0.5;
+    const dirY = centerY - height * 0.5;
+    const distance = Math.hypot(dirX, dirY) || 1;
+    const radialX = dirX / distance;
+    const radialY = dirY / distance;
+    const tangentX = -radialY;
+    const tangentY = radialX;
+    const shiftDistance = spread * cellSize * (0.72 + value * 0.9);
+    const phaseSeed = gridX * 0.62 + gridY * 0.48 + (distance / cellSize) * 0.14 + wavePhase;
+    const waveCarrier = Math.sin(waveTime * waveFrequency - phaseSeed);
+    const waveLift = Math.max(0, waveCarrier) * waveAmplitude * cellSize * (0.34 + value * 1.18);
+    const swirlCarrier = Math.sin(waveTime * (waveFrequency * 1.65) + gridX * 0.93 - gridY * 0.71 + wavePhase);
+    const swirl = swirlCarrier * swirlStrength * cellSize * (0.22 + value * 0.52);
+    const shiftX = radialX * (shiftDistance + waveLift * 0.85) + tangentX * swirl;
+    const shiftY = radialY * (shiftDistance + waveLift) + tangentY * swirl;
+
+    if (glowBlur > 0 && glowAlpha > 0) {
+      ctx.save();
+      ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${glowAlpha * value})`;
+      ctx.shadowBlur = glowBlur;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(1, value * 0.4)})`;
+      ctx.fillRect(x + outerOffsetX + shiftX, y + outerOffsetY + shiftY, outerSize, outerSize);
+      ctx.restore();
+    }
+
+    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${value * haloAlpha})`;
+    ctx.fillRect(x + outerOffsetX + shiftX, y + outerOffsetY + shiftY, outerSize, outerSize);
+
+    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(1, value * pixelAlphaBoost)})`;
+    ctx.fillRect(x + innerOffsetX + shiftX, y + innerOffsetY + shiftY, innerSize, innerSize);
+  }
+}
+
+function renderScaledDigit(canvas, pixels, options = {}) {
+  resizeCanvasToDisplaySize(canvas);
+
+  const ctx = canvas.getContext("2d");
+  const { width, height } = canvas;
+  const color = options.color ?? [255, 255, 255];
+  const alphaBoost = options.alphaBoost ?? 1;
+  const glowBlur = options.glowBlur ?? 0;
+  const glowAlpha = options.glowAlpha ?? 0;
+  const sourceCanvas = document.createElement("canvas");
+  sourceCanvas.width = 28;
+  sourceCanvas.height = 28;
+  const sourceCtx = sourceCanvas.getContext("2d");
+  const image = sourceCtx.createImageData(28, 28);
+
+  for (let i = 0; i < pixels.length; i += 1) {
+    const alpha = Math.min(255, pixels[i] * alphaBoost);
+    image.data[i * 4] = color[0];
+    image.data[i * 4 + 1] = color[1];
+    image.data[i * 4 + 2] = color[2];
+    image.data[i * 4 + 3] = alpha;
+  }
+
+  sourceCtx.putImageData(image, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  if (glowBlur > 0 && glowAlpha > 0) {
+    ctx.save();
+    ctx.filter = `blur(${glowBlur}px)`;
+    ctx.globalAlpha = glowAlpha;
+    ctx.drawImage(sourceCanvas, 0, 0, width, height);
+    ctx.restore();
+  }
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(sourceCanvas, 0, 0, width, height);
+}
+
+function createOverlayDigitRenderer(canvas, pixels) {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const state = {
+    canvas,
+    pixels,
+    dragging: false,
+    spread: 0,
+    glow: 0.16,
+    targetSpread: 0,
+    targetGlow: 0.16,
+    rafId: 0,
+  };
+
+  const render = (now = performance.now()) => {
+    const breath = state.dragging && !reduceMotion.matches ? (Math.sin(now * 0.0062) + 1) * 0.5 : 0;
+    const spread = state.spread + breath * 0.06;
+    const glow = state.glow + breath * 0.34;
+    const dragMix = state.dragging ? Math.min(1, 0.7 + breath * 0.3) : 0;
+    const color = mixColor([191, 181, 43], [255, 230, 84], dragMix);
+
+    if (spread <= 0.012) {
+      renderScaledDigit(state.canvas, state.pixels, {
+        color,
+        alphaBoost: 0.93,
+        glowBlur: 16 + glow * 10,
+        glowAlpha: 0.16 + glow * 0.14,
+      });
+      return;
+    }
+
+    renderPixelDigit(state.canvas, state.pixels, {
+      color,
+      haloAlpha: 0.26 + glow * 0.18,
+      pixelAlphaBoost: 0.92 + breath * 0.08,
+      spread,
+      outerScale: 0.79 + breath * 0.03,
+      innerScale: 0.57 + breath * 0.03,
+      glowBlur: 18 + glow * 24,
+      glowAlpha: 0.18 + glow * 0.22,
+      waveTime: now,
+      waveAmplitude: 0.82 + breath * 0.2,
+      waveFrequency: 0.015,
+      wavePhase: 1.2,
+      swirlStrength: 0.34 + breath * 0.12,
+    });
+  };
+
+  const animate = (now) => {
+    state.rafId = 0;
+    const spreadDelta = state.targetSpread - state.spread;
+    const glowDelta = state.targetGlow - state.glow;
+    const settled = Math.abs(spreadDelta) < 0.003 && Math.abs(glowDelta) < 0.01;
+
+    if (settled) {
+      state.spread = state.targetSpread;
+      state.glow = state.targetGlow;
+    } else {
+      state.spread += spreadDelta * 0.18;
+      state.glow += glowDelta * 0.18;
+    }
+
+    render(now);
+
+    if (state.dragging || !settled) {
+      state.rafId = requestAnimationFrame(animate);
+    }
+  };
+
+  return {
+    render,
+    setDragging(isDragging) {
+      state.dragging = isDragging;
+      state.targetSpread = isDragging ? 0.34 : 0;
+      state.targetGlow = isDragging ? 1 : 0.16;
+
+      if (reduceMotion.matches) {
+        state.spread = state.targetSpread;
+        state.glow = state.targetGlow;
+        render();
+        return;
+      }
+
+      if (!state.rafId) {
+        state.rafId = requestAnimationFrame(animate);
+      }
+    },
+  };
+}
+
+function resizeCanvasToDisplaySize(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.round(rect.width * ratio));
+  const height = Math.max(1, Math.round(rect.height * ratio));
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+}
+
+function generateCompareDigits() {
+  const variants = [
+    {
+      strokeWidth: 40,
+      path: [
+        ["M", 112, 40],
+        ["C", 168, 24, 199, 47, 183, 90],
+        ["C", 170, 124, 128, 130, 116, 136],
+        ["C", 129, 143, 168, 161, 176, 204],
+        ["C", 183, 246, 144, 267, 90, 245],
+      ],
+    },
+    {
+      strokeWidth: 40,
+      path: [
+        ["M", 72, 62],
+        ["C", 151, 33, 204, 47, 189, 92],
+        ["C", 176, 122, 134, 136, 124, 141],
+        ["C", 144, 149, 189, 169, 190, 214],
+        ["C", 192, 252, 140, 267, 84, 238],
+      ],
+    },
+    {
+      strokeWidth: 46,
+      path: [
+        ["M", 88, 56],
+        ["C", 146, 34, 210, 54, 186, 105],
+        ["C", 171, 135, 126, 144, 112, 147],
+        ["C", 129, 153, 178, 174, 181, 216],
+        ["C", 183, 255, 132, 271, 74, 239],
+      ],
+    },
+  ];
+
+  return variants.map((variant) => rasterizeThreeVariant(variant));
+}
+
+function normalizeDigitPixels(pixels, options = {}) {
+  const threshold = options.threshold ?? 8;
+  const padding = options.padding ?? 2;
+  const paddingX = options.paddingX ?? padding;
+  const paddingY = options.paddingY ?? padding;
+  const scaleBoost = options.scaleBoost ?? 1;
+  let minX = 28;
+  let minY = 28;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let index = 0; index < pixels.length; index += 1) {
+    if (pixels[index] <= threshold) {
+      continue;
+    }
+
+    const x = index % 28;
+    const y = Math.floor(index / 28);
+    minX = Math.min(minX, x);
+    minY = Math.min(minY, y);
+    maxX = Math.max(maxX, x);
+    maxY = Math.max(maxY, y);
+  }
+
+  if (maxX < 0 || maxY < 0) {
+    return [...pixels];
+  }
+
+  const sourceCanvas = document.createElement("canvas");
+  sourceCanvas.width = 28;
+  sourceCanvas.height = 28;
+  const sourceCtx = sourceCanvas.getContext("2d");
+  const sourceImage = sourceCtx.createImageData(28, 28);
+
+  for (let i = 0; i < pixels.length; i += 1) {
+    const value = pixels[i];
+    sourceImage.data[i * 4] = value;
+    sourceImage.data[i * 4 + 1] = value;
+    sourceImage.data[i * 4 + 2] = value;
+    sourceImage.data[i * 4 + 3] = 255;
+  }
+
+  sourceCtx.putImageData(sourceImage, 0, 0);
+
+  const outputCanvas = document.createElement("canvas");
+  outputCanvas.width = 28;
+  outputCanvas.height = 28;
+  const outputCtx = outputCanvas.getContext("2d");
+  outputCtx.clearRect(0, 0, 28, 28);
+  outputCtx.imageSmoothingEnabled = true;
+
+  const sourceWidth = maxX - minX + 1;
+  const sourceHeight = maxY - minY + 1;
+  const targetWidth = 28 - paddingX * 2;
+  const targetHeight = 28 - paddingY * 2;
+  const scale = Math.min(targetWidth / sourceWidth, targetHeight / sourceHeight) * scaleBoost;
+  const drawWidth = sourceWidth * scale;
+  const drawHeight = sourceHeight * scale;
+  const drawX = (28 - drawWidth) * 0.5;
+  const drawY = (28 - drawHeight) * 0.5;
+
+  outputCtx.drawImage(
+    sourceCanvas,
+    minX,
+    minY,
+    sourceWidth,
+    sourceHeight,
+    drawX,
+    drawY,
+    drawWidth,
+    drawHeight,
+  );
+
+  const { data } = outputCtx.getImageData(0, 0, 28, 28);
+  const normalizedPixels = new Array(28 * 28);
+
+  for (let i = 0; i < normalizedPixels.length; i += 1) {
+    normalizedPixels[i] = data[i * 4];
+  }
+
+  return normalizedPixels;
+}
+
+function rasterizeThreeVariant(variant) {
+  const sourceSize = 280;
+  const sourceCanvas = document.createElement("canvas");
+  sourceCanvas.width = sourceSize;
+  sourceCanvas.height = sourceSize;
+  const sourceCtx = sourceCanvas.getContext("2d");
+
+  sourceCtx.fillStyle = "#000";
+  sourceCtx.fillRect(0, 0, sourceSize, sourceSize);
+  sourceCtx.lineCap = "round";
+  sourceCtx.lineJoin = "round";
+
+  tracePath(sourceCtx, variant.path);
+  sourceCtx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+  sourceCtx.lineWidth = variant.strokeWidth + 18;
+  sourceCtx.stroke();
+
+  tracePath(sourceCtx, variant.path);
+  sourceCtx.strokeStyle = "rgba(255, 255, 255, 0.92)";
+  sourceCtx.lineWidth = variant.strokeWidth;
+  sourceCtx.stroke();
+
+  const sampleCanvas = document.createElement("canvas");
+  sampleCanvas.width = 28;
+  sampleCanvas.height = 28;
+  const sampleCtx = sampleCanvas.getContext("2d");
+  sampleCtx.imageSmoothingEnabled = true;
+  sampleCtx.drawImage(sourceCanvas, 0, 0, 28, 28);
+
+  const { data } = sampleCtx.getImageData(0, 0, 28, 28);
+  const pixels = new Array(28 * 28);
+
+  for (let i = 0; i < pixels.length; i += 1) {
+    pixels[i] = data[i * 4];
+  }
+
+  return pixels;
+}
+
+function tracePath(ctx, commands) {
+  ctx.beginPath();
+
+  for (const command of commands) {
+    const [type, ...values] = command;
+
+    if (type === "M") {
+      ctx.moveTo(values[0], values[1]);
+      continue;
+    }
+
+    if (type === "C") {
+      ctx.bezierCurveTo(values[0], values[1], values[2], values[3], values[4], values[5]);
+    }
+  }
+}
+
+function mixColor(from, to, amount) {
+  return [
+    Math.round(lerp(from[0], to[0], amount)),
+    Math.round(lerp(from[1], to[1], amount)),
+    Math.round(lerp(from[2], to[2], amount)),
+  ];
+}
+
+function lerp(start, end, amount) {
+  return start + (end - start) * amount;
 }
