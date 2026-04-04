@@ -33,6 +33,7 @@ svg {
 
 .page {
   height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
@@ -410,11 +411,16 @@ svg {
 .values-section {
   position: relative;
   width: min(1320px, calc(100vw - 36px));
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: 30px 0 48px;
+  padding: 16px 0 20px;
   display: grid;
   justify-items: center;
-  align-content: center;
+  align-content: stretch;
+  overflow: hidden;
 }
 
 .values-section::before {
@@ -434,21 +440,24 @@ svg {
 
 .values-shell {
   width: min(1320px, 100%);
+  height: 100%;
   display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   justify-items: center;
-  gap: 1.85rem;
+  gap: clamp(0.45rem, 1vh, 0.9rem);
 }
 
 .values-stage {
   position: relative;
   width: min(1320px, 100%);
-  min-height: clamp(860px, 92vh, 1080px);
+  min-height: 0;
+  height: 100%;
   display: grid;
   place-items: center;
 }
 
 .values-figure {
-  width: min(92vw, 840px);
+  width: min(88vw, 760px, calc(100dvh - 250px));
   padding: 0;
   border: none;
   background: transparent;
@@ -571,8 +580,8 @@ svg {
 }
 
 .values-output {
-  --slot-height: clamp(60px, 6.8vh, 86px);
-  --slot-gap: clamp(8px, 1vh, 12px);
+  --slot-height: clamp(44px, 5.8vh, 72px);
+  --slot-gap: clamp(4px, 0.6vh, 8px);
   --slot-step: calc(var(--slot-height) + var(--slot-gap));
   position: absolute;
   top: 50%;
@@ -606,7 +615,7 @@ svg {
   height: var(--slot-height);
   color: rgba(255, 255, 255, 0.98);
   font-family: "Frank Ruhl Libre", serif;
-  font-size: clamp(3rem, 4.8vw, 5rem);
+  font-size: clamp(2.5rem, 4.2vw, 4.4rem);
   line-height: 1;
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
 }
@@ -633,7 +642,7 @@ svg {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(52px, 4.9vw, 68px);
+  width: clamp(46px, 4.4vw, 62px);
   height: calc(var(--slot-height) - 12px);
   transform: translate(-50%, -50%);
   border: 4px solid rgba(255, 238, 0, 0.98);
@@ -642,11 +651,11 @@ svg {
 
 .values-selector-question {
   position: absolute;
-  left: calc(50% + 56px);
+  left: calc(50% + 48px);
   top: 50%;
   color: rgba(255, 255, 255, 0.98);
   font-family: "Frank Ruhl Libre", serif;
-  font-size: clamp(2.9rem, 4.4vw, 4.7rem);
+  font-size: clamp(2.4rem, 3.9vw, 4rem);
   line-height: 1;
   transform: translateY(-50%);
   animation: values-question-pulse 1100ms ease-in-out infinite;
@@ -654,10 +663,11 @@ svg {
 
 .values-copy {
   margin: 0;
-  margin-top: clamp(18px, 3vh, 38px);
+  margin-top: clamp(4px, 0.8vh, 10px);
+  padding-bottom: clamp(2px, 0.8vh, 8px);
   color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1.7;
+  font-size: 1.04rem;
+  line-height: 1.58;
   text-align: center;
   max-width: 46rem;
 }
@@ -783,33 +793,38 @@ svg {
 
   .values-section {
     width: min(100vw - 20px, 1320px);
-    padding: 28px 0 36px;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 14px 0 16px;
   }
 
   .values-shell {
     --values-frame-size: min(94vw, 700px);
     width: 100%;
-    gap: 0.9rem;
+    gap: 0.5rem;
   }
 
   .values-stage {
-    min-height: 1160px;
+    min-height: 0;
+    height: 100%;
   }
 
   .values-figure {
-    width: min(94vw, 700px);
+    width: min(82vw, 420px, calc(100dvh - 360px));
   }
 
   .values-shell.is-inference .values-figure {
     left: 50%;
-    transform: translate(-50%, -170px) scale(0.92);
+    transform: translate(-50%, -112px) scale(0.84);
   }
 
   .values-arrow {
     top: auto;
-    bottom: 220px;
+    bottom: 128px;
     left: 50%;
-    width: 110px;
+    width: 92px;
     transform: translateX(-50%) rotate(90deg) scaleX(0.72);
     transform-origin: center;
   }
@@ -819,19 +834,42 @@ svg {
   }
 
   .values-output {
+    --slot-height: clamp(34px, 4.5vh, 46px);
+    --slot-gap: clamp(2px, 0.45vh, 5px);
     top: auto;
-    bottom: 0;
+    bottom: 2px;
     right: 50%;
     transform: translateX(50%) translateY(24px);
+    width: clamp(112px, 22vw, 132px);
   }
 
   .values-shell.is-inference .values-output {
     transform: translateX(50%) translateY(0);
   }
 
+  .values-output-digit {
+    font-size: clamp(2rem, 9vw, 3.35rem);
+  }
+
+  .values-selector {
+    width: clamp(104px, 20vw, 124px);
+  }
+
+  .values-selector-box {
+    width: clamp(40px, 7.6vw, 50px);
+    border-width: 3px;
+  }
+
+  .values-selector-question {
+    left: calc(50% + 38px);
+    font-size: clamp(1.9rem, 7.4vw, 3rem);
+  }
+
   .values-copy {
-    font-size: 1.03rem;
-    margin-top: 26px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-top: 6px;
+    padding-bottom: 0;
   }
 }
 
