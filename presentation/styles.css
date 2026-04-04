@@ -731,7 +731,7 @@ svg {
 }
 
 .network-title {
-  margin: 0.45rem 0 0;
+  margin: 0;
   color: var(--text);
   font-family: "Rubik", "Heebo", sans-serif;
   font-size: clamp(1.42rem, 2.35vw, 2.2rem);

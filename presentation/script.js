@@ -390,7 +390,6 @@ function setupNetworkDemoSection(model) {
     !drawFrame ||
     !clearButton ||
     !sampleButton ||
-    !result ||
     !model?.layers?.length
   ) {
     return;
@@ -405,8 +404,10 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "קלט חדש";
       }
-      result.textContent =
-        "הציור החדש ייכנס עכשיו לרשת בתור קלט חדש, במקום הדוגמה הקודמת.";
+      if (result) {
+        result.textContent =
+          "הציור החדש ייכנס עכשיו לרשת בתור קלט חדש, במקום הדוגמה הקודמת.";
+      }
     },
     onChange() {
       state.userHasDrawn = true;
@@ -438,7 +439,9 @@ function setupNetworkDemoSection(model) {
     if (phaseLabel) {
       phaseLabel.textContent = drawPad.isBlank() ? "מחכה לקלט" : "דוגמת MNIST";
     }
-    result.textContent = message;
+    if (result) {
+      result.textContent = message;
+    }
   };
 
   const loadSampleDigit = (digit, autorun = false) => {
@@ -453,10 +456,12 @@ function setupNetworkDemoSection(model) {
     if (phaseLabel) {
       phaseLabel.textContent = "דוגמת MNIST";
     }
-    result.innerHTML =
-      `זו דוגמה של <strong>${digit}</strong> מתוך MNIST.` +
-      ` כך נראה קלט מהמאגר שעליו הרשת אומנה,` +
-      ` יחד עם התשובה הנכונה שממנה היא לומדת.`;
+    if (result) {
+      result.innerHTML =
+        `זו דוגמה של <strong>${digit}</strong> מתוך MNIST.` +
+        ` כך נראה קלט מהמאגר שעליו הרשת אומנה,` +
+        ` יחד עם התשובה הנכונה שממנה היא לומדת.`;
+    }
 
     if (autorun) {
       window.requestAnimationFrame(() => {
@@ -477,8 +482,10 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "Pre-processing";
       }
-      result.textContent =
-        "הציור מיוצג עכשיו כגריד של 28×28, כלומר 784 ערכים שייכנסו לרשת.";
+      if (result) {
+        result.textContent =
+          "הציור מיוצג עכשיו כגריד של 28×28, כלומר 784 ערכים שייכנסו לרשת.";
+      }
       return;
     }
 
@@ -486,8 +493,10 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "שכבת input";
       }
-      result.textContent =
-        "כל פיקסל נטען לנוירון קלט מתאים, והשכבה הראשונה מקבלת את התמונה כמספרים.";
+      if (result) {
+        result.textContent =
+          "כל פיקסל נטען לנוירון קלט מתאים, והשכבה הראשונה מקבלת את התמונה כמספרים.";
+      }
       return;
     }
 
@@ -495,8 +504,10 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "Hidden layer 1";
       }
-      result.textContent =
-        "השכבה החבויה הראשונה מתחילה לבנות ייצוגים פשוטים מתוך הפיקסלים.";
+      if (result) {
+        result.textContent =
+          "השכבה החבויה הראשונה מתחילה לבנות ייצוגים פשוטים מתוך הפיקסלים.";
+      }
       return;
     }
 
@@ -504,8 +515,10 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "Hidden layer 2";
       }
-      result.textContent =
-        "השכבה הבאה מרכיבה מהייצוגים האלה דפוסים עשירים יותר לקראת ההחלטה.";
+      if (result) {
+        result.textContent =
+          "השכבה הבאה מרכיבה מהייצוגים האלה דפוסים עשירים יותר לקראת ההחלטה.";
+      }
       return;
     }
 
@@ -513,8 +526,10 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "Output · 0–9";
       }
-      result.textContent =
-        "בשכבת הפלט הרשת מחלקת ציונים לכל אחת מהספרות 0-9.";
+      if (result) {
+        result.textContent =
+          "בשכבת הפלט הרשת מחלקת ציונים לכל אחת מהספרות 0-9.";
+      }
       return;
     }
 
@@ -557,10 +572,12 @@ function setupNetworkDemoSection(model) {
         if (phaseLabel) {
           phaseLabel.textContent = "ההחלטה של הרשת";
         }
-        result.innerHTML =
-          sourceKind === "sample"
-            ? `על הדוגמה הזו הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
-            : `על הציור הזה הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
+        if (result) {
+          result.innerHTML =
+            sourceKind === "sample"
+              ? `על הדוגמה הזו הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
+              : `על הציור הזה הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
+        }
       },
     });
   };
