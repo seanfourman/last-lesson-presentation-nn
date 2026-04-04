@@ -405,7 +405,8 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "קלט חדש";
       }
-      result.textContent = "הציור החדש מחליף כרגע את התוצאה הקודמת.";
+      result.textContent =
+        "הציור החדש ייכנס עכשיו לרשת בתור קלט חדש, במקום הדוגמה הקודמת.";
     },
     onChange() {
       state.userHasDrawn = true;
@@ -452,7 +453,10 @@ function setupNetworkDemoSection(model) {
     if (phaseLabel) {
       phaseLabel.textContent = "דוגמת MNIST";
     }
-    result.innerHTML = `כרגע מוצגת דוגמה של <strong>${digit}</strong> מתוך MNIST.`;
+    result.innerHTML =
+      `זו דוגמה של <strong>${digit}</strong> מתוך MNIST.` +
+      ` כך נראה קלט מהמאגר שעליו הרשת אומנה,` +
+      ` יחד עם התשובה הנכונה שממנה היא לומדת.`;
 
     if (autorun) {
       window.requestAnimationFrame(() => {
@@ -474,7 +478,7 @@ function setupNetworkDemoSection(model) {
         phaseLabel.textContent = "Pre-processing";
       }
       result.textContent =
-        "הציור כבר יושב על גריד של 28×28, וכל תא בו הופך עכשיו לערך קלט לרשת.";
+        "הציור מיוצג עכשיו כגריד של 28×28, כלומר 784 ערכים שייכנסו לרשת.";
       return;
     }
 
@@ -482,7 +486,8 @@ function setupNetworkDemoSection(model) {
       if (phaseLabel) {
         phaseLabel.textContent = "שכבת input";
       }
-      result.textContent = "784 ערכי הבהירות נטענים לשכבת הקלט של הרשת.";
+      result.textContent =
+        "כל פיקסל נטען לנוירון קלט מתאים, והשכבה הראשונה מקבלת את התמונה כמספרים.";
       return;
     }
 
@@ -491,7 +496,7 @@ function setupNetworkDemoSection(model) {
         phaseLabel.textContent = "Hidden layer 1";
       }
       result.textContent =
-        "הקשתות הראשונות מדליקות נוירונים שמתחילים לקלוט קווים ותבניות גסות.";
+        "השכבה החבויה הראשונה מתחילה לבנות ייצוגים פשוטים מתוך הפיקסלים.";
       return;
     }
 
@@ -500,7 +505,7 @@ function setupNetworkDemoSection(model) {
         phaseLabel.textContent = "Hidden layer 2";
       }
       result.textContent =
-        "הייצוג מתחדד בשכבה הבאה, כשהרשת מרכיבה דפוסים גדולים יותר.";
+        "השכבה הבאה מרכיבה מהייצוגים האלה דפוסים עשירים יותר לקראת ההחלטה.";
       return;
     }
 
@@ -509,7 +514,7 @@ function setupNetworkDemoSection(model) {
         phaseLabel.textContent = "Output · 0–9";
       }
       result.textContent =
-        "עכשיו 10 נוירוני ה-output משווים בין כל הספרות האפשריות.";
+        "בשכבת הפלט הרשת מחלקת ציונים לכל אחת מהספרות 0-9.";
       return;
     }
 
@@ -526,7 +531,9 @@ function setupNetworkDemoSection(model) {
       state.currentSnapshot = null;
       state.runId += 1;
       scene.renderIdle();
-      setIdleMessage("המודל מחכה כרגע לקלט.");
+      setIdleMessage(
+        "ציירו ספרה, והרשת תפעיל על הקלט החדש את מה שלמדה מתוך דוגמאות האימון של MNIST.",
+      );
       return;
     }
 
@@ -552,8 +559,8 @@ function setupNetworkDemoSection(model) {
         }
         result.innerHTML =
           sourceKind === "sample"
-            ? `על הדוגמה הזו הרשת הכי בטוחה שזה <strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
-            : `הרשת הכי בטוחה שזה <strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
+            ? `על הדוגמה הזו הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
+            : `על הציור הזה הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
       },
     });
   };
@@ -565,7 +572,9 @@ function setupNetworkDemoSection(model) {
     state.userHasDrawn = true;
     drawPad.clear();
     scene.renderIdle();
-    setIdleMessage("המודל מחכה כרגע לקלט.");
+    setIdleMessage(
+      "ציירו ספרה, והרשת תפעיל על הקלט החדש את מה שלמדה מתוך דוגמאות האימון של MNIST.",
+    );
   });
 
   sampleButton.addEventListener("click", () => {
@@ -592,7 +601,9 @@ function setupNetworkDemoSection(model) {
   if (sampleDigits.length) {
     loadSampleDigit(sampleDigits[state.sampleIndex], false);
   } else {
-    setIdleMessage("המודל מחכה כרגע לקלט.");
+    setIdleMessage(
+      "ציירו ספרה, והרשת תפעיל על הקלט החדש את מה שלמדה מתוך דוגמאות האימון של MNIST.",
+    );
   }
 
   const visibilityObserver = new IntersectionObserver(
