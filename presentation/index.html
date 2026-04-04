@@ -299,41 +299,64 @@
 
           <div class="mnist-history-layout">
             <div class="mnist-timeline" aria-label="היסטוריה וחשיבות של MNIST">
-              <article class="mnist-step">
+              <article class="mnist-step mnist-step-raw">
                 <p class="mnist-step-label">לפני MNIST</p>
+                <div class="mnist-step-visual mnist-step-visual-raw" aria-hidden="true">
+                  <span class="mnist-mini-card mnist-mini-card-a">2</span>
+                  <span class="mnist-mini-card mnist-mini-card-b">3</span>
+                  <span class="mnist-mini-card mnist-mini-card-c">7</span>
+                </div>
                 <h3 class="mnist-step-title">
                   הדאטה המקורי לא היה מדד ייחוס נוח באמת
                 </h3>
                 <p class="mnist-step-copy">
-                  הדוגמאות הגיעו ממאגרי NIST, אבל הן לא ישבו בפורמט אחד נוח
-                  ללמידת מכונה, וגם הגיעו מקבוצות כותבים שונות. קשה להשוות ככה
+                  הדוגמאות הגיעו ממאגרי NIST, אבל לא בפורמט אחד אחיד.
+                  <br />
+                  גם צורת הקלט וגם קבוצות הכותבים השתנו, ולכן קשה היה להשוות
                   מודלים בצורה נקייה.
                 </p>
               </article>
 
-              <article class="mnist-step">
+              <article class="mnist-step mnist-step-standard">
                 <p class="mnist-step-label">המהלך</p>
+                <div class="mnist-step-visual mnist-step-visual-standard" aria-hidden="true">
+                  <span class="mnist-standard-before">3</span>
+                  <span class="mnist-standard-arrow"></span>
+                  <span class="mnist-standard-grid">
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                  </span>
+                </div>
                 <h3 class="mnist-step-title">
                   הגרסה המעובדת של NIST:
                   <br />
                   אותו קלט, אותו מבנה, אותו מבחן
                 </h3>
                 <p class="mnist-step-copy">
-                  בדיוק בשביל זה בנו את MNIST: 28×28 פיקסלים, גווני אפור, חלוקה
-                  קבועה לאימון ולבדיקה, ותווית נכונה לכל תמונה. פתאום כולם
-                  מדברים באותה שפה.
+                  MNIST יישר את כל הדוגמאות לאותו מבנה: 28×28, גווני אפור, חלוקה
+                  קבועה לאימון ולבדיקה.
+                  <br />
+                  פתאום כולם פותרים בדיוק את אותה משימה.
                 </p>
               </article>
 
-              <article class="mnist-step">
+              <article class="mnist-step mnist-step-impact">
                 <p class="mnist-step-label">החשיבות</p>
+                <div class="mnist-step-visual mnist-step-visual-impact" aria-hidden="true">
+                  <span class="mnist-impact-axis"></span>
+                  <span class="mnist-impact-bar mnist-impact-bar-a"></span>
+                  <span class="mnist-impact-bar mnist-impact-bar-b"></span>
+                  <span class="mnist-impact-bar mnist-impact-bar-c"></span>
+                </div>
                 <h3 class="mnist-step-title">
                   מכאן הוא הפך למגרש ההשוואה של התחום
                 </h3>
                 <p class="mnist-step-copy">
-                  במקום שכל מאמר יביא תוצאה על דאטה אחר, נוצרה נקודת ייחוס אחת.
-                  אם מישהו שיפר תוצאה על MNIST, כולם יכלו להבין מיד מה השתנה
-                  והאם זה באמת שיפור.
+                  מרגע שהיה מדד ייחוס משותף, היה אפשר להבין אם מודל באמת השתפר,
+                  <br />
+                  או שהוא פשוט נבדק על בעיה אחרת.
                 </p>
               </article>
             </div>
