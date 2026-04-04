@@ -431,10 +431,18 @@ svg {
 }
 
 .values-shell {
-  width: min(930px, 100%);
+  width: min(1240px, 100%);
   display: grid;
   justify-items: center;
   gap: 1rem;
+}
+
+.values-stage {
+  position: relative;
+  width: min(1180px, 100%);
+  min-height: clamp(560px, 72vh, 780px);
+  display: grid;
+  place-items: center;
 }
 
 .values-figure {
@@ -443,6 +451,19 @@ svg {
   border: none;
   background: transparent;
   cursor: pointer;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  transition:
+    left 720ms cubic-bezier(0.18, 0.88, 0.22, 1),
+    transform 720ms cubic-bezier(0.18, 0.88, 0.22, 1);
+}
+
+.values-shell.is-inference .values-figure {
+  left: clamp(56px, 5vw, 84px);
+  transform: translateY(-50%);
 }
 
 .values-figure:focus-visible {
@@ -502,6 +523,130 @@ svg {
   transform: scale(1);
 }
 
+.values-arrow {
+  position: absolute;
+  top: 50%;
+  left: calc(clamp(56px, 5vw, 84px) + min(92vw, 840px) + 20px);
+  z-index: 4;
+  width: clamp(120px, 12vw, 176px);
+  height: 40px;
+  opacity: 0;
+  transform: translateY(-50%) scaleX(0.72);
+  transform-origin: right center;
+  transition:
+    opacity 320ms ease,
+    transform 520ms cubic-bezier(0.18, 0.88, 0.22, 1);
+  pointer-events: none;
+}
+
+.values-shell.is-inference .values-arrow {
+  opacity: 1;
+  transform: translateY(-50%) scaleX(1);
+}
+
+.values-arrow-line {
+  position: absolute;
+  left: 0;
+  right: 26px;
+  top: 50%;
+  height: 7px;
+  background: rgba(104, 217, 255, 0.92);
+  transform: translateY(-50%);
+  box-shadow: 0 0 16px rgba(104, 217, 255, 0.16);
+}
+
+.values-arrow-head {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 36px solid rgba(104, 217, 255, 0.92);
+  filter: drop-shadow(0 0 16px rgba(104, 217, 255, 0.18));
+}
+
+.values-output {
+  --slot-height: clamp(60px, 6.8vh, 86px);
+  --slot-gap: clamp(8px, 1vh, 12px);
+  --slot-step: calc(var(--slot-height) + var(--slot-gap));
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  z-index: 4;
+  width: clamp(154px, 13vw, 196px);
+  transform: translateY(-50%) translateX(24px);
+  opacity: 0;
+  transition:
+    opacity 320ms ease,
+    transform 520ms cubic-bezier(0.18, 0.88, 0.22, 1);
+  pointer-events: none;
+}
+
+.values-shell.is-inference .values-output {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.values-output-list {
+  position: relative;
+  display: grid;
+  gap: var(--slot-gap);
+  justify-items: center;
+}
+
+.values-output-digit {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: var(--slot-height);
+  color: rgba(255, 255, 255, 0.98);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(3rem, 4.8vw, 5rem);
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+.values-selector {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: clamp(138px, 12vw, 168px);
+  height: var(--slot-height);
+  transform: translateX(-50%) translateY(var(--slot-step));
+  opacity: 0;
+}
+
+.values-shell.is-inference .values-selector {
+  opacity: 1;
+  animation: values-selector-scan 2900ms cubic-bezier(0.46, 0.04, 0.28, 0.98) infinite;
+}
+
+.values-selector-box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(52px, 4.9vw, 68px);
+  height: calc(var(--slot-height) - 12px);
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 238, 0, 0.98);
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.12);
+}
+
+.values-selector-question {
+  position: absolute;
+  left: calc(50% + 56px);
+  top: 50%;
+  color: rgba(255, 255, 255, 0.98);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(2.9rem, 4.4vw, 4.7rem);
+  line-height: 1;
+  transform: translateY(-50%);
+  animation: values-question-pulse 1100ms ease-in-out infinite;
+}
+
 .values-copy {
   margin: 0;
   color: var(--muted);
@@ -538,6 +683,46 @@ svg {
   100% {
     opacity: 1;
     transform: scaleX(1);
+  }
+}
+
+@keyframes values-selector-scan {
+  0%,
+  10% {
+    transform: translateX(-50%) translateY(calc(var(--slot-step) * 1));
+  }
+
+  22%,
+  32% {
+    transform: translateX(-50%) translateY(calc(var(--slot-step) * 5));
+  }
+
+  44%,
+  54% {
+    transform: translateX(-50%) translateY(calc(var(--slot-step) * 2));
+  }
+
+  66%,
+  76% {
+    transform: translateX(-50%) translateY(calc(var(--slot-step) * 6));
+  }
+
+  88%,
+  100% {
+    transform: translateX(-50%) translateY(calc(var(--slot-step) * 4));
+  }
+}
+
+@keyframes values-question-pulse {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: translateY(-50%) scale(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.03);
   }
 }
 
@@ -623,12 +808,46 @@ svg {
   }
 
   .values-shell {
+    --values-frame-size: min(94vw, 700px);
     width: 100%;
     gap: 0.9rem;
   }
 
+  .values-stage {
+    min-height: 960px;
+  }
+
   .values-figure {
     width: min(94vw, 700px);
+  }
+
+  .values-shell.is-inference .values-figure {
+    left: 50%;
+    transform: translate(-50%, -170px) scale(0.92);
+  }
+
+  .values-arrow {
+    top: auto;
+    bottom: 220px;
+    left: 50%;
+    width: 110px;
+    transform: translateX(-50%) rotate(90deg) scaleX(0.72);
+    transform-origin: center;
+  }
+
+  .values-shell.is-inference .values-arrow {
+    transform: translateX(-50%) rotate(90deg) scaleX(1);
+  }
+
+  .values-output {
+    top: auto;
+    bottom: 0;
+    right: 50%;
+    transform: translateX(50%) translateY(24px);
+  }
+
+  .values-shell.is-inference .values-output {
+    transform: translateX(50%) translateY(0);
   }
 
   .values-copy {

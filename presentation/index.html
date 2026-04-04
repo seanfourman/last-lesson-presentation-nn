@@ -128,31 +128,58 @@
       </section>
 
       <section class="values-section" id="values">
-        <div class="values-shell">
-          <button
-            class="values-figure"
-            id="valueFigure"
-            type="button"
-            aria-pressed="false"
-            aria-label="לחצו כדי להחליף בין תמונת הספרה לבין ערכי עוצמת האפור שלה"
-          >
-            <div class="values-frame">
-              <canvas
-                id="valueDigitCanvas"
-                class="values-view values-digit-view"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              ></canvas>
-              <canvas
-                id="valueMatrixCanvas"
-                class="values-view values-matrix-view"
-                aria-hidden="true"
-              ></canvas>
-            </div>
-          </button>
+        <div class="values-shell" id="valuesShell">
+          <div class="values-stage">
+            <button
+              class="values-figure"
+              id="valueFigure"
+              type="button"
+              aria-pressed="false"
+              aria-label="לחצו כדי להחליף בין תמונת הספרה לבין ערכי עוצמת האפור שלה"
+            >
+              <div class="values-frame">
+                <canvas
+                  id="valueDigitCanvas"
+                  class="values-view values-digit-view"
+                  width="28"
+                  height="28"
+                  aria-hidden="true"
+                ></canvas>
+                <canvas
+                  id="valueMatrixCanvas"
+                  class="values-view values-matrix-view"
+                  aria-hidden="true"
+                ></canvas>
+              </div>
+            </button>
 
-          <p class="values-copy">
+            <div class="values-arrow" id="valuesArrow" aria-hidden="true">
+              <span class="values-arrow-line"></span>
+              <span class="values-arrow-head"></span>
+            </div>
+
+            <div class="values-output" id="valuesOutput" aria-hidden="true">
+              <div class="values-output-list" aria-hidden="true">
+                <span class="values-output-digit">0</span>
+                <span class="values-output-digit">1</span>
+                <span class="values-output-digit">2</span>
+                <span class="values-output-digit">3</span>
+                <span class="values-output-digit">4</span>
+                <span class="values-output-digit">5</span>
+                <span class="values-output-digit">6</span>
+                <span class="values-output-digit">7</span>
+                <span class="values-output-digit">8</span>
+                <span class="values-output-digit">9</span>
+              </div>
+
+              <div class="values-selector" aria-hidden="true">
+                <span class="values-selector-box"></span>
+                <span class="values-selector-question">?</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="values-copy" id="valuesCopy">
             לחצו על הספרה כדי לחשוף את 784 הערכים שהיא באמת מכילה: עוצמות אפור בין 0 ל־1.
           </p>
         </div>

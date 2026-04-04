@@ -215,18 +215,70 @@ function setupCompareSection(basePixels) {
 }
 
 function setupValueSection(pixels) {
+  const shell = document.getElementById("valuesShell");
+  const stage = shell?.querySelector(".values-stage");
   const figure = document.getElementById("valueFigure");
   const digitCanvas = document.getElementById("valueDigitCanvas");
   const matrixCanvas = document.getElementById("valueMatrixCanvas");
+  const arrow = document.getElementById("valuesArrow");
+  const output = document.getElementById("valuesOutput");
+  const copy = document.getElementById("valuesCopy");
 
-  if (!figure || !digitCanvas || !matrixCanvas || !pixels) {
+  if (!shell || !stage || !figure || !digitCanvas || !matrixCanvas || !arrow || !output || !copy || !pixels) {
     return;
   }
+
+  let stateIndex = 0;
+  const copyByState = [
+    "לחצו על הספרה כדי לחשוף את 784 הערכים שהיא באמת מכילה: עוצמות אפור בין 0 ל־1.",
+    "עוד לחיצה אחת, והרשת תתחיל לחפש בין הספרות 0 עד 9 מה בעצם מופיע כאן.",
+    "עכשיו היא כבר לא רואה רק תמונה, אלא מנסה לנחש לאן מכל 0 עד 9 היא הכי קרובה.",
+  ];
+  const labelByState = [
+    "לחצו כדי לעבור מתמונת הספרה אל ערכי עוצמת האפור שלה",
+    "לחצו שוב כדי להראות איך הרשת מחפשת בין הספרות 0 עד 9",
+    "לחצו שוב כדי לחזור לתמונת הספרה",
+  ];
 
   drawDigit(digitCanvas, pixels);
 
   const renderAll = () => {
     drawValueMatrix(matrixCanvas, pixels);
+    updateInferenceLayout();
+  };
+
+  const updateInferenceLayout = () => {
+    if (stateIndex !== 2) {
+      figure.style.left = "50%";
+      figure.style.transform = "translate(-50%, -50%)";
+      arrow.style.left = "";
+      return;
+    }
+
+    const stageWidth = stage.clientWidth;
+    const figureWidth = figure.getBoundingClientRect().width || Math.min(stageWidth * 0.92, 840);
+    const desiredLeft = stageWidth > 1180 ? 36 : Math.max(18, Math.round(stageWidth * 0.024));
+    const clampedLeft = Math.min(desiredLeft, Math.max(24, stageWidth - figureWidth - 280));
+    const arrowLeft = Math.min(stageWidth - 230, clampedLeft + figureWidth + 28);
+
+    figure.style.left = `${clampedLeft}px`;
+    figure.style.transform = "translateY(-50%)";
+    arrow.style.left = `${arrowLeft}px`;
+  };
+
+  const applyState = () => {
+    const showValues = stateIndex >= 1;
+    const showInference = stateIndex === 2;
+
+    figure.classList.toggle("is-values", showValues);
+    shell.classList.toggle("is-inference", showInference);
+    output.setAttribute("aria-hidden", String(!showInference));
+    figure.setAttribute("aria-pressed", String(showValues));
+    figure.setAttribute("aria-label", labelByState[stateIndex]);
+    copy.textContent = copyByState[stateIndex];
+    updateInferenceLayout();
+    requestAnimationFrame(updateInferenceLayout);
+    setTimeout(updateInferenceLayout, 0);
   };
 
   renderAll();
@@ -234,10 +286,11 @@ function setupValueSection(pixels) {
   document.fonts?.ready.then(renderAll).catch(() => {});
 
   figure.addEventListener("click", () => {
-    const showValues = !figure.classList.contains("is-values");
-    figure.classList.toggle("is-values", showValues);
-    figure.setAttribute("aria-pressed", String(showValues));
+    stateIndex = (stateIndex + 1) % 3;
+    applyState();
   });
+
+  applyState();
 }
 
 function setupOverlayDrag(stage, overlay, callbacks = {}) {
