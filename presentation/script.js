@@ -510,7 +510,10 @@ function setupMnistWhySection(model) {
     if (speedBars.length) {
       speedBars.forEach((bar, index) => {
         const fill = Math.max(0.14, Math.min(1, eased * 1.08 - index * 0.045));
-        bar.style.setProperty("--bar-fill", fill.toFixed(3));
+        bar.style.opacity = String(0.42 + fill * 0.58);
+        bar.style.boxShadow = `0 0 ${(8 + fill * 14).toFixed(1)}px rgba(255, 238, 0, ${(
+          0.1 + fill * 0.12
+        ).toFixed(3)})`;
       });
     }
 
