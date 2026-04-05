@@ -1034,7 +1034,7 @@ svg {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.35rem;
+  gap: clamp(2rem, 4vh, 3.2rem);
 }
 
 .mnist-intro {
@@ -1107,7 +1107,7 @@ svg {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 1.35rem;
+  gap: clamp(2rem, 4.2vh, 3.4rem);
   align-items: center;
   min-height: 0;
   height: auto;
@@ -1442,7 +1442,7 @@ svg {
   width: 100%;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.5rem;
-  margin-top: 0.2rem;
+  margin-top: clamp(0.6rem, 1.8vh, 1.4rem);
   padding: 1.15rem 0 0.35rem;
 }
 
