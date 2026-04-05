@@ -874,11 +874,11 @@ function setupFeatureStorySection(model) {
 
   const specialZeroQuestionPixels = createGlyphPixels("?", {
     fontFamily: 'Georgia, "Times New Roman", serif',
-    fontSize: 158,
+    fontSize: 142,
     weight: 700,
-    offsetY: -8,
-    scaleX: 0.92,
-    scaleY: 1.03,
+    offsetY: 2,
+    scaleX: 0.9,
+    scaleY: 1,
   });
 
   const featureDefinitions = {
