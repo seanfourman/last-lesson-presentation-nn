@@ -819,6 +819,68 @@ function setupFeatureStorySection(model) {
     },
   });
 
+  const createGlyphPixels = (glyph, options = {}) => {
+    const sourceSize = options.sourceSize ?? 196;
+    const sourceCanvas = document.createElement("canvas");
+    sourceCanvas.width = sourceSize;
+    sourceCanvas.height = sourceSize;
+    const ctx = sourceCanvas.getContext("2d");
+    const fontSize = options.fontSize ?? 156;
+    const offsetX = options.offsetX ?? 0;
+    const offsetY = options.offsetY ?? -6;
+    const scaleX = options.scaleX ?? 0.94;
+    const scaleY = options.scaleY ?? 1;
+
+    ctx.clearRect(0, 0, sourceSize, sourceSize);
+    ctx.save();
+    ctx.translate(sourceSize * 0.5 + offsetX, sourceSize * 0.5 + offsetY);
+    ctx.scale(scaleX, scaleY);
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `${options.weight ?? 700} ${fontSize}px ${options.fontFamily ?? 'Georgia, "Times New Roman", serif'}`;
+    ctx.fillText(glyph, 0, 0);
+    ctx.restore();
+
+    const { data } = ctx.getImageData(0, 0, sourceSize, sourceSize);
+    const pixels = new Array(28 * 28).fill(0);
+    const cellSize = sourceSize / 28;
+
+    for (let y = 0; y < 28; y += 1) {
+      for (let x = 0; x < 28; x += 1) {
+        const startX = Math.floor(x * cellSize);
+        const endX = Math.max(startX + 1, Math.floor((x + 1) * cellSize));
+        const startY = Math.floor(y * cellSize);
+        const endY = Math.max(startY + 1, Math.floor((y + 1) * cellSize));
+        let sum = 0;
+        let count = 0;
+
+        for (let sampleY = startY; sampleY < endY; sampleY += 1) {
+          for (let sampleX = startX; sampleX < endX; sampleX += 1) {
+            sum += data[(sampleY * sourceSize + sampleX) * 4 + 3];
+            count += 1;
+          }
+        }
+
+        const average = count ? sum / count : 0;
+        const boosted =
+          average < 8 ? 0 : clamp(Math.round((average - 8) * 1.42), 0, 255);
+        pixels[y * 28 + x] = boosted;
+      }
+    }
+
+    return pixels;
+  };
+
+  const specialZeroQuestionPixels = createGlyphPixels("?", {
+    fontFamily: 'Georgia, "Times New Roman", serif',
+    fontSize: 158,
+    weight: 700,
+    offsetY: -8,
+    scaleX: 0.92,
+    scaleY: 1.03,
+  });
+
   const featureDefinitions = {
     "0": {
       digit: "0",
@@ -1257,8 +1319,12 @@ function setupFeatureStorySection(model) {
     const stageMeta = getStageMeta(state.digit);
     const isSpecialZero = state.digit === "special-zero";
     state.stage = clamp(state.stage, 0, stageMeta.length - 1);
+    const displaySourcePixels =
+      isSpecialZero && state.stage < stageMeta.length - 1
+        ? specialZeroQuestionPixels
+        : sourcePixels;
 
-    drawSampleDigitToCanvas(sourceCanvas, sourcePixels);
+    drawSampleDigitToCanvas(sourceCanvas, displaySourcePixels);
     sourceLabel.textContent = definition.sourceLabel;
 
     const meta = stageMeta[state.stage];
