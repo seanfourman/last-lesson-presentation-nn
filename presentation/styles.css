@@ -2903,22 +2903,12 @@ svg {
 .mnist-why-speed-bars {
   height: 172px;
   display: flex;
+  flex-direction: row-reverse;
   align-items: flex-end;
   gap: 8px;
   width: 100%;
   max-width: 520px;
-  padding: 10px 10px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 238, 0, 0.045),
-      rgba(255, 255, 255, 0.012)
-    );
-  box-shadow:
-    inset 0 -1px 0 rgba(255, 238, 0, 0.18),
-    0 14px 32px rgba(0, 0, 0, 0.18);
+  padding: 0;
 }
 
 .mnist-why-speed-bars span {
