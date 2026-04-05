@@ -612,29 +612,57 @@
 
               <section class="mnist-why-mode" data-why-mode="3">
                 <div class="mnist-why-mode-stage mnist-why-mode-stage-principles" aria-hidden="true">
-                  <span class="mnist-why-principles-digit">
-                    <canvas
-                      class="mnist-why-principles-canvas"
-                      id="mnistWhyPrinciplesDigit"
-                    ></canvas>
-                  </span>
-                  <span class="mnist-why-principles-arrow"></span>
-                  <span class="mnist-why-principles-grid">
-                    <span></span><span></span><span></span><span></span><span></span>
-                    <span></span><span></span><span></span><span></span><span></span>
-                    <span></span><span></span><span></span><span></span><span></span>
-                    <span></span><span></span><span></span><span></span><span></span>
-                  </span>
-                  <span class="mnist-why-principles-arrow"></span>
-                  <span class="mnist-why-principles-network">
-                    <span class="mnist-why-principles-col mnist-why-principles-col-a">
-                      <span></span><span></span><span></span><span></span>
-                    </span>
-                    <span class="mnist-why-principles-links"></span>
-                    <span class="mnist-why-principles-col mnist-why-principles-col-b">
-                      <span></span><span></span><span></span>
-                    </span>
-                  </span>
+                  <div class="mnist-why-principles-flow">
+                    <div class="mnist-why-principles-step mnist-why-principles-step-input">
+                      <span class="mnist-why-principles-step-label">קלט</span>
+                      <span class="mnist-why-principles-digit">
+                        <canvas
+                          class="mnist-why-principles-canvas"
+                          id="mnistWhyPrinciplesDigit"
+                        ></canvas>
+                      </span>
+                    </div>
+
+                    <span class="mnist-why-principles-connector"></span>
+
+                    <div class="mnist-why-principles-step mnist-why-principles-step-grid">
+                      <span class="mnist-why-principles-step-label">28×28</span>
+                      <span class="mnist-why-principles-grid">
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                      </span>
+                    </div>
+
+                    <span class="mnist-why-principles-connector"></span>
+
+                    <div class="mnist-why-principles-step mnist-why-principles-step-network">
+                      <span class="mnist-why-principles-step-label">שכבות</span>
+                      <span class="mnist-why-principles-network">
+                        <span class="mnist-why-principles-layer mnist-why-principles-layer-a">
+                          <span></span><span></span><span></span><span></span>
+                        </span>
+                        <span class="mnist-why-principles-layer mnist-why-principles-layer-b">
+                          <span></span><span></span><span></span>
+                        </span>
+                        <span class="mnist-why-principles-layer mnist-why-principles-layer-c">
+                          <span></span><span></span><span></span>
+                        </span>
+                      </span>
+                    </div>
+
+                    <span class="mnist-why-principles-connector"></span>
+
+                    <div class="mnist-why-principles-step mnist-why-principles-step-output">
+                      <span class="mnist-why-principles-step-label">פלט</span>
+                      <span class="mnist-why-principles-output">
+                        <span>0</span>
+                        <span>...</span>
+                        <span>9</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div class="mnist-why-mode-copy">
                   <span class="mnist-reason-index">04</span>
