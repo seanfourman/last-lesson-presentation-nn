@@ -593,6 +593,9 @@ function setupFeatureStorySection(model) {
   const sourceCanvas = document.getElementById("featureStorySourceCanvas");
   const sourceLabel = document.getElementById("featureStorySourceLabel");
   const outputCanvas = document.getElementById("featureStoryOutputCanvas");
+  const outputStack = document.getElementById("featureStoryOutputStack");
+  const outputCompare = document.getElementById("featureStoryOutputCompare");
+  const outputSelector = document.getElementById("featureStoryOutputSelector");
   const progressBar = document.getElementById("featureStoryProgressBar");
   const stageTitle = document.getElementById("featureStoryStageTitle");
   const stageCopy = document.getElementById("featureStoryStageCopy");
@@ -624,6 +627,15 @@ function setupFeatureStorySection(model) {
   const patternLabels = Array.from(
     document.querySelectorAll(".feature-story-pattern-label"),
   );
+  const outputRows = Array.from(
+    document.querySelectorAll(".feature-story-output-row"),
+  ).map((row) => ({
+    row,
+    digit: Number(row.dataset.outputDigit || "0"),
+    node: row.querySelector(".feature-story-output-node"),
+    digitLabel: row.querySelector(".feature-story-output-digit"),
+    score: row.querySelector(".feature-story-output-score"),
+  }));
 
   if (
     !root ||
@@ -631,6 +643,9 @@ function setupFeatureStorySection(model) {
     !sourceCanvas ||
     !sourceLabel ||
     !outputCanvas ||
+    !outputStack ||
+    !outputCompare ||
+    !outputSelector ||
     !progressBar ||
     !stageTitle ||
     !stageCopy ||
@@ -641,6 +656,7 @@ function setupFeatureStorySection(model) {
     !linksA ||
     !linksB ||
     !linksC ||
+    outputRows.some(({ node, digitLabel, score }) => !node || !digitLabel || !score) ||
     !digitTabs.length ||
     !model?.digitExamples
   ) {
@@ -672,32 +688,99 @@ function setupFeatureStorySection(model) {
     "special-zero": originalZeroPixels,
   };
 
-  const stageMeta = [
+  const defaultStageMeta = [
     {
-      index: "01",
       title: "הספרה נכנסת כרשת אחת של פיקסלים",
       copy: (digit) =>
         `כרגע ${digit} היא רק תמונה אחת של 28×28 פיקסלים, לפני שהרשת ניסתה לפרק אותה לרמזים קטנים יותר.`,
     },
     {
-      index: "02",
       title: "השכבה הראשונה תופסת קווים, קשתות וזוויות",
       copy: () =>
         "בשלב הזה אפשר לדמיין נוירונים שמגיבים לחלקים מקומיים: קו אנכי, קשת קצרה או אלכסון.",
     },
     {
-      index: "03",
       title: "השכבה הבאה מחברת אותם למבנה גדול יותר",
       copy: () =>
         "עכשיו כמה רכיבים מתחברים יחד לצורה שכבר מזכירה חלק גדול מהספרה, ולא רק קטעים מבודדים.",
     },
     {
-      index: "04",
       title: "בסוף מתקבלת השערה ברורה על הספרה",
       copy: (digit) =>
         `אחרי שהרמזים נאספו משכבה לשכבה, לרשת כבר יש מספיק מידע כדי להכריע שמדובר ב-${digit}.`,
     },
   ];
+
+  const specialZeroOutput = {
+    finalDigit: 0,
+    rivalDigit: 6,
+    scores: [40.4, 1.1, 0.8, 1.8, 0.6, 0.5, 39.8, 0.4, 8.4, 6.2],
+  };
+
+  const specialZeroStageMeta = [
+    defaultStageMeta[0],
+    defaultStageMeta[1],
+    defaultStageMeta[2],
+    {
+      title: "בשכבת הפלט גם 0 וגם 6 נדלקות כמעט באותה עוצמה",
+      copy: () =>
+        "מבחינת הרשת הלולאה הזאת עדיין יכולה להיות גם 0 וגם 6, ולכן סימן השאלה ממשיך לזוז בין שתיהן.",
+    },
+    {
+      title: "רק בצעד האחרון 0 מקבלת יתרון קטן",
+      copy: () =>
+        "הפער קטן מאוד, אבל 0 עוקפת מעט את 6 ולכן זו הבחירה הסופית של הרשת.",
+    },
+  ];
+
+  const getStageMeta = (digit) =>
+    digit === "special-zero" ? specialZeroStageMeta : defaultStageMeta;
+
+  const formatStoryPercent = (value) => `${value.toFixed(1)}%`;
+
+  let specialSelectorIndex = specialZeroOutput.finalDigit;
+  let specialSelectorDirection = 1;
+  let specialSelectorTimerId = 0;
+
+  const setSpecialSelectorIndex = (index) => {
+    specialSelectorIndex = clamp(index, 0, 9);
+    outputSelector.style.setProperty(
+      "--feature-output-selector-index",
+      String(specialSelectorIndex),
+    );
+  };
+
+  const stopSpecialSelectorLoop = () => {
+    if (specialSelectorTimerId) {
+      window.clearTimeout(specialSelectorTimerId);
+      specialSelectorTimerId = 0;
+    }
+  };
+
+  const getNextSpecialSelectorIndex = () => {
+    if (specialSelectorIndex >= 9) {
+      specialSelectorDirection = -1;
+    } else if (specialSelectorIndex <= 0) {
+      specialSelectorDirection = 1;
+    }
+
+    const step = Math.random() < 0.18 ? 2 : 1;
+    return clamp(specialSelectorIndex + specialSelectorDirection * step, 0, 9);
+  };
+
+  const runSpecialSelectorLoop = () => {
+    stopSpecialSelectorLoop();
+
+    if (state.digit !== "special-zero" || state.stage !== 3) {
+      return;
+    }
+
+    const delay = 660 + Math.random() * 160;
+    specialSelectorTimerId = window.setTimeout(() => {
+      setSpecialSelectorIndex(getNextSpecialSelectorIndex());
+      runSpecialSelectorLoop();
+    }, delay);
+  };
 
   const syncLinkGroup = (container, count, tiltStart, tiltEnd) => {
     const safeCount = Math.max(1, count);
@@ -1109,6 +1192,60 @@ function setupFeatureStorySection(model) {
     stage: 0,
   };
 
+  const renderStandardOutput = (sourcePixels, digit, stage) => {
+    stopSpecialSelectorLoop();
+    outputStack.hidden = false;
+    outputCompare.setAttribute("aria-hidden", "true");
+    outputCompare.classList.remove("is-searching");
+    outputColumn.classList.remove("has-output-list");
+    outputSelector.setAttribute("aria-hidden", "true");
+    outputBadge.textContent = digit;
+    outputBadge.classList.toggle("is-active", stage >= 3);
+    drawTintedDigitToCanvas(outputCanvas, sourcePixels, "#f7f1c0", {
+      drawRatio: 0.84,
+      glowStrength: 0.08,
+    });
+  };
+
+  const renderSpecialOutput = (stage) => {
+    const isSearching = stage === 3;
+    const isResolved = stage >= 4;
+
+    outputStack.hidden = true;
+    outputCompare.setAttribute("aria-hidden", "false");
+    outputCompare.classList.toggle("is-searching", isSearching);
+    outputColumn.classList.add("has-output-list");
+    outputBadge.classList.remove("is-active");
+    outputSelector.setAttribute("aria-hidden", String(!isSearching));
+
+    outputRows.forEach(({ row, digit, node, score }) => {
+      const scoreValue = specialZeroOutput.scores[digit] ?? 0;
+      const isFinal = digit === specialZeroOutput.finalDigit;
+      const isRival = digit === specialZeroOutput.rivalDigit;
+      const isHot = isFinal || isRival;
+      const isSelected = isResolved && isFinal;
+      const isContender = isResolved && isRival;
+
+      row.classList.toggle("is-hot", isHot);
+      row.classList.toggle("is-dormant", !isHot);
+      row.classList.toggle("is-contender", isContender);
+      row.classList.toggle("is-selected", isSelected);
+      score.textContent = formatStoryPercent(scoreValue);
+
+      const baseOpacity = isHot ? 1 : 0.56 + Math.min(0.12, scoreValue / 52);
+      row.style.opacity = String(isSelected ? 1 : baseOpacity);
+      score.style.opacity = isHot ? "1" : String(0.66 + Math.min(0.12, scoreValue / 42));
+      node.style.opacity = isHot ? "1" : String(0.76 + Math.min(0.08, scoreValue / 54));
+    });
+
+    if (isSearching) {
+      runSpecialSelectorLoop();
+    } else {
+      stopSpecialSelectorLoop();
+      setSpecialSelectorIndex(specialZeroOutput.finalDigit);
+    }
+  };
+
   const render = () => {
     const definition = featureDefinitions[state.digit];
     const sourcePixels = featureStoryDigitPixels[state.digit];
@@ -1117,17 +1254,24 @@ function setupFeatureStorySection(model) {
       return;
     }
 
+    const stageMeta = getStageMeta(state.digit);
+    const isSpecialZero = state.digit === "special-zero";
+    state.stage = clamp(state.stage, 0, stageMeta.length - 1);
+
     drawSampleDigitToCanvas(sourceCanvas, sourcePixels);
     sourceLabel.textContent = definition.sourceLabel;
 
     const meta = stageMeta[state.stage];
     stageTitle.textContent = meta.title;
     stageCopy.textContent = meta.copy(definition.digit);
-    outputBadge.textContent = definition.digit;
     syncLinkGroup(linksA, definition.components.length, -14, 15);
     syncLinkGroup(linksB, definition.patterns.length, -10, 10);
-    syncLinkGroup(linksC, 1, 0, 0);
-    outputBadge.classList.toggle("is-active", state.stage >= 3);
+    syncLinkGroup(
+      linksC,
+      isSpecialZero ? outputRows.length : 1,
+      isSpecialZero ? -16 : 0,
+      isSpecialZero ? 16 : 0,
+    );
     componentColumn.classList.toggle("is-active", state.stage >= 1);
     patternColumn.classList.toggle("is-active", state.stage >= 2);
     outputColumn.classList.toggle("is-active", state.stage >= 3);
@@ -1135,10 +1279,12 @@ function setupFeatureStorySection(model) {
     linksB.classList.toggle("is-active", state.stage >= 2);
     linksC.classList.toggle("is-active", state.stage >= 3);
     progressBar.style.transform = `scaleX(${(state.stage + 1) / stageMeta.length})`;
-    drawTintedDigitToCanvas(outputCanvas, sourcePixels, "#f7f1c0", {
-      drawRatio: 0.84,
-      glowStrength: 0.08,
-    });
+
+    if (isSpecialZero) {
+      renderSpecialOutput(state.stage);
+    } else {
+      renderStandardOutput(sourcePixels, definition.digit, state.stage);
+    }
 
     digitTabs.forEach((tab) => {
       tab.classList.toggle("is-active", tab.dataset.digit === state.digit);
@@ -1189,11 +1335,14 @@ function setupFeatureStorySection(model) {
   const setDigit = (digit) => {
     state.digit = digit;
     state.stage = 0;
+    specialSelectorDirection = 1;
+    setSpecialSelectorIndex(specialZeroOutput.finalDigit);
     render();
   };
 
   const setStage = (stage) => {
-    state.stage = stage;
+    const stageMeta = getStageMeta(state.digit);
+    state.stage = clamp(stage, 0, stageMeta.length - 1);
     render();
   };
 
@@ -1205,9 +1354,11 @@ function setupFeatureStorySection(model) {
   });
 
   panel.addEventListener("click", () => {
+    const stageMeta = getStageMeta(state.digit);
     setStage((state.stage + 1) % stageMeta.length);
   });
 
+  setSpecialSelectorIndex(specialZeroOutput.finalDigit);
   render();
 }
 
