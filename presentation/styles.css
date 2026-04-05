@@ -3418,9 +3418,8 @@ svg {
 }
 
 .feature-story-digit-asterisk {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-grid;
+  place-items: center;
   flex: 0 0 auto;
   position: static;
   width: auto;

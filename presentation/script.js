@@ -719,7 +719,7 @@ function setupFeatureStorySection(model) {
   const featureDefinitions = {
     "0": {
       digit: "0",
-      sourceLabel: "שכבת הקלט · 0",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "קשת עליונה שמאלית",
@@ -757,7 +757,7 @@ function setupFeatureStorySection(model) {
     },
     "1": {
       digit: "1",
-      sourceLabel: "שכבת הקלט · 1",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "קצה עליון",
@@ -790,7 +790,7 @@ function setupFeatureStorySection(model) {
     },
     "2": {
       digit: "2",
-      sourceLabel: "שכבת הקלט · 2",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "קשת עליונה",
@@ -829,7 +829,7 @@ function setupFeatureStorySection(model) {
     },
     "3": {
       digit: "3",
-      sourceLabel: "שכבת הקלט · 3",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "קשת עליונה",
@@ -868,7 +868,7 @@ function setupFeatureStorySection(model) {
     },
     "4": {
       digit: "4",
-      sourceLabel: "שכבת הקלט · 4",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "אלכסון שמאלי",
@@ -907,7 +907,7 @@ function setupFeatureStorySection(model) {
     },
     "5": {
       digit: "5",
-      sourceLabel: "שכבת הקלט · 5",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "קו עליון",
@@ -946,7 +946,7 @@ function setupFeatureStorySection(model) {
     },
     "6": {
       digit: "6",
-      sourceLabel: "שכבת הקלט · 6",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "כניסה עליונה",
@@ -985,7 +985,7 @@ function setupFeatureStorySection(model) {
     },
     "7": {
       digit: "7",
-      sourceLabel: "שכבת הקלט · 7",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "קו עליון",
@@ -1018,7 +1018,7 @@ function setupFeatureStorySection(model) {
     },
     "8": {
       digit: "8",
-      sourceLabel: "שכבת הקלט · 8",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "לולאה עליונה",
@@ -1051,7 +1051,7 @@ function setupFeatureStorySection(model) {
     },
     "9": {
       digit: "9",
-      sourceLabel: "שכבת הקלט · 9",
+      sourceLabel: "שכבת קלט",
       components: [
         {
           label: "לולאה עליונה",
@@ -1081,7 +1081,7 @@ function setupFeatureStorySection(model) {
 
   featureDefinitions["special-zero"] = {
     ...featureDefinitions["0"],
-    sourceLabel: "×©×›×‘×ª ×”×§×œ×˜ Â· 0",
+    sourceLabel: "שכבת קלט",
   };
 
   const state = {
