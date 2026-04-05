@@ -567,7 +567,9 @@ function setupMnistWhySection(model) {
 }
 
 function setupAmbientMnistCollages(model) {
-  const canvases = Array.from(document.querySelectorAll(".mnist-ambient-canvas"));
+  const canvases = Array.from(
+    document.querySelectorAll(".mnist-ambient-canvas"),
+  );
 
   if (!canvases.length || !model?.digitExamples) {
     return;
@@ -576,8 +578,7 @@ function setupAmbientMnistCollages(model) {
   canvases.forEach((canvas, index) => {
     const digit = canvas.dataset.digit ?? String(index % 10);
     const pixels =
-      model.digitExamples?.[digit] ??
-      model.digitExamples?.[String(index % 10)];
+      model.digitExamples?.[digit] ?? model.digitExamples?.[String(index % 10)];
 
     if (!pixels) {
       return;
@@ -600,7 +601,9 @@ function setupFeatureStorySection(model) {
   const stageTitle = document.getElementById("featureStoryStageTitle");
   const stageCopy = document.getElementById("featureStoryStageCopy");
   const outputBadge = document.getElementById("featureStoryOutputBadge");
-  const componentColumn = document.getElementById("featureStoryComponentColumn");
+  const componentColumn = document.getElementById(
+    "featureStoryComponentColumn",
+  );
   const patternColumn = document.getElementById("featureStoryPatternColumn");
   const outputColumn = document.getElementById("featureStoryOutputColumn");
   const linksA = document.getElementById("featureStoryLinksA");
@@ -656,7 +659,9 @@ function setupFeatureStorySection(model) {
     !linksA ||
     !linksB ||
     !linksC ||
-    outputRows.some(({ node, digitLabel, score }) => !node || !digitLabel || !score) ||
+    outputRows.some(
+      ({ node, digitLabel, score }) => !node || !digitLabel || !score,
+    ) ||
     !digitTabs.length ||
     !model?.digitExamples
   ) {
@@ -684,7 +689,7 @@ function setupFeatureStorySection(model) {
 
   const featureStoryDigitPixels = {
     ...model.digitExamples,
-    "0": alternateZeroPixels,
+    0: alternateZeroPixels,
     "special-zero": originalZeroPixels,
   };
 
@@ -718,18 +723,30 @@ function setupFeatureStorySection(model) {
   };
 
   const specialZeroStageMeta = [
-    defaultStageMeta[0],
-    defaultStageMeta[1],
-    defaultStageMeta[2],
     {
-      title: "בשכבת הפלט גם 0 וגם 6 נדלקות כמעט באותה עוצמה",
+      title: "כאן הקלט עצמו כבר מרגיש כמו חידה",
       copy: () =>
-        "מבחינת הרשת הלולאה הזאת עדיין יכולה להיות גם 0 וגם 6, ולכן סימן השאלה ממשיך לזוז בין שתיהן.",
+        "במקום ספרה ברורה, הרשת מקבלת קלט מעורפל שמזכיר יותר מסימון אחד אפשרי.",
     },
     {
-      title: "רק בצעד האחרון 0 מקבלת יתרון קטן",
+      title: "השכבה הראשונה עדיין אוספת קשתות ושברים קטנים",
       copy: () =>
-        "הפער קטן מאוד, אבל 0 עוקפת מעט את 6 ולכן זו הבחירה הסופית של הרשת.",
+        "גם כשהקלט לא חד-משמעי, נוירונים מוקדמים יכולים לזהות קטעי לולאה, קשת קצרה וחיבור מקומי.",
+    },
+    {
+      title: "עכשיו אותם רמזים מתאימים ליותר מאפשרות אחת",
+      copy: () =>
+        "בשלב הזה עדיין אין הכרעה, ולכן כמה אפשרויות שונות נשארות פתוחות.",
+    },
+    {
+      title: "בשכבת הפלט כמה אפשרויות עדיין נשארות חזקות",
+      copy: () =>
+        "עדיין אין תשובה אחת חדה, ולכן ההכרעה מתעכבת כמעט עד הסוף.",
+    },
+    {
+      title: "רק בצעד האחרון מתקבלת הכרעה",
+      copy: () =>
+        "גם כאן זו לא ודאות מוחלטת. הרשת פשוט בוחרת את האפשרות שקיבלה ציון קצת יותר גבוה.",
     },
   ];
 
@@ -882,7 +899,7 @@ function setupFeatureStorySection(model) {
   });
 
   const featureDefinitions = {
-    "0": {
+    0: {
       digit: "0",
       sourceLabel: "שכבת קלט",
       components: [
@@ -920,7 +937,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "1": {
+    1: {
       digit: "1",
       sourceLabel: "שכבת קלט",
       components: [
@@ -953,7 +970,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "2": {
+    2: {
       digit: "2",
       sourceLabel: "שכבת קלט",
       components: [
@@ -992,7 +1009,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "3": {
+    3: {
       digit: "3",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1031,7 +1048,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "4": {
+    4: {
       digit: "4",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1070,7 +1087,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "5": {
+    5: {
       digit: "5",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1094,10 +1111,7 @@ function setupFeatureStorySection(model) {
         {
           label: "החלק העליון",
           color: "#93dcff",
-          masks: [
-            line(9, 7.2, 18.4, 7.2, 2.7),
-            line(10, 7.6, 10.1, 13.6, 2.7),
-          ],
+          masks: [line(9, 7.2, 18.4, 7.2, 2.7), line(10, 7.6, 10.1, 13.6, 2.7)],
         },
         {
           label: "החלק המעוגל",
@@ -1109,7 +1123,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "6": {
+    6: {
       digit: "6",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1148,7 +1162,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "7": {
+    7: {
       digit: "7",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1181,7 +1195,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "8": {
+    8: {
       digit: "8",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1214,7 +1228,7 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
-    "9": {
+    9: {
       digit: "9",
       sourceLabel: "שכבת קלט",
       components: [
@@ -1296,8 +1310,12 @@ function setupFeatureStorySection(model) {
 
       const baseOpacity = isHot ? 1 : 0.56 + Math.min(0.12, scoreValue / 52);
       row.style.opacity = String(isSelected ? 1 : baseOpacity);
-      score.style.opacity = isHot ? "1" : String(0.66 + Math.min(0.12, scoreValue / 42));
-      node.style.opacity = isHot ? "1" : String(0.76 + Math.min(0.08, scoreValue / 54));
+      score.style.opacity = isHot
+        ? "1"
+        : String(0.66 + Math.min(0.12, scoreValue / 42));
+      node.style.opacity = isHot
+        ? "1"
+        : String(0.76 + Math.min(0.08, scoreValue / 54));
     });
 
     if (isSearching) {
