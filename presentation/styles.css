@@ -3012,11 +3012,13 @@ svg {
 .mnist-why-measure-rows {
   display: grid;
   gap: 0.75rem;
+  width: min(100%, 358px);
+  margin: 0 auto;
 }
 
 .mnist-why-measure-row {
-  --measure-name-width: 6.2rem;
-  --measure-value-width: 4.8rem;
+  --measure-name-width: 5.8rem;
+  --measure-value-width: 4.9rem;
   display: grid;
   grid-template-columns:
     var(--measure-name-width)
@@ -3043,6 +3045,7 @@ svg {
   font-family: "Rubik", "Heebo", sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
+  line-height: 1;
 }
 
 .mnist-why-measure-name {
@@ -3079,15 +3082,15 @@ svg {
 }
 
 .mnist-why-measure-row[data-kind="train"] {
-  --measure-width: calc(100% - 2px);
+  --measure-width: 97.5%;
 }
 
 .mnist-why-measure-row[data-kind="validation"] {
-  --measure-width: calc(100% - 2px);
+  --measure-width: 95.5%;
 }
 
 .mnist-why-measure-row[data-kind="test"] {
-  --measure-width: calc(100% - 2px);
+  --measure-width: 94.5%;
 }
 
 .mnist-why-mode-stage-principles {
