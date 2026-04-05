@@ -2754,21 +2754,6 @@ svg {
   overflow: hidden;
 }
 
-.mnist-why-vision-line {
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  top: 50%;
-  height: 1px;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(255, 238, 0, 0),
-      rgba(255, 238, 0, 0.42),
-      rgba(255, 238, 0, 0)
-    );
-}
-
 .mnist-why-vision-card {
   position: absolute;
   width: 124px;
@@ -2780,6 +2765,8 @@ svg {
     0 16px 32px rgba(0, 0, 0, 0.22),
     0 0 24px rgba(255, 238, 0, 0.05);
   overflow: hidden;
+  --card-rotation: 0deg;
+  --card-scale: 1;
   animation: mnist-why-card-drift 5.4s ease-in-out infinite;
 }
 
@@ -2790,26 +2777,48 @@ svg {
   display: block;
 }
 
-.mnist-why-vision-card-back {
-  right: 18%;
+.mnist-why-vision-card-a {
+  right: 6%;
+  top: 18px;
+  opacity: 0.32;
+  --card-rotation: 7deg;
+  --card-scale: 0.9;
+}
+
+.mnist-why-vision-card-b {
+  right: 19%;
+  top: 74px;
+  opacity: 0.52;
+  --card-rotation: -8deg;
+  --card-scale: 0.96;
+  animation-delay: -0.9s;
+}
+
+.mnist-why-vision-card-c {
+  left: calc(50% - 62px);
+  top: 34px;
+  opacity: 0.86;
+  --card-rotation: -4deg;
+  --card-scale: 1;
+  animation-delay: -1.8s;
+}
+
+.mnist-why-vision-card-d {
+  left: 22%;
+  bottom: 20px;
+  opacity: 0.74;
+  --card-rotation: 8deg;
+  --card-scale: 1.02;
+  animation-delay: -2.7s;
+}
+
+.mnist-why-vision-card-e {
+  left: 6%;
   top: 26px;
-  transform: rotate(9deg);
-  opacity: 0.42;
-}
-
-.mnist-why-vision-card-mid {
-  left: 50%;
-  top: 40px;
-  transform: translateX(-50%) rotate(-5deg);
-  opacity: 0.78;
-  animation-delay: -1.4s;
-}
-
-.mnist-why-vision-card-front {
-  left: 18%;
-  bottom: 18px;
-  transform: rotate(7deg);
-  animation-delay: -2.8s;
+  opacity: 0.38;
+  --card-rotation: -10deg;
+  --card-scale: 0.88;
+  animation-delay: -3.4s;
 }
 
 .mnist-why-mode-stage-speed {
@@ -3102,11 +3111,17 @@ svg {
 @keyframes mnist-why-card-drift {
   0%,
   100% {
-    transform: translateY(0);
+    transform:
+      translateY(0)
+      rotate(var(--card-rotation))
+      scale(var(--card-scale));
   }
 
   50% {
-    transform: translateY(-10px);
+    transform:
+      translateY(-10px)
+      rotate(var(--card-rotation))
+      scale(var(--card-scale));
   }
 }
 
@@ -3577,6 +3592,31 @@ svg {
   .mnist-why-vision-card {
     width: 96px;
     height: 96px;
+  }
+
+  .mnist-why-vision-card-a {
+    right: 2%;
+    top: 12px;
+  }
+
+  .mnist-why-vision-card-b {
+    right: 16%;
+    top: 54px;
+  }
+
+  .mnist-why-vision-card-c {
+    left: calc(50% - 48px);
+    top: 24px;
+  }
+
+  .mnist-why-vision-card-d {
+    left: 20%;
+    bottom: 16px;
+  }
+
+  .mnist-why-vision-card-e {
+    left: 2%;
+    top: 18px;
   }
 
   .mnist-why-epoch-box {

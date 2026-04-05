@@ -419,6 +419,8 @@ function setupMnistWhySection(model) {
     document.getElementById("mnistWhyVisionA"),
     document.getElementById("mnistWhyVisionB"),
     document.getElementById("mnistWhyVisionC"),
+    document.getElementById("mnistWhyVisionD"),
+    document.getElementById("mnistWhyVisionE"),
   ];
   const principlesCanvas = document.getElementById("mnistWhyPrinciplesDigit");
 
@@ -456,8 +458,10 @@ function setupMnistWhySection(model) {
 
   const renderDigits = () => {
     renderMnistHistoryDigit(visionCanvases[0], getPixels(0), "sharp");
-    renderMnistHistoryDigit(visionCanvases[1], getPixels(3), "smooth");
-    renderMnistHistoryDigit(visionCanvases[2], getPixels(6), "standard");
+    renderMnistHistoryDigit(visionCanvases[1], getPixels(2), "standard");
+    renderMnistHistoryDigit(visionCanvases[2], getPixels(4), "smooth");
+    renderMnistHistoryDigit(visionCanvases[3], getPixels(6), "sharp");
+    renderMnistHistoryDigit(visionCanvases[4], getPixels(8), "standard");
     renderMnistHistoryDigit(principlesCanvas, getPixels(2), "standard");
   };
 
