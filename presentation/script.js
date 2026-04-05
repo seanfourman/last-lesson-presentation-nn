@@ -699,6 +699,26 @@ function setupFeatureStorySection(model) {
     },
   ];
 
+  const syncLinkGroup = (container, count, tiltStart, tiltEnd) => {
+    const safeCount = Math.max(1, count);
+    const items = Array.from({ length: safeCount }, (_, index) => {
+      const span = document.createElement("span");
+      const progress =
+        safeCount === 1 ? 0.5 : index / Math.max(1, safeCount - 1);
+      const top = 20 + progress * 60;
+      const tilt = lerp(tiltStart, tiltEnd, progress);
+      const pulseDelay = index * 0.08;
+
+      span.className = "feature-story-link";
+      span.style.top = `${top}%`;
+      span.style.setProperty("--tilt", `${tilt}deg`);
+      span.style.setProperty("--pulse-delay", `${pulseDelay}s`);
+      return span;
+    });
+
+    container.replaceChildren(...items);
+  };
+
   const rect = (x0, y0, x1, y1) => ({
     test: (x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1,
   });
@@ -1104,6 +1124,9 @@ function setupFeatureStorySection(model) {
     stageTitle.textContent = meta.title;
     stageCopy.textContent = meta.copy(definition.digit);
     outputBadge.textContent = definition.digit;
+    syncLinkGroup(linksA, definition.components.length, -14, 15);
+    syncLinkGroup(linksB, definition.patterns.length, -10, 10);
+    syncLinkGroup(linksC, 1, 0, 0);
     outputBadge.classList.toggle("is-active", state.stage >= 3);
     componentColumn.classList.toggle("is-active", state.stage >= 1);
     patternColumn.classList.toggle("is-active", state.stage >= 2);
