@@ -3644,18 +3644,26 @@ svg {
 
 .feature-story-component-label {
   margin: 0;
+  width: min(100%, 9.5rem);
   color: rgba(255, 255, 255, 0.76);
   font-family: "Rubik", "Heebo", sans-serif;
   font-size: 0.84rem;
   font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .feature-story-pattern-label {
   margin: 0;
+  width: min(100%, 9.5rem);
   color: rgba(255, 255, 255, 0.76);
   font-family: "Rubik", "Heebo", sans-serif;
   font-size: 0.84rem;
   font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .feature-story-analysis-title {
