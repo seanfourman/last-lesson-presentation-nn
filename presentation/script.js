@@ -719,10 +719,10 @@ function setupNetworkDemoSection(model) {
 
     if (phase === "output") {
       if (phaseLabel) {
-        phaseLabel.textContent = "Output · 0–9";
+        phaseLabel.textContent = "Output · 0-9";
       }
       if (result) {
-        result.textContent = "בשכבת הפלט הרשת נותנת ציון לכל אחת מהספרות 0–9.";
+        result.textContent = "בשכבת הפלט הרשת נותנת ציון לכל אחת מהספרות 0-9.";
       }
       return;
     }
