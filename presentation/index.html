@@ -769,6 +769,261 @@
           </p>
         </div>
       </section>
+
+      <section class="feature-story-section" id="feature-story">
+        <div class="feature-story-shell">
+          <div class="feature-story-intro">
+            <p class="feature-story-kicker">מה אולי קורה בפנים</p>
+            <h2 class="feature-story-title">
+              אולי השכבות החבויות לא מזהות ספרות שלמות בבת אחת,
+              <br />
+              אלא אוספות חלקים קטנים ובונות מהם צורה מוכרת.
+            </h2>
+            <p class="feature-story-copy">
+              בחרו ספרה ולחצו על הפאנל כדי להתקדם שלב־שלב דרך הפירוק האפשרי שלה.
+            </p>
+          </div>
+
+          <div class="feature-story-lab" id="featureStoryLab">
+            <div class="feature-story-toolbar">
+              <div
+                class="feature-story-digit-tabs"
+                role="tablist"
+                aria-label="בחירת ספרה"
+              >
+                <button
+                  class="feature-story-digit-tab is-active"
+                  type="button"
+                  data-digit="1"
+                >
+                  1
+                </button>
+                <button class="feature-story-digit-tab" type="button" data-digit="0">
+                  0
+                </button>
+                <button class="feature-story-digit-tab" type="button" data-digit="7">
+                  7
+                </button>
+                <button class="feature-story-digit-tab" type="button" data-digit="9">
+                  9
+                </button>
+              </div>
+
+              <div
+                class="feature-story-stage-tabs"
+                role="tablist"
+                aria-label="שלבי הפירוק"
+              >
+                <button
+                  class="feature-story-stage-tab is-active"
+                  type="button"
+                  data-stage="0"
+                >
+                  קלט
+                </button>
+                <button class="feature-story-stage-tab" type="button" data-stage="1">
+                  רכיב ראשון
+                </button>
+                <button class="feature-story-stage-tab" type="button" data-stage="2">
+                  עוד רכיבים
+                </button>
+                <button class="feature-story-stage-tab" type="button" data-stage="3">
+                  ספרה
+                </button>
+              </div>
+            </div>
+
+            <div class="feature-story-panel" id="featureStoryPanel">
+              <div class="feature-story-progress" aria-hidden="true">
+                <span id="featureStoryProgressBar"></span>
+              </div>
+
+              <div class="feature-story-main">
+                <div class="feature-story-analysis-head feature-story-stage-copy">
+                  <span
+                    class="feature-story-analysis-index"
+                    id="featureStoryStageIndex"
+                  >
+                    01
+                  </span>
+                  <h3
+                    class="feature-story-analysis-title"
+                    id="featureStoryStageTitle"
+                  >
+                    הקלט נכנס כמו שהוא
+                  </h3>
+                  <p
+                    class="feature-story-analysis-copy"
+                    id="featureStoryStageCopy"
+                  >
+                    כרגע זו רק תמונה של ספרה אחת מתוך 28×28 פיקסלים.
+                  </p>
+                </div>
+
+                <div class="feature-story-network" dir="ltr">
+                  <div class="feature-story-column feature-story-column-source is-active">
+                    <div class="feature-story-source-wrap">
+                      <div class="feature-story-card feature-story-source-card">
+                        <canvas
+                          id="featureStorySourceCanvas"
+                          width="220"
+                          height="220"
+                        ></canvas>
+                      </div>
+                      <p class="feature-story-source-label" id="featureStorySourceLabel">
+                        קלט
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="feature-story-links" id="featureStoryLinksA" aria-hidden="true">
+                    <span class="feature-story-link" style="--tilt: -14deg"></span>
+                    <span class="feature-story-link" style="--tilt: -7deg"></span>
+                    <span class="feature-story-link" style="--tilt: 0deg"></span>
+                    <span class="feature-story-link" style="--tilt: 8deg"></span>
+                    <span class="feature-story-link" style="--tilt: 15deg"></span>
+                  </div>
+
+                  <div class="feature-story-column feature-story-column-components" id="featureStoryComponentColumn">
+                    <div class="feature-story-component-track">
+                      <div class="feature-story-component-wrap" data-slot="0">
+                        <div class="feature-story-card feature-story-component-card">
+                          <canvas
+                            class="feature-story-component-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-component-label"></p>
+                      </div>
+
+                      <div class="feature-story-component-wrap" data-slot="1">
+                        <div class="feature-story-card feature-story-component-card">
+                          <canvas
+                            class="feature-story-component-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-component-label"></p>
+                      </div>
+
+                      <div class="feature-story-component-wrap" data-slot="2">
+                        <div class="feature-story-card feature-story-component-card">
+                          <canvas
+                            class="feature-story-component-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-component-label"></p>
+                      </div>
+
+                      <div class="feature-story-component-wrap" data-slot="3">
+                        <div class="feature-story-card feature-story-component-card">
+                          <canvas
+                            class="feature-story-component-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-component-label"></p>
+                      </div>
+
+                      <div class="feature-story-component-wrap" data-slot="4">
+                        <div class="feature-story-card feature-story-component-card">
+                          <canvas
+                            class="feature-story-component-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-component-label"></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="feature-story-links" id="featureStoryLinksB" aria-hidden="true">
+                    <span class="feature-story-link" style="--tilt: -12deg"></span>
+                    <span class="feature-story-link" style="--tilt: -4deg"></span>
+                    <span class="feature-story-link" style="--tilt: 4deg"></span>
+                    <span class="feature-story-link" style="--tilt: 12deg"></span>
+                  </div>
+
+                  <div class="feature-story-column feature-story-column-patterns" id="featureStoryPatternColumn">
+                    <div class="feature-story-pattern-track">
+                      <div class="feature-story-pattern-wrap" data-slot="0">
+                        <div class="feature-story-card feature-story-pattern-card">
+                          <canvas
+                            class="feature-story-pattern-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-pattern-label"></p>
+                      </div>
+
+                      <div class="feature-story-pattern-wrap" data-slot="1">
+                        <div class="feature-story-card feature-story-pattern-card">
+                          <canvas
+                            class="feature-story-pattern-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-pattern-label"></p>
+                      </div>
+
+                      <div class="feature-story-pattern-wrap" data-slot="2">
+                        <div class="feature-story-card feature-story-pattern-card">
+                          <canvas
+                            class="feature-story-pattern-canvas"
+                            width="160"
+                            height="160"
+                          ></canvas>
+                        </div>
+                        <p class="feature-story-pattern-label"></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="feature-story-links" id="featureStoryLinksC" aria-hidden="true">
+                    <span class="feature-story-link" style="--tilt: -10deg"></span>
+                    <span class="feature-story-link" style="--tilt: -2deg"></span>
+                    <span class="feature-story-link" style="--tilt: 6deg"></span>
+                  </div>
+
+                  <div class="feature-story-column feature-story-column-output" id="featureStoryOutputColumn">
+                    <div class="feature-story-output-stack">
+                      <div class="feature-story-card feature-story-output-card">
+                        <canvas
+                          id="featureStoryOutputCanvas"
+                          width="160"
+                          height="160"
+                        ></canvas>
+                      </div>
+                      <div
+                        class="feature-story-output-badge"
+                        id="featureStoryOutputBadge"
+                      >
+                        1
+                      </div>
+                      <p class="feature-story-source-label">זיהוי סופי</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="feature-story-note">
+            זו לא הוכחה שככה הרשת באמת “חושבת”.
+            <br />
+            זו דרך אינטואיטיבית להבין למה שכבות חבויות עשויות לזהות קווים, קשתות וקצוות
+            לפני שהן מזהות ספרה שלמה.
+          </p>
+        </div>
+      </section>
     </main>
   </body>
 </html>

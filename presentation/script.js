@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNetworkDemoSection(model);
   setupMnistHistorySection(model);
   setupMnistWhySection(model);
+  setupFeatureStorySection(model);
   setupAmbientMnistCollages(model);
 
   const canvas = document.getElementById("heroDigitCanvas");
@@ -584,6 +585,367 @@ function setupAmbientMnistCollages(model) {
 
     drawSampleDigitToCanvas(canvas, pixels);
   });
+}
+
+function setupFeatureStorySection(model) {
+  const root = document.getElementById("featureStoryLab");
+  const panel = document.getElementById("featureStoryPanel");
+  const sourceCanvas = document.getElementById("featureStorySourceCanvas");
+  const sourceLabel = document.getElementById("featureStorySourceLabel");
+  const outputCanvas = document.getElementById("featureStoryOutputCanvas");
+  const progressBar = document.getElementById("featureStoryProgressBar");
+  const stageIndex = document.getElementById("featureStoryStageIndex");
+  const stageTitle = document.getElementById("featureStoryStageTitle");
+  const stageCopy = document.getElementById("featureStoryStageCopy");
+  const outputBadge = document.getElementById("featureStoryOutputBadge");
+  const componentColumn = document.getElementById("featureStoryComponentColumn");
+  const patternColumn = document.getElementById("featureStoryPatternColumn");
+  const outputColumn = document.getElementById("featureStoryOutputColumn");
+  const linksA = document.getElementById("featureStoryLinksA");
+  const linksB = document.getElementById("featureStoryLinksB");
+  const linksC = document.getElementById("featureStoryLinksC");
+  const digitTabs = Array.from(
+    document.querySelectorAll(".feature-story-digit-tab"),
+  );
+  const stageTabs = Array.from(
+    document.querySelectorAll(".feature-story-stage-tab"),
+  );
+  const componentWraps = Array.from(
+    document.querySelectorAll(".feature-story-component-wrap"),
+  );
+  const componentCanvases = Array.from(
+    document.querySelectorAll(".feature-story-component-canvas"),
+  );
+  const componentLabels = Array.from(
+    document.querySelectorAll(".feature-story-component-label"),
+  );
+  const patternWraps = Array.from(
+    document.querySelectorAll(".feature-story-pattern-wrap"),
+  );
+  const patternCanvases = Array.from(
+    document.querySelectorAll(".feature-story-pattern-canvas"),
+  );
+  const patternLabels = Array.from(
+    document.querySelectorAll(".feature-story-pattern-label"),
+  );
+
+  if (
+    !root ||
+    !panel ||
+    !sourceCanvas ||
+    !sourceLabel ||
+    !outputCanvas ||
+    !progressBar ||
+    !stageIndex ||
+    !stageTitle ||
+    !stageCopy ||
+    !outputBadge ||
+    !componentColumn ||
+    !patternColumn ||
+    !outputColumn ||
+    !linksA ||
+    !linksB ||
+    !linksC ||
+    !digitTabs.length ||
+    !stageTabs.length ||
+    !model?.digitExamples
+  ) {
+    return;
+  }
+
+  const stageMeta = [
+    {
+      index: "01",
+      title: "הספרה נכנסת כרשת אחת של פיקסלים",
+      copy: (digit) =>
+        `כרגע ${digit} היא רק תמונה אחת של 28×28 פיקסלים, לפני שהרשת ניסתה לפרק אותה לרמזים קטנים יותר.`,
+    },
+    {
+      index: "02",
+      title: "השכבה הראשונה תופסת קווים, קשתות וזוויות",
+      copy: () =>
+        "בשלב הזה אפשר לדמיין נוירונים שמגיבים לחלקים מקומיים: קו אנכי, קשת קצרה או אלכסון.",
+    },
+    {
+      index: "03",
+      title: "השכבה הבאה מחברת אותם למבנה גדול יותר",
+      copy: () =>
+        "עכשיו כמה רכיבים מתחברים יחד לצורה שכבר מזכירה חלק גדול מהספרה, ולא רק קטעים מבודדים.",
+    },
+    {
+      index: "04",
+      title: "בסוף מתקבלת השערה ברורה על הספרה",
+      copy: (digit) =>
+        `אחרי שהרמזים נאספו משכבה לשכבה, לרשת כבר יש מספיק מידע כדי להכריע שמדובר ב-${digit}.`,
+    },
+  ];
+
+  const rect = (x0, y0, x1, y1) => ({
+    test: (x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1,
+  });
+
+  const line = (x1, y1, x2, y2, thickness) => ({
+    test: (x, y) => distancePointToSegment(x, y, x1, y1, x2, y2) <= thickness,
+  });
+
+  const ellipse = (cx, cy, rx, ry, predicate = null) => ({
+    test: (x, y) => {
+      const dx = (x - cx) / rx;
+      const dy = (y - cy) / ry;
+      const inside = dx * dx + dy * dy <= 1;
+      return inside && (!predicate || predicate(x, y));
+    },
+  });
+
+  const featureDefinitions = {
+    "1": {
+      digit: "1",
+      sourceLabel: "שכבת הקלט · 1",
+      components: [
+        {
+          label: "קצה עליון",
+          color: "#f7b4c8",
+          masks: [line(13, 4, 13, 10, 2.7)],
+        },
+        {
+          label: "עמוד מרכזי",
+          color: "#da90e7",
+          masks: [line(14, 9, 14, 18, 3.1)],
+        },
+        {
+          label: "זנב אלכסוני",
+          color: "#ab93ff",
+          masks: [line(14, 18, 18.5, 24, 2.7)],
+        },
+      ],
+      patterns: [
+        {
+          label: "קו אנכי",
+          color: "#ffd67a",
+          masks: [line(13.9, 5, 14.2, 18.8, 3.2)],
+        },
+        {
+          label: "סיומת תחתונה",
+          color: "#f6b9ce",
+          masks: [line(14.2, 17.5, 18.2, 24, 2.9)],
+        },
+      ],
+    },
+    "0": {
+      digit: "0",
+      sourceLabel: "שכבת הקלט · 0",
+      components: [
+        {
+          label: "קשת עליונה שמאלית",
+          color: "#61c8ff",
+          masks: [ellipse(13.5, 13.5, 7.8, 9.3, (x, y) => x <= 13 && y <= 13)],
+        },
+        {
+          label: "קשת עליונה ימנית",
+          color: "#a7d86d",
+          masks: [ellipse(13.5, 13.5, 7.8, 9.3, (x, y) => x >= 13 && y <= 13)],
+        },
+        {
+          label: "קשת תחתונה ימנית",
+          color: "#ffee37",
+          masks: [ellipse(13.5, 13.5, 7.8, 9.3, (x, y) => x >= 13 && y >= 13)],
+        },
+        {
+          label: "קשת תחתונה שמאלית",
+          color: "#ff8e6a",
+          masks: [ellipse(13.5, 13.5, 7.8, 9.3, (x, y) => x <= 13 && y >= 13)],
+        },
+      ],
+      patterns: [
+        {
+          label: "חצי עליון",
+          color: "#8ae3ff",
+          masks: [ellipse(13.5, 13.5, 7.8, 9.3, (x, y) => y <= 13.3)],
+        },
+        {
+          label: "חצי תחתון",
+          color: "#ffd66c",
+          masks: [ellipse(13.5, 13.5, 7.8, 9.3, (x, y) => y >= 13.3)],
+        },
+      ],
+    },
+    "7": {
+      digit: "7",
+      sourceLabel: "שכבת הקלט · 7",
+      components: [
+        {
+          label: "קו עליון",
+          color: "#62c8ff",
+          masks: [line(9, 7, 19, 7, 2.8)],
+        },
+        {
+          label: "אלכסון מרכזי",
+          color: "#a9d86d",
+          masks: [line(18.5, 8, 12.5, 18, 2.9)],
+        },
+        {
+          label: "ירידה תחתונה",
+          color: "#ffea33",
+          masks: [line(12, 18, 10.5, 23.5, 2.7)],
+        },
+      ],
+      patterns: [
+        {
+          label: "קורה עליונה",
+          color: "#8dd5ff",
+          masks: [line(8.8, 7.2, 19.3, 7.4, 3)],
+        },
+        {
+          label: "ירידה אלכסונית",
+          color: "#ffe66c",
+          masks: [line(18.5, 8, 11.2, 23.2, 3.1)],
+        },
+      ],
+    },
+    "9": {
+      digit: "9",
+      sourceLabel: "שכבת הקלט · 9",
+      components: [
+        {
+          label: "לולאה עליונה",
+          color: "#ffed33",
+          masks: [ellipse(13.2, 9.8, 6.6, 5.6)],
+        },
+        {
+          label: "עמוד ימני",
+          color: "#ff8a73",
+          masks: [line(17.8, 10, 17.8, 23, 2.9)],
+        },
+      ],
+      patterns: [
+        {
+          label: "לולאה שלמה",
+          color: "#ffe66c",
+          masks: [ellipse(13.2, 9.8, 6.6, 5.6)],
+        },
+        {
+          label: "גזע יורד",
+          color: "#ffb18e",
+          masks: [line(17.8, 9.6, 17.6, 23.4, 3)],
+        },
+      ],
+    },
+  };
+
+  const state = {
+    digit: "1",
+    stage: 0,
+  };
+
+  const render = () => {
+    const definition = featureDefinitions[state.digit];
+    const sourcePixels = model.digitExamples?.[state.digit];
+
+    if (!definition || !sourcePixels) {
+      return;
+    }
+
+    drawSampleDigitToCanvas(sourceCanvas, sourcePixels);
+    sourceLabel.textContent = definition.sourceLabel;
+
+    const meta = stageMeta[state.stage];
+    stageIndex.textContent = meta.index;
+    stageTitle.textContent = meta.title;
+    stageCopy.textContent = meta.copy(definition.digit);
+    outputBadge.textContent = definition.digit;
+    outputBadge.classList.toggle("is-active", state.stage >= 3);
+    componentColumn.classList.toggle("is-active", state.stage >= 1);
+    patternColumn.classList.toggle("is-active", state.stage >= 2);
+    outputColumn.classList.toggle("is-active", state.stage >= 3);
+    linksA.classList.toggle("is-active", state.stage >= 1);
+    linksB.classList.toggle("is-active", state.stage >= 2);
+    linksC.classList.toggle("is-active", state.stage >= 3);
+    progressBar.style.transform = `scaleX(${(state.stage + 1) / stageMeta.length})`;
+    drawTintedDigitToCanvas(outputCanvas, sourcePixels, "#f7f1c0", {
+      drawRatio: 0.84,
+      glowStrength: 0.08,
+    });
+
+    digitTabs.forEach((tab) => {
+      tab.classList.toggle("is-active", tab.dataset.digit === state.digit);
+    });
+
+    stageTabs.forEach((tab, index) => {
+      tab.classList.toggle("is-active", index === state.stage);
+    });
+
+    componentWraps.forEach((wrap, index) => {
+      const component = definition.components[index];
+      const canvas = componentCanvases[index];
+      const label = componentLabels[index];
+
+      if (!component) {
+        wrap.classList.remove("is-visible");
+        wrap.style.display = "none";
+        return;
+      }
+
+      const maskedPixels = extractFeaturePixels(sourcePixels, component.masks);
+      wrap.style.display = "grid";
+      wrap.style.setProperty("--component-color", component.color);
+      label.textContent = component.label;
+      drawTintedDigitToCanvas(canvas, maskedPixels, component.color);
+      wrap.classList.toggle("is-visible", state.stage >= 1);
+    });
+
+    patternWraps.forEach((wrap, index) => {
+      const pattern = definition.patterns?.[index];
+      const canvas = patternCanvases[index];
+      const label = patternLabels[index];
+
+      if (!pattern) {
+        wrap.classList.remove("is-visible");
+        wrap.style.display = "none";
+        return;
+      }
+
+      const maskedPixels = extractFeaturePixels(sourcePixels, pattern.masks);
+      wrap.style.display = "grid";
+      wrap.style.setProperty("--component-color", pattern.color);
+      label.textContent = pattern.label;
+      drawTintedDigitToCanvas(canvas, maskedPixels, pattern.color, {
+        drawRatio: 0.8,
+        glowStrength: 0.12,
+      });
+      wrap.classList.toggle("is-visible", state.stage >= 2);
+    });
+  };
+
+  const setDigit = (digit) => {
+    state.digit = digit;
+    state.stage = 0;
+    render();
+  };
+
+  const setStage = (stage) => {
+    state.stage = stage;
+    render();
+  };
+
+  digitTabs.forEach((tab) => {
+    tab.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setDigit(tab.dataset.digit || "1");
+    });
+  });
+
+  stageTabs.forEach((tab, index) => {
+    tab.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setStage(index);
+    });
+  });
+
+  panel.addEventListener("click", () => {
+    setStage((state.stage + 1) % stageMeta.length);
+  });
+
+  render();
 }
 
 function setupNetworkDemoSection(model) {
@@ -2813,6 +3175,23 @@ function drawSampleDigitToCanvas(canvas, pixels) {
   ctx.restore();
 }
 
+function drawTintedDigitToCanvas(canvas, pixels, color, options = {}) {
+  const ctx = canvas.getContext("2d");
+  const sourceCanvas = createTintedPixelCanvas(pixels, color, options);
+  const drawRatio = options.drawRatio ?? 0.72;
+  const drawSize = canvas.width * drawRatio;
+  const drawX = (canvas.width - drawSize) * 0.5;
+  const drawY = (canvas.height - drawSize) * 0.5;
+
+  clearCanvas(ctx, canvas.width, canvas.height);
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.shadowColor = colorToRgba(color, options.glowStrength ?? 0.22);
+  ctx.shadowBlur = canvas.width * 0.05;
+  ctx.drawImage(sourceCanvas, drawX, drawY, drawSize, drawSize);
+  ctx.restore();
+}
+
 function createPixelCanvas(pixels, options = {}) {
   const canvas = document.createElement("canvas");
   canvas.width = 28;
@@ -2838,6 +3217,41 @@ function createPixelCanvas(pixels, options = {}) {
   return canvas;
 }
 
+function createTintedPixelCanvas(pixels, color, options = {}) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 28;
+  canvas.height = 28;
+  const ctx = canvas.getContext("2d");
+  const image = ctx.createImageData(28, 28);
+  const [red, green, blue] = hexToRgb(color);
+  const alphaBoost = options.alphaBoost ?? 1.08;
+
+  for (let i = 0; i < pixels.length; i += 1) {
+    const value = clamp(Math.round(pixels[i] * alphaBoost), 0, 255);
+    image.data[i * 4] = red;
+    image.data[i * 4 + 1] = green;
+    image.data[i * 4 + 2] = blue;
+    image.data[i * 4 + 3] = value;
+  }
+
+  ctx.putImageData(image, 0, 0);
+  return canvas;
+}
+
+function extractFeaturePixels(pixels, masks) {
+  const extracted = new Array(28 * 28).fill(0);
+
+  for (let y = 0; y < 28; y += 1) {
+    for (let x = 0; x < 28; x += 1) {
+      const index = y * 28 + x;
+      const isInside = masks.some((mask) => mask.test(x, y));
+      extracted[index] = isInside ? pixels[index] : 0;
+    }
+  }
+
+  return extracted;
+}
+
 function clearCanvas(ctx, width, height) {
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = "#000";
@@ -2854,6 +3268,43 @@ function relativeRectToContainer(element, container) {
     width: elementRect.width,
     height: elementRect.height,
   };
+}
+
+function distancePointToSegment(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSquared = dx * dx + dy * dy;
+
+  if (lengthSquared === 0) {
+    return Math.hypot(px - x1, py - y1);
+  }
+
+  const t = clamp(((px - x1) * dx + (py - y1) * dy) / lengthSquared, 0, 1);
+  const nearestX = x1 + t * dx;
+  const nearestY = y1 + t * dy;
+  return Math.hypot(px - nearestX, py - nearestY);
+}
+
+function hexToRgb(color) {
+  const normalized = color.replace("#", "");
+  const value =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((part) => part + part)
+          .join("")
+      : normalized;
+
+  return [
+    Number.parseInt(value.slice(0, 2), 16),
+    Number.parseInt(value.slice(2, 4), 16),
+    Number.parseInt(value.slice(4, 6), 16),
+  ];
+}
+
+function colorToRgba(color, alpha) {
+  const [red, green, blue] = hexToRgb(color);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
 function lerpRect(from, to, amount) {
