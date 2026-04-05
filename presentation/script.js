@@ -415,6 +415,8 @@ function setupMnistWhySection(model) {
   const progressBar = document.getElementById("mnistWhyProgressBar");
   const panel = root?.querySelector(".mnist-why-panel");
   const epochValue = document.getElementById("mnistWhyEpochValue");
+  const speedTimeValue = document.getElementById("mnistWhySpeedTime");
+  const speedBars = Array.from(root.querySelectorAll(".mnist-why-speed-bars span"));
   const visionCanvases = [
     document.getElementById("mnistWhyVisionA"),
     document.getElementById("mnistWhyVisionB"),
@@ -490,10 +492,26 @@ function setupMnistWhySection(model) {
   };
 
   const updateEpoch = () => {
+    const cycleMs = 5600;
+    const normalized = (performance.now() % cycleMs) / cycleMs;
+    const eased = 1 - (1 - normalized) * (1 - normalized);
+    const stage = Math.min(7, Math.floor(eased * 8));
+    const epoch = stage + 1;
+    const seconds = 4 + stage * 3;
+
     if (epochValue) {
-      const phase = performance.now() / 190;
-      const value = 6 + Math.floor((Math.sin(phase) * 0.5 + 0.5) * 18);
-      epochValue.textContent = String(value).padStart(2, "0");
+      epochValue.textContent = String(epoch).padStart(2, "0");
+    }
+
+    if (speedTimeValue) {
+      speedTimeValue.textContent = `00:${String(seconds).padStart(2, "0")}`;
+    }
+
+    if (speedBars.length) {
+      speedBars.forEach((bar, index) => {
+        const fill = Math.max(0.14, Math.min(1, eased * 1.08 - index * 0.045));
+        bar.style.setProperty("--bar-fill", fill.toFixed(3));
+      });
     }
 
     epochRafId = window.requestAnimationFrame(updateEpoch);
