@@ -3417,6 +3417,36 @@ svg {
   box-shadow: 0 0 20px rgba(255, 238, 0, 0.08);
 }
 
+.feature-story-digit-asterisk {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  position: static;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  padding: 0.62rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: none;
+}
+
+.feature-story-digit-asterisk::after {
+  content: none;
+}
+
+.feature-story-digit-asterisk-star {
+  position: static;
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: none;
+  transform: none;
+}
+
 .feature-story-panel {
   position: relative;
   width: 100%;
@@ -4519,6 +4549,7 @@ svg {
 
   .feature-story-toolbar {
     justify-content: center;
+    min-height: auto;
   }
 
   .feature-story-panel {

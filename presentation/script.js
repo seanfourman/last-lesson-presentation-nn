@@ -647,6 +647,31 @@ function setupFeatureStorySection(model) {
     return;
   }
 
+  const pixelsAreEqual = (left, right) =>
+    Array.isArray(left) &&
+    Array.isArray(right) &&
+    left.length === right.length &&
+    left.every((value, index) => value === right[index]);
+
+  const originalZeroPixels = model.digitExamples?.["0"];
+  const alternateZeroPixels =
+    model.samples?.[91]?.label === 0 &&
+    Array.isArray(model.samples[91].pixels) &&
+    !pixelsAreEqual(model.samples[91].pixels, originalZeroPixels)
+      ? model.samples[91].pixels
+      : (model.samples || []).find(
+          (sample) =>
+            String(sample.label) === "0" &&
+            Array.isArray(sample.pixels) &&
+            !pixelsAreEqual(sample.pixels, originalZeroPixels),
+        )?.pixels || originalZeroPixels;
+
+  const featureStoryDigitPixels = {
+    ...model.digitExamples,
+    "0": alternateZeroPixels,
+    "special-zero": originalZeroPixels,
+  };
+
   const stageMeta = [
     {
       index: "01",
@@ -1054,6 +1079,11 @@ function setupFeatureStorySection(model) {
     },
   };
 
+  featureDefinitions["special-zero"] = {
+    ...featureDefinitions["0"],
+    sourceLabel: "×©×›×‘×ª ×”×§×œ×˜ Â· 0",
+  };
+
   const state = {
     digit: "0",
     stage: 0,
@@ -1061,7 +1091,7 @@ function setupFeatureStorySection(model) {
 
   const render = () => {
     const definition = featureDefinitions[state.digit];
-    const sourcePixels = model.digitExamples?.[state.digit];
+    const sourcePixels = featureStoryDigitPixels[state.digit];
 
     if (!definition || !sourcePixels) {
       return;
