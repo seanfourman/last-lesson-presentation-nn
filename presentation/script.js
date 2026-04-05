@@ -249,8 +249,8 @@ function setupValueSection(pixels) {
   let selectorDirection = 1;
   let selectorTimerId = 0;
   const copyByState = [
-    "נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים ומחזירה מספר אחד בין 0 ל־9.<br><strong>פתאום זה כבר לא נשמע כמו משהו כל כך פשוט.</strong>",
-    'מבחינת המחשב, זו לא "ספרה" ולא כתב יד.<br>אלה פשוט 784 ערכים בין 0 ל־1, שכל אחד מהם מתאר עד כמה הפיקסל שלו בהיר.',
+    "נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים ומחזירה מספר אחד בין 0 ל-9.<br><strong>פתאום זה כבר לא נשמע כמו משהו כל כך פשוט.</strong>",
+    'מבחינת המחשב, זו לא "ספרה" ולא כתב יד.<br>אלה פשוט 784 ערכים בין 0 ל-1, שכל אחד מהם מתאר עד כמה הפיקסל שלו בהיר.',
     "מכאן הרשת צריכה לעשות את הצעד המעניין באמת:<br>לקחת המון מספרים קטנים ולהפוך אותם להחלטה אחת מתוך 0 עד 9.",
   ];
   const labelByState = [
@@ -385,7 +385,8 @@ function setupMnistHistorySection(model) {
 
   const examples = model?.digitExamples || {};
   const fallbackPixels =
-    examples["3"] || Object.values(examples).find((pixels) => Array.isArray(pixels));
+    examples["3"] ||
+    Object.values(examples).find((pixels) => Array.isArray(pixels));
 
   if (!fallbackPixels) {
     return;
@@ -401,7 +402,11 @@ function setupMnistHistorySection(model) {
     renderMnistHistoryDigit(rawCanvases[0], rawSamples[0], "pixelated");
     renderMnistHistoryDigit(rawCanvases[1], rawSamples[1], "smooth");
     renderMnistHistoryDigit(rawCanvases[2], rawSamples[2], "sharp");
-    renderMnistHistoryDigit(standardCanvas, examples["3"] || fallbackPixels, "standard");
+    renderMnistHistoryDigit(
+      standardCanvas,
+      examples["3"] || fallbackPixels,
+      "standard",
+    );
   };
 
   renderAll();
@@ -416,7 +421,9 @@ function setupMnistWhySection(model) {
   const panel = root?.querySelector(".mnist-why-panel");
   const epochValue = document.getElementById("mnistWhyEpochValue");
   const speedTimeValue = document.getElementById("mnistWhySpeedTime");
-  const speedBars = Array.from(root.querySelectorAll(".mnist-why-speed-bars span"));
+  const speedBars = Array.from(
+    root.querySelectorAll(".mnist-why-speed-bars span"),
+  );
   const visionCanvases = [
     document.getElementById("mnistWhyVisionA"),
     document.getElementById("mnistWhyVisionB"),
@@ -441,7 +448,8 @@ function setupMnistWhySection(model) {
     (left, right) => Number(left) - Number(right),
   );
   const fallbackPixels =
-    examples["3"] || Object.values(examples).find((pixels) => Array.isArray(pixels));
+    examples["3"] ||
+    Object.values(examples).find((pixels) => Array.isArray(pixels));
 
   if (!fallbackPixels || !sampleDigits.length) {
     return;
@@ -454,7 +462,9 @@ function setupMnistWhySection(model) {
 
   const getPixels = (offset = 0) => {
     const digit =
-      sampleDigits[(digitIndex + offset + sampleDigits.length) % sampleDigits.length];
+      sampleDigits[
+        (digitIndex + offset + sampleDigits.length) % sampleDigits.length
+      ];
     return examples[digit] || fallbackPixels;
   };
 
@@ -512,7 +522,8 @@ function setupMnistWhySection(model) {
         const fill = Math.max(0.14, Math.min(1, eased * 1.08 - index * 0.045));
         bar.style.opacity = String(0.42 + fill * 0.58);
         bar.style.boxShadow = `0 0 ${(8 + fill * 14).toFixed(1)}px rgba(255, 238, 0, ${(
-          0.1 + fill * 0.12
+          0.1 +
+          fill * 0.12
         ).toFixed(3)})`;
       });
     }
@@ -711,8 +722,7 @@ function setupNetworkDemoSection(model) {
         phaseLabel.textContent = "Output · 0–9";
       }
       if (result) {
-        result.textContent =
-          "בשכבת הפלט הרשת נותנת ציון לכל אחת מהספרות 0–9.";
+        result.textContent = "בשכבת הפלט הרשת נותנת ציון לכל אחת מהספרות 0–9.";
       }
       return;
     }
@@ -731,7 +741,7 @@ function setupNetworkDemoSection(model) {
       state.runId += 1;
       scene.renderIdle();
       setIdleMessage(
-        "ציירו ספרה, והרשת תראה איך היא משתמשת במה שלמדה על דוגמאות מ־MNIST.",
+        "ציירו ספרה, והרשת תראה איך היא משתמשת במה שלמדה על דוגמאות מ-MNIST.",
       );
       return;
     }
@@ -759,8 +769,8 @@ function setupNetworkDemoSection(model) {
         if (result) {
           result.innerHTML =
             sourceKind === "sample"
-              ? `על הדוגמה הזו הרשת הכי בטוחה ב־<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
-              : `על הציור הזה הרשת הכי בטוחה ב־<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
+              ? `על הדוגמה הזו הרשת הכי בטוחה ב-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
+              : `על הציור הזה הרשת הכי בטוחה ב-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
         }
       },
     });

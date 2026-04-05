@@ -4,13 +4,13 @@
 
 מה יש בפנים:
 
-- סיפור ב־6 פרקים שממשיך את הזרימה של `docs/video/interactive`
+- סיפור ב-6 פרקים שממשיך את הזרימה של `docs/video/interactive`
 - דמו ציור ספרות בזמן אמת
-- preprocessing ל־28x28
+- preprocessing ל-28x28
 - הרצת מודל MNIST מקומי מתוך `data/mnist_model.js`
 - אנימציית זרימת מידע ברשת
 - פירוק אינטואיטיבי לפיצ'רים
-- המחשת `solution space` ו־XOR
+- המחשת `solution space` ו-XOR
 
 כדי לפתוח:
 

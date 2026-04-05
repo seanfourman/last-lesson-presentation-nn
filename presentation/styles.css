@@ -711,6 +711,8 @@ svg {
   width: min(1400px, 100%);
   min-height: calc(100vh - 48px);
   min-height: calc(100dvh - 48px);
+  box-sizing: border-box;
+  padding-block: clamp(48px, 8.5vh, 96px) clamp(42px, 7.6vh, 82px);
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 1rem;
@@ -3655,6 +3657,7 @@ svg {
   .network-shell {
     min-height: calc(100vh - 42px);
     min-height: calc(100dvh - 42px);
+    padding-block: 30px 26px;
     gap: 0.85rem;
   }
 

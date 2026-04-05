@@ -130,7 +130,8 @@
               <br />
               וזאת בדיוק היכולת שאנחנו רוצים ממכונה:
               <br />
-              לא לזכור תמונה אחת, אלא להבין מה משותף להרבה גרסאות שונות של אותה ספרה.
+              לא לזכור תמונה אחת, אלא להבין מה משותף להרבה גרסאות שונות של אותה
+              ספרה.
             </p>
           </div>
         </div>
@@ -190,7 +191,7 @@
 
           <p class="values-copy" id="valuesCopy">
             נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים ומחזירה מספר אחד
-            בין 0 ל־9.
+            בין 0 ל-9.
             <br />
             <strong>פתאום זה כבר לא נשמע כמו משהו כל כך פשוט.</strong>
           </p>
@@ -208,7 +209,8 @@
               <br />
               כך הרשת לא מקבלת חוקים מוכנים מראש,
               <br />
-              אלא לומדת מתוך דוגמאות איך לקשר בין קלט של 28×28 פיקסלים לבין הספרות 0–9.
+              אלא לומדת מתוך דוגמאות איך לקשר בין קלט של 28×28 פיקסלים לבין
+              הספרות 0–9.
             </p>
           </div>
 
@@ -268,7 +270,7 @@
               <br />
               כאן אפשר לראות בזמן אמת מה הרשת עושה עם קלט חדש:
               <br />
-              הציור מומר ל־784 ערכים, עובר דרך השכבות,
+              הציור מומר ל-784 ערכים, עובר דרך השכבות,
               <br />
               ובסוף מתקבל ציון לכל אחת מהספרות 0–9.
             </p>
@@ -428,7 +430,10 @@
             <div class="mnist-stat-board" aria-label="מספרי המפתח של MNIST">
               <article class="mnist-stat-card mnist-stat-card-grid">
                 <span class="mnist-stat-node" aria-hidden="true"></span>
-                <span class="mnist-stat-icon mnist-stat-icon-grid" aria-hidden="true">
+                <span
+                  class="mnist-stat-icon mnist-stat-icon-grid"
+                  aria-hidden="true"
+                >
                   <span></span><span></span><span></span><span></span>
                   <span></span><span></span><span></span><span></span>
                   <span></span><span></span><span></span><span></span>
@@ -499,9 +504,21 @@
             </p>
           </div>
 
-          <div class="mnist-why-lab" id="mnistWhyLab" aria-label="למה MNIST נהיה דוגמה קלאסית">
-            <div class="mnist-why-tabs" role="tablist" aria-label="ארבע סיבות לבחור ב-MNIST">
-              <button class="mnist-why-tab is-active" type="button" data-why-tab="0">
+          <div
+            class="mnist-why-lab"
+            id="mnistWhyLab"
+            aria-label="למה MNIST נהיה דוגמה קלאסית"
+          >
+            <div
+              class="mnist-why-tabs"
+              role="tablist"
+              aria-label="ארבע סיבות לבחור ב-MNIST"
+            >
+              <button
+                class="mnist-why-tab is-active"
+                type="button"
+                data-why-tab="0"
+              >
                 <span class="mnist-why-tab-index">01</span>
                 <span class="mnist-why-tab-label">רואים בעיניים</span>
               </button>
@@ -525,21 +542,39 @@
               </div>
 
               <section class="mnist-why-mode is-active" data-why-mode="0">
-                <div class="mnist-why-mode-stage mnist-why-mode-stage-vision" aria-hidden="true">
+                <div
+                  class="mnist-why-mode-stage mnist-why-mode-stage-vision"
+                  aria-hidden="true"
+                >
                   <span class="mnist-why-vision-card mnist-why-vision-card-a">
-                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionA"></canvas>
+                    <canvas
+                      class="mnist-why-vision-canvas"
+                      id="mnistWhyVisionA"
+                    ></canvas>
                   </span>
                   <span class="mnist-why-vision-card mnist-why-vision-card-b">
-                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionB"></canvas>
+                    <canvas
+                      class="mnist-why-vision-canvas"
+                      id="mnistWhyVisionB"
+                    ></canvas>
                   </span>
                   <span class="mnist-why-vision-card mnist-why-vision-card-c">
-                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionC"></canvas>
+                    <canvas
+                      class="mnist-why-vision-canvas"
+                      id="mnistWhyVisionC"
+                    ></canvas>
                   </span>
                   <span class="mnist-why-vision-card mnist-why-vision-card-d">
-                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionD"></canvas>
+                    <canvas
+                      class="mnist-why-vision-canvas"
+                      id="mnistWhyVisionD"
+                    ></canvas>
                   </span>
                   <span class="mnist-why-vision-card mnist-why-vision-card-e">
-                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionE"></canvas>
+                    <canvas
+                      class="mnist-why-vision-canvas"
+                      id="mnistWhyVisionE"
+                    ></canvas>
                   </span>
                 </div>
                 <div class="mnist-why-mode-copy">
@@ -554,21 +589,33 @@
               </section>
 
               <section class="mnist-why-mode" data-why-mode="1">
-                <div class="mnist-why-mode-stage mnist-why-mode-stage-speed" aria-hidden="true">
+                <div
+                  class="mnist-why-mode-stage mnist-why-mode-stage-speed"
+                  aria-hidden="true"
+                >
                   <div class="mnist-why-speed-meta">
                     <div class="mnist-why-epoch-box">
                       <span class="mnist-why-epoch-label">Epoch</span>
-                      <span class="mnist-why-epoch-value" id="mnistWhyEpochValue">01</span>
+                      <span
+                        class="mnist-why-epoch-value"
+                        id="mnistWhyEpochValue"
+                        >01</span
+                      >
                     </div>
                     <div class="mnist-why-speed-time">
                       <span class="mnist-why-speed-time-label">זמן ריצה</span>
-                      <span class="mnist-why-speed-time-value" id="mnistWhySpeedTime">00:04</span>
+                      <span
+                        class="mnist-why-speed-time-value"
+                        id="mnistWhySpeedTime"
+                        >00:04</span
+                      >
                     </div>
                   </div>
                   <div class="mnist-why-speed-track">
                     <div class="mnist-why-speed-bars">
-                      <span></span><span></span><span></span><span></span><span></span>
-                      <span></span><span></span><span></span><span></span><span></span>
+                      <span></span><span></span><span></span><span></span
+                      ><span></span> <span></span><span></span><span></span
+                      ><span></span><span></span>
                     </div>
                   </div>
                 </div>
@@ -584,11 +631,16 @@
               </section>
 
               <section class="mnist-why-mode" data-why-mode="2">
-                <div class="mnist-why-mode-stage mnist-why-mode-stage-measure" aria-hidden="true">
+                <div
+                  class="mnist-why-mode-stage mnist-why-mode-stage-measure"
+                  aria-hidden="true"
+                >
                   <div class="mnist-why-measure-board">
                     <div class="mnist-why-score-box">
                       <span class="mnist-why-score-value">98.1%</span>
-                      <span class="mnist-why-score-label">דיוק על סט הבדיקה</span>
+                      <span class="mnist-why-score-label"
+                        >דיוק על סט הבדיקה</span
+                      >
                     </div>
 
                     <div class="mnist-why-measure-rows">
@@ -602,7 +654,10 @@
                         <span class="mnist-why-measure-bar"><span></span></span>
                         <span class="mnist-why-measure-value">98.4%</span>
                       </div>
-                      <div class="mnist-why-measure-row is-focus" data-kind="test">
+                      <div
+                        class="mnist-why-measure-row is-focus"
+                        data-kind="test"
+                      >
                         <span class="mnist-why-measure-name">בדיקה</span>
                         <span class="mnist-why-measure-bar"><span></span></span>
                         <span class="mnist-why-measure-value">98.1%</span>
@@ -622,9 +677,14 @@
               </section>
 
               <section class="mnist-why-mode" data-why-mode="3">
-                <div class="mnist-why-mode-stage mnist-why-mode-stage-principles" aria-hidden="true">
+                <div
+                  class="mnist-why-mode-stage mnist-why-mode-stage-principles"
+                  aria-hidden="true"
+                >
                   <div class="mnist-why-principles-flow">
-                    <div class="mnist-why-principles-step mnist-why-principles-step-input">
+                    <div
+                      class="mnist-why-principles-step mnist-why-principles-step-input"
+                    >
                       <span class="mnist-why-principles-step-label">קלט</span>
                       <span class="mnist-why-principles-digit">
                         <canvas
@@ -636,28 +696,39 @@
 
                     <span class="mnist-why-principles-connector"></span>
 
-                    <div class="mnist-why-principles-step mnist-why-principles-step-grid">
+                    <div
+                      class="mnist-why-principles-step mnist-why-principles-step-grid"
+                    >
                       <span class="mnist-why-principles-step-label">28×28</span>
                       <span class="mnist-why-principles-grid">
-                        <span></span><span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span
+                        ><span></span> <span></span><span></span><span></span
+                        ><span></span><span></span> <span></span><span></span
+                        ><span></span><span></span><span></span> <span></span
+                        ><span></span><span></span><span></span><span></span>
                       </span>
                     </div>
 
                     <span class="mnist-why-principles-connector"></span>
 
-                    <div class="mnist-why-principles-step mnist-why-principles-step-network">
+                    <div
+                      class="mnist-why-principles-step mnist-why-principles-step-network"
+                    >
                       <span class="mnist-why-principles-step-label">שכבות</span>
                       <span class="mnist-why-principles-network">
-                        <span class="mnist-why-principles-layer mnist-why-principles-layer-a">
+                        <span
+                          class="mnist-why-principles-layer mnist-why-principles-layer-a"
+                        >
                           <span></span><span></span><span></span><span></span>
                         </span>
-                        <span class="mnist-why-principles-layer mnist-why-principles-layer-b">
+                        <span
+                          class="mnist-why-principles-layer mnist-why-principles-layer-b"
+                        >
                           <span></span><span></span><span></span>
                         </span>
-                        <span class="mnist-why-principles-layer mnist-why-principles-layer-c">
+                        <span
+                          class="mnist-why-principles-layer mnist-why-principles-layer-c"
+                        >
                           <span></span><span></span><span></span>
                         </span>
                       </span>
@@ -665,7 +736,9 @@
 
                     <span class="mnist-why-principles-connector"></span>
 
-                    <div class="mnist-why-principles-step mnist-why-principles-step-output">
+                    <div
+                      class="mnist-why-principles-step mnist-why-principles-step-output"
+                    >
                       <span class="mnist-why-principles-step-label">פלט</span>
                       <span class="mnist-why-principles-output">
                         <span>0</span>
@@ -691,7 +764,8 @@
           <p class="mnist-note">
             במילים אחרות, MNIST לא נשאר קלאסי כי הוא הכי קשה,
             <br />
-            אלא כי הוא אחד המקומות הכי טובים להתחיל מהם כשרוצים להבין איך רשת לומדת.
+            אלא כי הוא אחד המקומות הכי טובים להתחיל מהם כשרוצים להבין איך רשת
+            לומדת.
           </p>
         </div>
       </section>
