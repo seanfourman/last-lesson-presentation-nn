@@ -575,18 +575,29 @@
 
               <section class="mnist-why-mode" data-why-mode="2">
                 <div class="mnist-why-mode-stage mnist-why-mode-stage-measure" aria-hidden="true">
-                  <div class="mnist-why-score-box">
-                    <span class="mnist-why-score-value">98.1%</span>
-                    <span class="mnist-why-score-label">accuracy על test set</span>
-                  </div>
-                  <div class="mnist-why-meter">
-                    <span class="mnist-why-meter-fill"></span>
-                    <span class="mnist-why-meter-marker"></span>
-                  </div>
-                  <div class="mnist-why-split-row">
-                    <span>train</span>
-                    <span>validation</span>
-                    <span>test</span>
+                  <div class="mnist-why-measure-board">
+                    <div class="mnist-why-score-box">
+                      <span class="mnist-why-score-value">98.1%</span>
+                      <span class="mnist-why-score-label">דיוק על סט הבדיקה</span>
+                    </div>
+
+                    <div class="mnist-why-measure-rows">
+                      <div class="mnist-why-measure-row" data-kind="train">
+                        <span class="mnist-why-measure-name">אימון</span>
+                        <span class="mnist-why-measure-bar"><span></span></span>
+                        <span class="mnist-why-measure-value">99.0%</span>
+                      </div>
+                      <div class="mnist-why-measure-row" data-kind="validation">
+                        <span class="mnist-why-measure-name">ולידציה</span>
+                        <span class="mnist-why-measure-bar"><span></span></span>
+                        <span class="mnist-why-measure-value">98.4%</span>
+                      </div>
+                      <div class="mnist-why-measure-row is-focus" data-kind="test">
+                        <span class="mnist-why-measure-name">בדיקה</span>
+                        <span class="mnist-why-measure-bar"><span></span></span>
+                        <span class="mnist-why-measure-value">98.1%</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="mnist-why-mode-copy">
