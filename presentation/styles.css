@@ -3379,15 +3379,15 @@ svg {
   gap: 0.9rem 1rem;
 }
 
-.feature-story-digit-tabs,
-.feature-story-stage-tabs {
+.feature-story-digit-tabs {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.65rem;
+  direction: ltr;
 }
 
-.feature-story-digit-tab,
-.feature-story-stage-tab {
+.feature-story-digit-tab {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.03);
@@ -3405,14 +3405,12 @@ svg {
     box-shadow 180ms ease;
 }
 
-.feature-story-digit-tab:hover,
-.feature-story-stage-tab:hover {
+.feature-story-digit-tab:hover {
   transform: translateY(-2px);
   border-color: rgba(255, 238, 0, 0.22);
 }
 
-.feature-story-digit-tab.is-active,
-.feature-story-stage-tab.is-active {
+.feature-story-digit-tab.is-active {
   color: rgba(255, 248, 190, 0.98);
   border-color: rgba(255, 238, 0, 0.28);
   background: rgba(255, 238, 0, 0.07);
@@ -3444,7 +3442,7 @@ svg {
   display: block;
   width: 100%;
   height: 100%;
-  transform-origin: right center;
+  transform-origin: left center;
   transform: scaleX(0.25);
   background:
     linear-gradient(
@@ -3633,14 +3631,6 @@ svg {
   font-family: "Rubik", "Heebo", sans-serif;
   font-size: 0.84rem;
   font-weight: 700;
-}
-
-.feature-story-analysis-index {
-  color: rgba(255, 238, 0, 0.92);
-  font-family: "Rubik", "Heebo", sans-serif;
-  font-size: 0.94rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
 }
 
 .feature-story-analysis-title {

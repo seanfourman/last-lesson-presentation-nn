@@ -594,7 +594,6 @@ function setupFeatureStorySection(model) {
   const sourceLabel = document.getElementById("featureStorySourceLabel");
   const outputCanvas = document.getElementById("featureStoryOutputCanvas");
   const progressBar = document.getElementById("featureStoryProgressBar");
-  const stageIndex = document.getElementById("featureStoryStageIndex");
   const stageTitle = document.getElementById("featureStoryStageTitle");
   const stageCopy = document.getElementById("featureStoryStageCopy");
   const outputBadge = document.getElementById("featureStoryOutputBadge");
@@ -606,9 +605,6 @@ function setupFeatureStorySection(model) {
   const linksC = document.getElementById("featureStoryLinksC");
   const digitTabs = Array.from(
     document.querySelectorAll(".feature-story-digit-tab"),
-  );
-  const stageTabs = Array.from(
-    document.querySelectorAll(".feature-story-stage-tab"),
   );
   const componentWraps = Array.from(
     document.querySelectorAll(".feature-story-component-wrap"),
@@ -636,7 +632,6 @@ function setupFeatureStorySection(model) {
     !sourceLabel ||
     !outputCanvas ||
     !progressBar ||
-    !stageIndex ||
     !stageTitle ||
     !stageCopy ||
     !outputBadge ||
@@ -647,7 +642,6 @@ function setupFeatureStorySection(model) {
     !linksB ||
     !linksC ||
     !digitTabs.length ||
-    !stageTabs.length ||
     !model?.digitExamples
   ) {
     return;
@@ -698,39 +692,6 @@ function setupFeatureStorySection(model) {
   });
 
   const featureDefinitions = {
-    "1": {
-      digit: "1",
-      sourceLabel: "שכבת הקלט · 1",
-      components: [
-        {
-          label: "קצה עליון",
-          color: "#f7b4c8",
-          masks: [line(13, 4, 13, 10, 2.7)],
-        },
-        {
-          label: "עמוד מרכזי",
-          color: "#da90e7",
-          masks: [line(14, 9, 14, 18, 3.1)],
-        },
-        {
-          label: "זנב אלכסוני",
-          color: "#ab93ff",
-          masks: [line(14, 18, 18.5, 24, 2.7)],
-        },
-      ],
-      patterns: [
-        {
-          label: "קו אנכי",
-          color: "#ffd67a",
-          masks: [line(13.9, 5, 14.2, 18.8, 3.2)],
-        },
-        {
-          label: "סיומת תחתונה",
-          color: "#f6b9ce",
-          masks: [line(14.2, 17.5, 18.2, 24, 2.9)],
-        },
-      ],
-    },
     "0": {
       digit: "0",
       sourceLabel: "שכבת הקלט · 0",
@@ -769,6 +730,234 @@ function setupFeatureStorySection(model) {
         },
       ],
     },
+    "1": {
+      digit: "1",
+      sourceLabel: "שכבת הקלט · 1",
+      components: [
+        {
+          label: "קצה עליון",
+          color: "#f7b4c8",
+          masks: [line(13, 4, 13, 10, 2.7)],
+        },
+        {
+          label: "עמוד מרכזי",
+          color: "#da90e7",
+          masks: [line(14, 9, 14, 18, 3.1)],
+        },
+        {
+          label: "זנב אלכסוני",
+          color: "#ab93ff",
+          masks: [line(14, 18, 18.5, 24, 2.7)],
+        },
+      ],
+      patterns: [
+        {
+          label: "קו אנכי",
+          color: "#ffd67a",
+          masks: [line(13.9, 5, 14.2, 18.8, 3.2)],
+        },
+        {
+          label: "סיומת תחתונה",
+          color: "#f6b9ce",
+          masks: [line(14.2, 17.5, 18.2, 24, 2.9)],
+        },
+      ],
+    },
+    "2": {
+      digit: "2",
+      sourceLabel: "שכבת הקלט · 2",
+      components: [
+        {
+          label: "קשת עליונה",
+          color: "#66cfff",
+          masks: [ellipse(13.5, 9.4, 7.6, 5.4, (x, y) => y <= 10.8)],
+        },
+        {
+          label: "ירידה אלכסונית",
+          color: "#a7d86d",
+          masks: [line(18.3, 10.8, 10.6, 18.4, 2.9)],
+        },
+        {
+          label: "בסיס תחתון",
+          color: "#ffee37",
+          masks: [line(8.6, 21.2, 18.8, 21.2, 2.8)],
+        },
+      ],
+      patterns: [
+        {
+          label: "ראש של 2",
+          color: "#8ae3ff",
+          masks: [
+            ellipse(13.5, 9.4, 7.6, 5.4, (x, y) => y <= 10.8),
+            line(18.2, 10.6, 13.6, 15, 2.7),
+          ],
+        },
+        {
+          label: "נחיתה לבסיס",
+          color: "#ffd66c",
+          masks: [
+            line(13.6, 15, 9.2, 20.6, 2.8),
+            line(8.6, 21.2, 18.8, 21.2, 2.8),
+          ],
+        },
+      ],
+    },
+    "3": {
+      digit: "3",
+      sourceLabel: "שכבת הקלט · 3",
+      components: [
+        {
+          label: "קשת עליונה",
+          color: "#72cfff",
+          masks: [ellipse(13.8, 9.3, 7.1, 5.1, (x, y) => x >= 10.4)],
+        },
+        {
+          label: "חיבור אמצעי",
+          color: "#d5a5ff",
+          masks: [rect(13.2, 11.8, 18.4, 15.7)],
+        },
+        {
+          label: "קשת תחתונה",
+          color: "#ffe85f",
+          masks: [ellipse(13.9, 18.6, 7.4, 5.8, (x, y) => x >= 10.2)],
+        },
+      ],
+      patterns: [
+        {
+          label: "חצי עליון",
+          color: "#8fd8ff",
+          masks: [
+            ellipse(13.8, 9.3, 7.1, 5.1, (x, y) => x >= 10.4),
+            line(18.4, 9.6, 17.1, 14.3, 2.7),
+          ],
+        },
+        {
+          label: "חצי תחתון",
+          color: "#ffdf70",
+          masks: [
+            line(16.9, 14.2, 17.4, 18.4, 2.6),
+            ellipse(13.9, 18.6, 7.4, 5.8, (x, y) => x >= 10.2),
+          ],
+        },
+      ],
+    },
+    "4": {
+      digit: "4",
+      sourceLabel: "שכבת הקלט · 4",
+      components: [
+        {
+          label: "אלכסון שמאלי",
+          color: "#6dccff",
+          masks: [line(9.1, 14.5, 15.4, 7.1, 2.7)],
+        },
+        {
+          label: "קורה אמצעית",
+          color: "#ffe34f",
+          masks: [line(9.2, 14.3, 18.6, 14.3, 2.7)],
+        },
+        {
+          label: "עמוד ימני",
+          color: "#ff9c7a",
+          masks: [line(17.9, 6.8, 17.8, 23.4, 2.9)],
+        },
+      ],
+      patterns: [
+        {
+          label: "הפינה העליונה",
+          color: "#8ed6ff",
+          masks: [
+            line(9.1, 14.5, 15.4, 7.1, 2.7),
+            line(9.2, 14.3, 18.6, 14.3, 2.7),
+          ],
+        },
+        {
+          label: "מבנה של 4",
+          color: "#ffc98f",
+          masks: [
+            line(9.2, 14.3, 18.6, 14.3, 2.7),
+            line(17.9, 6.8, 17.8, 23.4, 2.9),
+          ],
+        },
+      ],
+    },
+    "5": {
+      digit: "5",
+      sourceLabel: "שכבת הקלט · 5",
+      components: [
+        {
+          label: "קו עליון",
+          color: "#72d2ff",
+          masks: [line(9, 7.2, 18.4, 7.2, 2.7)],
+        },
+        {
+          label: "עמוד שמאלי קצר",
+          color: "#ffb66e",
+          masks: [line(10, 7.6, 10.1, 13.6, 2.7)],
+        },
+        {
+          label: "בטן תחתונה",
+          color: "#ffe44e",
+          masks: [ellipse(13.8, 18.2, 7.3, 5.8, (x, y) => y >= 13.2)],
+        },
+      ],
+      patterns: [
+        {
+          label: "החלק העליון",
+          color: "#93dcff",
+          masks: [
+            line(9, 7.2, 18.4, 7.2, 2.7),
+            line(10, 7.6, 10.1, 13.6, 2.7),
+          ],
+        },
+        {
+          label: "החלק המעוגל",
+          color: "#ffd86a",
+          masks: [
+            line(10.2, 13.6, 15.6, 13.8, 2.5),
+            ellipse(13.8, 18.2, 7.3, 5.8, (x, y) => y >= 13.2),
+          ],
+        },
+      ],
+    },
+    "6": {
+      digit: "6",
+      sourceLabel: "שכבת הקלט · 6",
+      components: [
+        {
+          label: "כניסה עליונה",
+          color: "#79d0ff",
+          masks: [line(16.9, 7.8, 11.6, 11.8, 2.6)],
+        },
+        {
+          label: "ירידה פנימית",
+          color: "#9fdb79",
+          masks: [line(11.6, 11.8, 11.2, 19.5, 2.8)],
+        },
+        {
+          label: "לולאה תחתונה",
+          color: "#ffd954",
+          masks: [ellipse(13.1, 18.2, 7.3, 6.1)],
+        },
+      ],
+      patterns: [
+        {
+          label: "עמוד יורד",
+          color: "#92dfff",
+          masks: [
+            line(16.9, 7.8, 11.6, 11.8, 2.6),
+            line(11.6, 11.8, 11.2, 19.5, 2.8),
+          ],
+        },
+        {
+          label: "חלק תחתון סגור",
+          color: "#ffe36a",
+          masks: [
+            ellipse(13.1, 18.2, 7.3, 6.1),
+            line(11.2, 15.3, 16.3, 15.6, 2.6),
+          ],
+        },
+      ],
+    },
     "7": {
       digit: "7",
       sourceLabel: "שכבת הקלט · 7",
@@ -799,6 +988,39 @@ function setupFeatureStorySection(model) {
           label: "ירידה אלכסונית",
           color: "#ffe66c",
           masks: [line(18.5, 8, 11.2, 23.2, 3.1)],
+        },
+      ],
+    },
+    "8": {
+      digit: "8",
+      sourceLabel: "שכבת הקלט · 8",
+      components: [
+        {
+          label: "לולאה עליונה",
+          color: "#71cbff",
+          masks: [ellipse(13.3, 9.1, 6.2, 4.9)],
+        },
+        {
+          label: "חיבור מרכזי",
+          color: "#caa3ff",
+          masks: [rect(11.5, 12.2, 16, 15.8)],
+        },
+        {
+          label: "לולאה תחתונה",
+          color: "#ffe24d",
+          masks: [ellipse(13.5, 18.2, 7.2, 5.9)],
+        },
+      ],
+      patterns: [
+        {
+          label: "ראש סגור",
+          color: "#90dcff",
+          masks: [ellipse(13.3, 9.1, 6.2, 4.9)],
+        },
+        {
+          label: "בסיס סגור",
+          color: "#ffe06b",
+          masks: [ellipse(13.5, 18.2, 7.2, 5.9)],
         },
       ],
     },
@@ -833,7 +1055,7 @@ function setupFeatureStorySection(model) {
   };
 
   const state = {
-    digit: "1",
+    digit: "0",
     stage: 0,
   };
 
@@ -849,7 +1071,6 @@ function setupFeatureStorySection(model) {
     sourceLabel.textContent = definition.sourceLabel;
 
     const meta = stageMeta[state.stage];
-    stageIndex.textContent = meta.index;
     stageTitle.textContent = meta.title;
     stageCopy.textContent = meta.copy(definition.digit);
     outputBadge.textContent = definition.digit;
@@ -868,10 +1089,6 @@ function setupFeatureStorySection(model) {
 
     digitTabs.forEach((tab) => {
       tab.classList.toggle("is-active", tab.dataset.digit === state.digit);
-    });
-
-    stageTabs.forEach((tab, index) => {
-      tab.classList.toggle("is-active", index === state.stage);
     });
 
     componentWraps.forEach((wrap, index) => {
@@ -931,13 +1148,6 @@ function setupFeatureStorySection(model) {
     tab.addEventListener("click", (event) => {
       event.stopPropagation();
       setDigit(tab.dataset.digit || "1");
-    });
-  });
-
-  stageTabs.forEach((tab, index) => {
-    tab.addEventListener("click", (event) => {
-      event.stopPropagation();
-      setStage(index);
     });
   });
 

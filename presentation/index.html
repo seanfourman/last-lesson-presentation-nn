@@ -780,7 +780,7 @@
               אלא אוספות חלקים קטנים ובונות מהם צורה מוכרת.
             </h2>
             <p class="feature-story-copy">
-              בחרו ספרה ולחצו על הפאנל כדי להתקדם שלב־שלב דרך הפירוק האפשרי שלה.
+              בחרו ספרה ולחצו על הפאנל כדי להתקדם שלב-שלב דרך הפירוק האפשרי שלה.
             </p>
           </div>
 
@@ -794,41 +794,72 @@
                 <button
                   class="feature-story-digit-tab is-active"
                   type="button"
+                  data-digit="0"
+                >
+                  0
+                </button>
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
                   data-digit="1"
                 >
                   1
                 </button>
-                <button class="feature-story-digit-tab" type="button" data-digit="0">
-                  0
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="2"
+                >
+                  2
                 </button>
-                <button class="feature-story-digit-tab" type="button" data-digit="7">
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="3"
+                >
+                  3
+                </button>
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="4"
+                >
+                  4
+                </button>
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="5"
+                >
+                  5
+                </button>
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="6"
+                >
+                  6
+                </button>
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="7"
+                >
                   7
                 </button>
-                <button class="feature-story-digit-tab" type="button" data-digit="9">
-                  9
-                </button>
-              </div>
-
-              <div
-                class="feature-story-stage-tabs"
-                role="tablist"
-                aria-label="שלבי הפירוק"
-              >
                 <button
-                  class="feature-story-stage-tab is-active"
+                  class="feature-story-digit-tab"
                   type="button"
-                  data-stage="0"
+                  data-digit="8"
                 >
-                  קלט
+                  8
                 </button>
-                <button class="feature-story-stage-tab" type="button" data-stage="1">
-                  רכיב ראשון
-                </button>
-                <button class="feature-story-stage-tab" type="button" data-stage="2">
-                  עוד רכיבים
-                </button>
-                <button class="feature-story-stage-tab" type="button" data-stage="3">
-                  ספרה
+                <button
+                  class="feature-story-digit-tab"
+                  type="button"
+                  data-digit="9"
+                >
+                  9
                 </button>
               </div>
             </div>
@@ -839,13 +870,9 @@
               </div>
 
               <div class="feature-story-main">
-                <div class="feature-story-analysis-head feature-story-stage-copy">
-                  <span
-                    class="feature-story-analysis-index"
-                    id="featureStoryStageIndex"
-                  >
-                    01
-                  </span>
+                <div
+                  class="feature-story-analysis-head feature-story-stage-copy"
+                >
                   <h3
                     class="feature-story-analysis-title"
                     id="featureStoryStageTitle"
@@ -861,7 +888,9 @@
                 </div>
 
                 <div class="feature-story-network" dir="ltr">
-                  <div class="feature-story-column feature-story-column-source is-active">
+                  <div
+                    class="feature-story-column feature-story-column-source is-active"
+                  >
                     <div class="feature-story-source-wrap">
                       <div class="feature-story-card feature-story-source-card">
                         <canvas
@@ -870,24 +899,51 @@
                           height="220"
                         ></canvas>
                       </div>
-                      <p class="feature-story-source-label" id="featureStorySourceLabel">
+                      <p
+                        class="feature-story-source-label"
+                        id="featureStorySourceLabel"
+                      >
                         קלט
                       </p>
                     </div>
                   </div>
 
-                  <div class="feature-story-links" id="featureStoryLinksA" aria-hidden="true">
-                    <span class="feature-story-link" style="--tilt: -14deg"></span>
-                    <span class="feature-story-link" style="--tilt: -7deg"></span>
-                    <span class="feature-story-link" style="--tilt: 0deg"></span>
-                    <span class="feature-story-link" style="--tilt: 8deg"></span>
-                    <span class="feature-story-link" style="--tilt: 15deg"></span>
+                  <div
+                    class="feature-story-links"
+                    id="featureStoryLinksA"
+                    aria-hidden="true"
+                  >
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: -14deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: -7deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: 0deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: 8deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: 15deg"
+                    ></span>
                   </div>
 
-                  <div class="feature-story-column feature-story-column-components" id="featureStoryComponentColumn">
+                  <div
+                    class="feature-story-column feature-story-column-components"
+                    id="featureStoryComponentColumn"
+                  >
                     <div class="feature-story-component-track">
                       <div class="feature-story-component-wrap" data-slot="0">
-                        <div class="feature-story-card feature-story-component-card">
+                        <div
+                          class="feature-story-card feature-story-component-card"
+                        >
                           <canvas
                             class="feature-story-component-canvas"
                             width="160"
@@ -898,7 +954,9 @@
                       </div>
 
                       <div class="feature-story-component-wrap" data-slot="1">
-                        <div class="feature-story-card feature-story-component-card">
+                        <div
+                          class="feature-story-card feature-story-component-card"
+                        >
                           <canvas
                             class="feature-story-component-canvas"
                             width="160"
@@ -909,7 +967,9 @@
                       </div>
 
                       <div class="feature-story-component-wrap" data-slot="2">
-                        <div class="feature-story-card feature-story-component-card">
+                        <div
+                          class="feature-story-card feature-story-component-card"
+                        >
                           <canvas
                             class="feature-story-component-canvas"
                             width="160"
@@ -920,7 +980,9 @@
                       </div>
 
                       <div class="feature-story-component-wrap" data-slot="3">
-                        <div class="feature-story-card feature-story-component-card">
+                        <div
+                          class="feature-story-card feature-story-component-card"
+                        >
                           <canvas
                             class="feature-story-component-canvas"
                             width="160"
@@ -931,7 +993,9 @@
                       </div>
 
                       <div class="feature-story-component-wrap" data-slot="4">
-                        <div class="feature-story-card feature-story-component-card">
+                        <div
+                          class="feature-story-card feature-story-component-card"
+                        >
                           <canvas
                             class="feature-story-component-canvas"
                             width="160"
@@ -943,17 +1007,38 @@
                     </div>
                   </div>
 
-                  <div class="feature-story-links" id="featureStoryLinksB" aria-hidden="true">
-                    <span class="feature-story-link" style="--tilt: -12deg"></span>
-                    <span class="feature-story-link" style="--tilt: -4deg"></span>
-                    <span class="feature-story-link" style="--tilt: 4deg"></span>
-                    <span class="feature-story-link" style="--tilt: 12deg"></span>
+                  <div
+                    class="feature-story-links"
+                    id="featureStoryLinksB"
+                    aria-hidden="true"
+                  >
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: -12deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: -4deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: 4deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: 12deg"
+                    ></span>
                   </div>
 
-                  <div class="feature-story-column feature-story-column-patterns" id="featureStoryPatternColumn">
+                  <div
+                    class="feature-story-column feature-story-column-patterns"
+                    id="featureStoryPatternColumn"
+                  >
                     <div class="feature-story-pattern-track">
                       <div class="feature-story-pattern-wrap" data-slot="0">
-                        <div class="feature-story-card feature-story-pattern-card">
+                        <div
+                          class="feature-story-card feature-story-pattern-card"
+                        >
                           <canvas
                             class="feature-story-pattern-canvas"
                             width="160"
@@ -964,7 +1049,9 @@
                       </div>
 
                       <div class="feature-story-pattern-wrap" data-slot="1">
-                        <div class="feature-story-card feature-story-pattern-card">
+                        <div
+                          class="feature-story-card feature-story-pattern-card"
+                        >
                           <canvas
                             class="feature-story-pattern-canvas"
                             width="160"
@@ -975,7 +1062,9 @@
                       </div>
 
                       <div class="feature-story-pattern-wrap" data-slot="2">
-                        <div class="feature-story-card feature-story-pattern-card">
+                        <div
+                          class="feature-story-card feature-story-pattern-card"
+                        >
                           <canvas
                             class="feature-story-pattern-canvas"
                             width="160"
@@ -987,13 +1076,29 @@
                     </div>
                   </div>
 
-                  <div class="feature-story-links" id="featureStoryLinksC" aria-hidden="true">
-                    <span class="feature-story-link" style="--tilt: -10deg"></span>
-                    <span class="feature-story-link" style="--tilt: -2deg"></span>
-                    <span class="feature-story-link" style="--tilt: 6deg"></span>
+                  <div
+                    class="feature-story-links"
+                    id="featureStoryLinksC"
+                    aria-hidden="true"
+                  >
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: -10deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: -2deg"
+                    ></span>
+                    <span
+                      class="feature-story-link"
+                      style="--tilt: 6deg"
+                    ></span>
                   </div>
 
-                  <div class="feature-story-column feature-story-column-output" id="featureStoryOutputColumn">
+                  <div
+                    class="feature-story-column feature-story-column-output"
+                    id="featureStoryOutputColumn"
+                  >
                     <div class="feature-story-output-stack">
                       <div class="feature-story-card feature-story-output-card">
                         <canvas
@@ -1019,8 +1124,8 @@
           <p class="feature-story-note">
             זו לא הוכחה שככה הרשת באמת “חושבת”.
             <br />
-            זו דרך אינטואיטיבית להבין למה שכבות חבויות עשויות לזהות קווים, קשתות וקצוות
-            לפני שהן מזהות ספרה שלמה.
+            זו דרך אינטואיטיבית להבין למה שכבות חבויות עשויות לזהות קווים, קשתות
+            וקצוות לפני שהן מזהות ספרה שלמה.
           </p>
         </div>
       </section>
