@@ -249,9 +249,9 @@ function setupValueSection(pixels) {
   let selectorDirection = 1;
   let selectorTimerId = 0;
   const copyByState = [
-    "נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים, ומחזירה מספר אחד בין 0 ל-9.<br><strong>פתאום זו כבר לא משימה טריוויאלית בכלל.</strong>",
-    'מבחינת המחשב, זה לא "שלוש" ולא כתב יד.<br>אלה רק 784 ערכים בין 0 ל-1, שכל אחד מהם מתאר כמה הפיקסל שלו בהיר.',
-    "מכאן הרשת צריכה לעשות את הצעד הקשה באמת:<br>לקחת ים של מספרים קטנים, ולהפוך אותם להחלטה אחת מתוך 0 עד 9.",
+    "נסו לרגע לכתוב תוכנית שמקבלת רשת של 28×28 פיקסלים ומחזירה מספר אחד בין 0 ל־9.<br><strong>פתאום זה כבר לא נשמע כמו משהו כל כך פשוט.</strong>",
+    'מבחינת המחשב, זו לא "ספרה" ולא כתב יד.<br>אלה פשוט 784 ערכים בין 0 ל־1, שכל אחד מהם מתאר עד כמה הפיקסל שלו בהיר.',
+    "מכאן הרשת צריכה לעשות את הצעד המעניין באמת:<br>לקחת המון מספרים קטנים ולהפוך אותם להחלטה אחת מתוך 0 עד 9.",
   ];
   const labelByState = [
     "לחצו כדי לעבור מתמונת הספרה אל ערכי עוצמת האפור שלה",
@@ -590,7 +590,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "הציור החדש ייכנס עכשיו לרשת בתור קלט חדש, במקום הדוגמה הקודמת.";
+          "הציור החדש ייכנס עכשיו לרשת כקלט חדש, במקום הדוגמה הקודמת.";
       }
     },
     onChange() {
@@ -643,7 +643,7 @@ function setupNetworkDemoSection(model) {
     if (result) {
       result.innerHTML =
         `זו דוגמה של <strong>${digit}</strong> מתוך MNIST.` +
-        ` כך נראה קלט מהמאגר שעליו הרשת אומנה,` +
+        ` כך נראה קלט אמיתי מהמאגר שעליו הרשת אומנה,` +
         ` יחד עם התשובה הנכונה שממנה היא לומדת.`;
     }
 
@@ -668,7 +668,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "הציור מיוצג עכשיו כגריד של 28×28, כלומר 784 ערכים שייכנסו לרשת.";
+          "הציור מומר עכשיו לגריד של 28×28, כלומר 784 ערכים שהרשת יכולה לעבוד איתם.";
       }
       return;
     }
@@ -679,7 +679,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "כל פיקסל נטען לנוירון קלט מתאים, והשכבה הראשונה מקבלת את התמונה כמספרים.";
+          "עכשיו כל פיקסל נטען לערך קלט, והשכבה הראשונה מקבלת את התמונה כמספרים.";
       }
       return;
     }
@@ -690,7 +690,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "השכבה החבויה הראשונה מתחילה לבנות ייצוגים פשוטים מתוך הפיקסלים.";
+          "השכבה החבויה הראשונה מתחילה לאסוף תבניות פשוטות מתוך הפיקסלים.";
       }
       return;
     }
@@ -701,7 +701,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "השכבה הבאה מרכיבה מהייצוגים האלה דפוסים עשירים יותר לקראת ההחלטה.";
+          "השכבה הבאה מחברת את התבניות האלה למבנים מורכבים יותר לקראת ההחלטה.";
       }
       return;
     }
@@ -712,7 +712,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "בשכבת הפלט הרשת מחלקת ציונים לכל אחת מהספרות 0-9.";
+          "בשכבת הפלט הרשת נותנת ציון לכל אחת מהספרות 0–9.";
       }
       return;
     }
@@ -731,7 +731,7 @@ function setupNetworkDemoSection(model) {
       state.runId += 1;
       scene.renderIdle();
       setIdleMessage(
-        "ציירו ספרה, והרשת תפעיל על הקלט החדש את מה שלמדה מתוך דוגמאות האימון של MNIST.",
+        "ציירו ספרה, והרשת תראה איך היא משתמשת במה שלמדה על דוגמאות מ־MNIST.",
       );
       return;
     }
@@ -759,8 +759,8 @@ function setupNetworkDemoSection(model) {
         if (result) {
           result.innerHTML =
             sourceKind === "sample"
-              ? `על הדוגמה הזו הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
-              : `על הציור הזה הרשת נותנת את הציון הגבוה ביותר ל-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
+              ? `על הדוגמה הזו הרשת הכי בטוחה ב־<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
+              : `על הציור הזה הרשת הכי בטוחה ב־<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
         }
       },
     });
