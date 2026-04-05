@@ -409,40 +409,123 @@ function setupMnistHistorySection(model) {
 }
 
 function setupMnistWhySection(model) {
+  const root = document.getElementById("mnistWhyLab");
+  const tabs = Array.from(document.querySelectorAll(".mnist-why-tab"));
+  const modes = Array.from(document.querySelectorAll(".mnist-why-mode"));
+  const progressBar = document.getElementById("mnistWhyProgressBar");
+  const panel = root?.querySelector(".mnist-why-panel");
+  const epochValue = document.getElementById("mnistWhyEpochValue");
   const visionCanvases = [
     document.getElementById("mnistWhyVisionA"),
     document.getElementById("mnistWhyVisionB"),
     document.getElementById("mnistWhyVisionC"),
   ];
-  const coreCanvas = document.getElementById("mnistWhyCoreDigit");
+  const principlesCanvas = document.getElementById("mnistWhyPrinciplesDigit");
 
-  if (visionCanvases.some((canvas) => !canvas) || !coreCanvas) {
+  if (
+    !root ||
+    !tabs.length ||
+    tabs.length !== modes.length ||
+    visionCanvases.some((canvas) => !canvas) ||
+    !principlesCanvas
+  ) {
     return;
   }
 
   const examples = model?.digitExamples || {};
+  const sampleDigits = Object.keys(examples).sort(
+    (left, right) => Number(left) - Number(right),
+  );
   const fallbackPixels =
     examples["3"] || Object.values(examples).find((pixels) => Array.isArray(pixels));
 
-  if (!fallbackPixels) {
+  if (!fallbackPixels || !sampleDigits.length) {
     return;
   }
 
-  const visionSamples = [
-    examples["2"] || fallbackPixels,
-    examples["5"] || fallbackPixels,
-    examples["8"] || fallbackPixels,
-  ];
+  let activeIndex = 0;
+  let digitIndex = Math.max(0, sampleDigits.indexOf("3"));
+  let digitTimerId = 0;
+  let epochRafId = 0;
 
-  const renderAll = () => {
-    renderMnistHistoryDigit(visionCanvases[0], visionSamples[0], "sharp");
-    renderMnistHistoryDigit(visionCanvases[1], visionSamples[1], "smooth");
-    renderMnistHistoryDigit(visionCanvases[2], visionSamples[2], "standard");
-    renderMnistHistoryDigit(coreCanvas, examples["3"] || fallbackPixels, "standard");
+  const getPixels = (offset = 0) => {
+    const digit =
+      sampleDigits[(digitIndex + offset + sampleDigits.length) % sampleDigits.length];
+    return examples[digit] || fallbackPixels;
   };
 
-  renderAll();
-  window.addEventListener("resize", renderAll);
+  const renderDigits = () => {
+    renderMnistHistoryDigit(visionCanvases[0], getPixels(0), "sharp");
+    renderMnistHistoryDigit(visionCanvases[1], getPixels(3), "smooth");
+    renderMnistHistoryDigit(visionCanvases[2], getPixels(6), "standard");
+    renderMnistHistoryDigit(principlesCanvas, getPixels(2), "standard");
+  };
+
+  const updateProgress = (index, immediate = false) => {
+    if (!progressBar) {
+      return;
+    }
+
+    const progress = (index + 1) / modes.length;
+    progressBar.style.transition = immediate
+      ? "none"
+      : "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)";
+    progressBar.style.transform = `scaleX(${progress})`;
+  };
+
+  const setActive = (index, immediate = false) => {
+    activeIndex = index;
+    tabs.forEach((tab, tabIndex) => {
+      tab.classList.toggle("is-active", tabIndex === index);
+      tab.setAttribute("aria-selected", tabIndex === index ? "true" : "false");
+    });
+    modes.forEach((mode, modeIndex) => {
+      mode.classList.toggle("is-active", modeIndex === index);
+    });
+    updateProgress(index, immediate);
+  };
+
+  const updateEpoch = () => {
+    if (epochValue) {
+      const phase = performance.now() / 190;
+      const value = 6 + Math.floor((Math.sin(phase) * 0.5 + 0.5) * 18);
+      epochValue.textContent = String(value).padStart(2, "0");
+    }
+
+    epochRafId = window.requestAnimationFrame(updateEpoch);
+  };
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setActive(index);
+    });
+  });
+
+  panel?.addEventListener("click", () => {
+    setActive((activeIndex + 1) % modes.length);
+  });
+
+  renderDigits();
+  window.addEventListener("resize", renderDigits);
+
+  digitTimerId = window.setInterval(() => {
+    digitIndex = (digitIndex + 1) % sampleDigits.length;
+    renderDigits();
+  }, 2400);
+
+  updateEpoch();
+  setActive(0, true);
+
+  window.addEventListener("beforeunload", () => {
+    if (digitTimerId) {
+      window.clearInterval(digitTimerId);
+    }
+
+    if (epochRafId) {
+      window.cancelAnimationFrame(epochRafId);
+    }
+  });
 }
 
 function setupNetworkDemoSection(model) {

@@ -2073,6 +2073,986 @@ svg {
   font-weight: 600;
 }
 
+.mnist-why-scene {
+  position: relative;
+  display: grid;
+  width: min(1260px, 100%);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(214px, 1fr));
+  gap: 1.15rem 1.4rem;
+  align-items: stretch;
+}
+
+.mnist-why-scene::before {
+  content: "";
+  position: absolute;
+  inset: 12% 18% 12%;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 238, 0, 0.12),
+      rgba(255, 238, 0, 0.04) 26%,
+      rgba(255, 238, 0, 0) 68%
+    );
+  filter: blur(22px);
+}
+
+.mnist-why-center {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  position: relative;
+  min-height: 454px;
+  display: grid;
+  place-items: center;
+}
+
+.mnist-why-center-halo {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 238, 0, 0.18),
+      rgba(255, 238, 0, 0.05) 36%,
+      rgba(255, 238, 0, 0) 72%
+    );
+  filter: blur(16px);
+  animation: mnist-why-halo 5.2s ease-in-out infinite;
+}
+
+.mnist-why-orbit {
+  position: absolute;
+  width: 74px;
+  height: 74px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.22),
+    0 0 24px rgba(255, 238, 0, 0.06);
+  overflow: hidden;
+  animation: mnist-why-orbit-float 5.8s ease-in-out infinite;
+}
+
+.mnist-why-orbit-canvas,
+.mnist-why-stack-canvas,
+.mnist-why-center-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mnist-why-orbit-a {
+  top: 12%;
+  right: 9%;
+  transform: rotate(9deg);
+}
+
+.mnist-why-orbit-b {
+  top: 18%;
+  left: 8%;
+  width: 66px;
+  height: 66px;
+  transform: rotate(-7deg);
+  animation-delay: -1.8s;
+}
+
+.mnist-why-orbit-c {
+  bottom: 13%;
+  left: 50%;
+  width: 82px;
+  height: 82px;
+  transform: translateX(-50%) rotate(6deg);
+  animation-delay: -3.2s;
+}
+
+.mnist-why-center-card {
+  position: relative;
+  width: min(100%, 370px);
+  padding: 1.12rem 1.08rem 1.18rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 34px;
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      rgba(255, 238, 0, 0.11),
+      rgba(255, 238, 0, 0) 44%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.018)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 56px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.mnist-why-center-kicker {
+  margin: 0;
+  color: rgba(255, 238, 0, 0.94);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.mnist-why-center-stage {
+  margin-top: 0.88rem;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mnist-why-center-grid {
+  width: 80px;
+  height: 80px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid rgba(255, 238, 0, 0.26);
+  background: rgba(255, 238, 0, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 238, 0, 0.04);
+}
+
+.mnist-why-center-grid span {
+  background: rgba(255, 238, 0, 0.78);
+}
+
+.mnist-why-center-arrow {
+  position: relative;
+  width: 74px;
+  height: 5px;
+  background: rgba(255, 238, 0, 0.92);
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.16);
+  animation: mnist-why-arrow-pulse 2.8s ease-in-out infinite;
+}
+
+.mnist-why-center-arrow::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 17px solid rgba(255, 238, 0, 0.92);
+}
+
+.mnist-why-center-digit {
+  width: 92px;
+  height: 92px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.22),
+    0 0 22px rgba(255, 238, 0, 0.04);
+  overflow: hidden;
+}
+
+.mnist-why-center-pills {
+  margin-top: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.mnist-why-center-pills span {
+  padding: 0.34rem 0.62rem;
+  border: 1px solid rgba(255, 238, 0, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 238, 0, 0.05);
+  color: rgba(255, 255, 255, 0.84);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.mnist-why-node {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem 1.02rem 1.06rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.015)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 38px rgba(0, 0, 0, 0.24);
+  text-align: right;
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+  animation: mnist-why-card-float 6.2s ease-in-out infinite;
+}
+
+.mnist-why-node:hover,
+.mnist-why-center-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 238, 0, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 50px rgba(0, 0, 0, 0.34),
+    0 0 28px rgba(255, 238, 0, 0.05);
+}
+
+.mnist-why-node::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 66px;
+  height: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 238, 0, 0),
+      rgba(255, 238, 0, 0.38),
+      rgba(255, 238, 0, 0)
+    );
+}
+
+.mnist-why-node-vision {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.mnist-why-node-speed {
+  grid-column: 3;
+  grid-row: 1;
+  animation-delay: -1.6s;
+}
+
+.mnist-why-node-measure {
+  grid-column: 1;
+  grid-row: 2;
+  animation-delay: -3.2s;
+}
+
+.mnist-why-node-principles {
+  grid-column: 3;
+  grid-row: 2;
+  animation-delay: -2.2s;
+}
+
+.mnist-why-node-vision::before,
+.mnist-why-node-measure::before {
+  left: calc(100% + 8px);
+}
+
+.mnist-why-node-speed::before,
+.mnist-why-node-principles::before {
+  right: calc(100% + 8px);
+}
+
+.mnist-why-node-visual {
+  position: relative;
+  width: 100%;
+  height: 76px;
+  margin-bottom: 0.4rem;
+}
+
+.mnist-why-node-visual-vision {
+  display: grid;
+  place-items: center;
+}
+
+.mnist-why-stack-card {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.mnist-why-stack-card-a {
+  right: calc(50% - 6px);
+  transform: translateX(50%) rotate(8deg);
+}
+
+.mnist-why-stack-card-b {
+  right: calc(50% - 38px);
+  top: 10px;
+  width: 52px;
+  height: 52px;
+  transform: translateX(50%) rotate(-7deg);
+  opacity: 0.82;
+}
+
+.mnist-why-node-visual-speed {
+  display: grid;
+  place-items: center;
+}
+
+.mnist-why-speed-ring {
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 238, 0, 0.24);
+  border-top-color: rgba(255, 238, 0, 0.96);
+  border-right-color: rgba(255, 238, 0, 0.92);
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.08);
+  animation: mnist-why-speed-spin 4.2s linear infinite;
+}
+
+.mnist-why-speed-wave {
+  position: absolute;
+  right: 50%;
+  height: 4px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 238, 0, 0),
+      rgba(255, 238, 0, 0.9)
+    );
+  animation: mnist-why-speed-wave 2.4s ease-in-out infinite;
+}
+
+.mnist-why-speed-wave-a {
+  top: 20px;
+  width: 64px;
+  transform: translateX(-74px);
+}
+
+.mnist-why-speed-wave-b {
+  top: 34px;
+  width: 88px;
+  transform: translateX(-98px);
+  animation-delay: -0.55s;
+}
+
+.mnist-why-speed-wave-c {
+  top: 48px;
+  width: 54px;
+  transform: translateX(-62px);
+  animation-delay: -1.1s;
+}
+
+.mnist-why-node-visual-measure {
+  display: grid;
+  place-items: center;
+}
+
+.mnist-why-meter-track {
+  position: absolute;
+  left: 18px;
+  right: 24px;
+  top: 32px;
+  height: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mnist-why-meter-fill {
+  position: absolute;
+  left: 19px;
+  top: 33px;
+  height: 6px;
+  width: 62%;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 238, 0, 0.18),
+      rgba(255, 238, 0, 0.96)
+    );
+  box-shadow: 0 0 16px rgba(255, 238, 0, 0.14);
+  animation: mnist-why-meter-fill 3.2s ease-in-out infinite;
+}
+
+.mnist-why-meter-tick {
+  position: absolute;
+  top: 25px;
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.mnist-why-meter-tick-a {
+  left: 40%;
+}
+
+.mnist-why-meter-tick-b {
+  left: 68%;
+}
+
+.mnist-why-meter-dot {
+  position: absolute;
+  left: 63%;
+  top: 25px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 238, 0, 0.96);
+  background: #000;
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.18);
+  animation: mnist-why-meter-dot 3.2s ease-in-out infinite;
+}
+
+.mnist-why-node-visual-principles {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+.mnist-why-network-column {
+  display: grid;
+  gap: 7px;
+}
+
+.mnist-why-network-column span {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 238, 0, 0.82);
+  background: rgba(255, 238, 0, 0.08);
+  box-shadow: 0 0 14px rgba(255, 238, 0, 0.08);
+  animation: mnist-why-node-glow 3.1s ease-in-out infinite;
+}
+
+.mnist-why-network-column-a span:nth-child(2),
+.mnist-why-network-column-b span:nth-child(1),
+.mnist-why-network-column-b span:nth-child(3),
+.mnist-why-network-column-c span:nth-child(2) {
+  animation-delay: -0.9s;
+}
+
+.mnist-why-network-links {
+  width: 62px;
+  height: 56px;
+  background:
+    linear-gradient(28deg, transparent 44%, rgba(255, 238, 0, 0.18) 50%, transparent 56%),
+    linear-gradient(-24deg, transparent 44%, rgba(255, 238, 0, 0.14) 50%, transparent 56%);
+  opacity: 0.68;
+  animation: mnist-why-link-pulse 2.9s ease-in-out infinite;
+}
+
+.mnist-why-lab {
+  width: min(1160px, 100%);
+  display: grid;
+  gap: 0.95rem;
+  margin: 0 auto;
+  justify-items: center;
+}
+
+.mnist-why-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.mnist-why-tab {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.82rem;
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.mnist-why-tab:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 238, 0, 0.2);
+}
+
+.mnist-why-tab.is-active {
+  color: rgba(255, 248, 190, 0.98);
+  border-color: rgba(255, 238, 0, 0.28);
+  background: rgba(255, 238, 0, 0.07);
+  box-shadow: 0 0 20px rgba(255, 238, 0, 0.08);
+}
+
+.mnist-why-tab-index {
+  color: rgba(255, 238, 0, 0.96);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+}
+
+.mnist-why-panel {
+  position: relative;
+  width: 100%;
+  min-height: 368px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  cursor: pointer;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 238, 0, 0.08),
+      rgba(255, 238, 0, 0) 38%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.015)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 44px rgba(0, 0, 0, 0.26);
+}
+
+.mnist-why-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.03) 42%,
+      rgba(255, 255, 255, 0) 58%
+    );
+  transform: translateX(-100%);
+  animation: mnist-why-panel-sweep 8s linear infinite;
+}
+
+.mnist-why-progress {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.mnist-why-progress::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0 calc(25% - 1px),
+      rgba(255, 255, 255, 0.14) calc(25% - 1px) 25%
+    );
+  opacity: 0.85;
+}
+
+.mnist-why-progress span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: right center;
+  transform: scaleX(0);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 238, 0, 0.24),
+      rgba(255, 238, 0, 1)
+    );
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.18);
+}
+
+#mnist-why .mnist-slide-shell {
+  width: min(1320px, calc(100vw - 32px));
+  margin: 0 auto;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  row-gap: clamp(1.4rem, 3vh, 2.8rem);
+}
+
+#mnist-why .mnist-intro {
+  align-self: end;
+}
+
+#mnist-why .mnist-why-lab {
+  align-self: center;
+}
+
+#mnist-why .mnist-note {
+  align-self: start;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mnist-why-mode {
+  position: absolute;
+  inset: 0;
+  padding: 1.5rem 1.55rem 1.3rem;
+  display: grid;
+  grid-template-columns: minmax(340px, 1.05fr) minmax(260px, 0.95fr);
+  gap: 1.5rem;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  pointer-events: none;
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.mnist-why-mode.is-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.mnist-why-mode-stage {
+  position: relative;
+  min-height: 250px;
+  display: grid;
+  place-items: center;
+}
+
+.mnist-why-mode-copy {
+  max-width: 28rem;
+  text-align: right;
+}
+
+.mnist-why-mode-copy .mnist-reason-title {
+  margin-top: 0.3rem;
+  font-size: 1.4rem;
+}
+
+.mnist-why-mode-copy .mnist-reason-copy {
+  margin-top: 0.6rem;
+  font-size: 1.03rem;
+  line-height: 1.8;
+}
+
+.mnist-why-mode-stage-vision {
+  overflow: hidden;
+}
+
+.mnist-why-vision-line {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 50%;
+  height: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 238, 0, 0),
+      rgba(255, 238, 0, 0.42),
+      rgba(255, 238, 0, 0)
+    );
+}
+
+.mnist-why-vision-card {
+  position: absolute;
+  width: 124px;
+  height: 124px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 16px 32px rgba(0, 0, 0, 0.22),
+    0 0 24px rgba(255, 238, 0, 0.05);
+  overflow: hidden;
+  animation: mnist-why-card-drift 5.4s ease-in-out infinite;
+}
+
+.mnist-why-vision-canvas,
+.mnist-why-principles-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mnist-why-vision-card-back {
+  right: 18%;
+  top: 26px;
+  transform: rotate(9deg);
+  opacity: 0.42;
+}
+
+.mnist-why-vision-card-mid {
+  left: 50%;
+  top: 40px;
+  transform: translateX(-50%) rotate(-5deg);
+  opacity: 0.78;
+  animation-delay: -1.4s;
+}
+
+.mnist-why-vision-card-front {
+  left: 18%;
+  bottom: 18px;
+  transform: rotate(7deg);
+  animation-delay: -2.8s;
+}
+
+.mnist-why-mode-stage-speed {
+  grid-template-columns: auto 1fr;
+  gap: 1.3rem;
+  align-items: center;
+}
+
+.mnist-why-epoch-box {
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(255, 238, 0, 0.16);
+  border-radius: 24px;
+  background: rgba(255, 238, 0, 0.05);
+  text-align: center;
+  box-shadow: 0 0 22px rgba(255, 238, 0, 0.06);
+}
+
+.mnist-why-epoch-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mnist-why-epoch-value {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(255, 238, 0, 0.98);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  line-height: 1;
+}
+
+.mnist-why-speed-bars {
+  height: 154px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  align-items: end;
+  gap: 8px;
+  width: 100%;
+}
+
+.mnist-why-speed-bars span {
+  display: block;
+  border-radius: 10px 10px 0 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 238, 0, 0.96),
+      rgba(255, 238, 0, 0.16)
+    );
+  box-shadow: 0 0 14px rgba(255, 238, 0, 0.1);
+  animation: mnist-why-bars 1.8s ease-in-out infinite;
+}
+
+.mnist-why-speed-bars span:nth-child(1) { height: 26%; animation-delay: -0.1s; }
+.mnist-why-speed-bars span:nth-child(2) { height: 48%; animation-delay: -0.4s; }
+.mnist-why-speed-bars span:nth-child(3) { height: 34%; animation-delay: -0.7s; }
+.mnist-why-speed-bars span:nth-child(4) { height: 62%; animation-delay: -1s; }
+.mnist-why-speed-bars span:nth-child(5) { height: 78%; animation-delay: -0.2s; }
+.mnist-why-speed-bars span:nth-child(6) { height: 58%; animation-delay: -0.5s; }
+.mnist-why-speed-bars span:nth-child(7) { height: 88%; animation-delay: -0.9s; }
+.mnist-why-speed-bars span:nth-child(8) { height: 54%; animation-delay: -1.2s; }
+.mnist-why-speed-bars span:nth-child(9) { height: 96%; animation-delay: -0.35s; }
+.mnist-why-speed-bars span:nth-child(10) { height: 66%; animation-delay: -0.8s; }
+
+.mnist-why-mode-stage-measure {
+  gap: 1rem;
+  align-content: center;
+}
+
+.mnist-why-score-box {
+  text-align: center;
+}
+
+.mnist-why-score-value {
+  display: block;
+  color: rgba(255, 238, 0, 0.98);
+  font-family: "Frank Ruhl Libre", serif;
+  font-size: clamp(2.5rem, 4.4vw, 3.8rem);
+  line-height: 1;
+}
+
+.mnist-why-score-label {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.mnist-why-meter {
+  position: relative;
+  width: min(100%, 360px);
+  height: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.mnist-why-meter-fill {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  width: 78%;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 238, 0, 0.18),
+      rgba(255, 238, 0, 0.98)
+    );
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.16);
+  animation: mnist-why-meter-fill 3s ease-in-out infinite;
+}
+
+.mnist-why-meter-marker {
+  position: absolute;
+  top: 50%;
+  left: 78%;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 238, 0, 0.98);
+  background: #000;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 18px rgba(255, 238, 0, 0.16);
+  animation: mnist-why-meter-marker 3s ease-in-out infinite;
+}
+
+.mnist-why-split-row {
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mnist-why-split-row span {
+  padding: 0.32rem 0.58rem;
+  border: 1px solid rgba(255, 238, 0, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 238, 0, 0.05);
+  color: rgba(255, 255, 255, 0.82);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.mnist-why-mode-stage-principles {
+  grid-template-columns: auto auto auto auto auto;
+  gap: 0.72rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.mnist-why-principles-digit {
+  width: 92px;
+  height: 92px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.22),
+    0 0 22px rgba(255, 238, 0, 0.05);
+  overflow: hidden;
+}
+
+.mnist-why-principles-grid {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  padding: 9px;
+  border: 1px solid rgba(255, 238, 0, 0.22);
+  background: rgba(255, 238, 0, 0.04);
+}
+
+.mnist-why-principles-grid span {
+  background: rgba(255, 238, 0, 0.76);
+}
+
+.mnist-why-principles-arrow {
+  position: relative;
+  width: 54px;
+  height: 4px;
+  background: rgba(255, 238, 0, 0.92);
+  box-shadow: 0 0 14px rgba(255, 238, 0, 0.14);
+  animation: mnist-why-arrow-pulse 2.6s ease-in-out infinite;
+}
+
+.mnist-why-principles-arrow::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 14px solid rgba(255, 238, 0, 0.92);
+}
+
+.mnist-why-principles-network {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.mnist-why-principles-col {
+  display: grid;
+  gap: 7px;
+}
+
+.mnist-why-principles-col span {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 238, 0, 0.82);
+  background: rgba(255, 238, 0, 0.08);
+  box-shadow: 0 0 14px rgba(255, 238, 0, 0.08);
+  animation: mnist-why-node-glow 3.1s ease-in-out infinite;
+}
+
+.mnist-why-principles-col-a span:nth-child(2),
+.mnist-why-principles-col-b span:nth-child(1),
+.mnist-why-principles-col-b span:nth-child(3) {
+  animation-delay: -0.9s;
+}
+
+.mnist-why-principles-links {
+  width: 52px;
+  height: 56px;
+  background:
+    linear-gradient(30deg, transparent 44%, rgba(255, 238, 0, 0.18) 50%, transparent 56%),
+    linear-gradient(-24deg, transparent 44%, rgba(255, 238, 0, 0.12) 50%, transparent 56%);
+  opacity: 0.72;
+  animation: mnist-why-link-pulse 2.9s ease-in-out infinite;
+}
+
 .mnist-reason-index {
   color: rgba(255, 238, 0, 0.9);
   font-family: "Rubik", "Heebo", sans-serif;
@@ -2094,6 +3074,155 @@ svg {
   font-size: clamp(1rem, 1.55vw, 1.25rem);
   font-weight: 700;
   line-height: 1.35;
+}
+
+@keyframes mnist-why-halo {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.97);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes mnist-why-panel-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(140%);
+  }
+}
+
+@keyframes mnist-why-card-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes mnist-why-orbit-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@keyframes mnist-why-bars {
+  0%,
+  100% {
+    filter: brightness(0.82);
+  }
+
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes mnist-why-card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes mnist-why-arrow-pulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: scaleX(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1.04);
+  }
+}
+
+@keyframes mnist-why-speed-spin {
+  from {
+    rotate: 0deg;
+  }
+
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes mnist-why-speed-wave {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: translateX(-88px) scaleX(0.74);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(-112px) scaleX(1.04);
+  }
+}
+
+@keyframes mnist-why-meter-fill {
+  0%,
+  100% {
+    width: 64%;
+  }
+
+  50% {
+    width: 82%;
+  }
+}
+
+@keyframes mnist-why-meter-marker {
+  0%,
+  100% {
+    left: 64%;
+  }
+
+  50% {
+    left: 82%;
+  }
+}
+
+@keyframes mnist-why-link-pulse {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes mnist-why-node-glow {
+  0%,
+  100% {
+    background: rgba(255, 238, 0, 0.06);
+    box-shadow: 0 0 10px rgba(255, 238, 0, 0.06);
+  }
+
+  50% {
+    background: rgba(255, 238, 0, 0.28);
+    box-shadow: 0 0 18px rgba(255, 238, 0, 0.18);
+  }
 }
 
 @keyframes question-reveal {
@@ -2357,41 +3486,150 @@ svg {
     gap: 1rem;
   }
 
-  .mnist-why-stage {
+  .mnist-why-scene {
     width: 100%;
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "core"
-      "vision"
-      "speed"
-      "measure"
-      "principles";
+    grid-template-rows: auto;
     gap: 0.9rem;
   }
 
-  .mnist-why-stage::before {
+  .mnist-why-scene::before {
     inset: 16% 12% 16%;
   }
 
-  .mnist-why-point::after {
-    display: none;
-  }
-
-  .mnist-why-point,
-  .mnist-why-core {
+  .mnist-why-center {
+    grid-column: auto;
+    grid-row: auto;
     min-height: 0;
   }
 
-  .mnist-why-core {
+  .mnist-why-center-halo {
+    width: min(72vw, 320px);
+    height: min(72vw, 320px);
+  }
+
+  .mnist-why-center-card {
+    width: min(100%, 360px);
     padding: 0.95rem 0.9rem 1rem;
   }
 
-  .mnist-why-core-stage {
+  .mnist-why-center-stage {
     gap: 0.7rem;
   }
 
-  .mnist-why-core-arrow {
+  .mnist-why-center-arrow {
     width: 56px;
+  }
+
+  .mnist-why-node {
+    min-height: 0;
+  }
+
+  .mnist-why-node::before {
+    display: none;
+  }
+
+  .mnist-why-lab {
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  #mnist-why .mnist-slide-shell {
+    width: 100%;
+    grid-template-rows: auto auto auto;
+    row-gap: 1rem;
+  }
+
+  .mnist-why-tabs {
+    gap: 0.4rem;
+  }
+
+  .mnist-why-tab {
+    width: calc(50% - 0.24rem);
+    justify-content: center;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .mnist-why-panel {
+    min-height: 470px;
+    border-radius: 26px;
+  }
+
+  .mnist-why-mode {
+    padding: 1.15rem 0.95rem 1rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .mnist-why-mode-stage {
+    min-height: 180px;
+  }
+
+  .mnist-why-mode-copy {
+    max-width: none;
+  }
+
+  .mnist-why-mode-copy .mnist-reason-title {
+    font-size: 1.2rem;
+  }
+
+  .mnist-why-vision-card {
+    width: 96px;
+    height: 96px;
+  }
+
+  .mnist-why-epoch-box {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .mnist-why-mode-stage-principles {
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+  }
+
+  .mnist-why-principles-digit {
+    grid-column: 1;
+    grid-row: 1;
+    width: 78px;
+    height: 78px;
+  }
+
+  .mnist-why-mode-stage-principles .mnist-why-principles-arrow:first-of-type {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .mnist-why-principles-grid {
+    grid-column: 3;
+    grid-row: 1;
+    width: 60px;
+    height: 60px;
+  }
+
+  .mnist-why-mode-stage-principles .mnist-why-principles-arrow:last-of-type {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .mnist-why-principles-network {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .mnist-why-orbit-a {
+    top: 4%;
+    right: 8%;
+  }
+
+  .mnist-why-orbit-b {
+    top: 8%;
+    left: 8%;
+  }
+
+  .mnist-why-orbit-c {
+    bottom: 6%;
   }
 
   .mnist-timeline {

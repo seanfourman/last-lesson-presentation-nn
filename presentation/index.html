@@ -491,102 +491,137 @@
             </p>
           </div>
 
-          <div class="mnist-why-stage" aria-label="למה MNIST נהיה דוגמה קלאסית">
-            <article class="mnist-why-point mnist-why-point-vision">
-              <div class="mnist-why-visual mnist-why-visual-cards" aria-hidden="true">
-                <span class="mnist-why-mini-card mnist-why-mini-card-a">
-                  <canvas class="mnist-why-mini-canvas" id="mnistWhyVisionA"></canvas>
-                </span>
-                <span class="mnist-why-mini-card mnist-why-mini-card-b">
-                  <canvas class="mnist-why-mini-canvas" id="mnistWhyVisionB"></canvas>
-                </span>
-                <span class="mnist-why-mini-card mnist-why-mini-card-c">
-                  <canvas class="mnist-why-mini-canvas" id="mnistWhyVisionC"></canvas>
-                </span>
-              </div>
-              <span class="mnist-reason-index">01</span>
-              <h3 class="mnist-reason-title">רואים את הבעיה בעיניים</h3>
-              <p class="mnist-reason-copy">
-                כל דוגמה היא ספרה שבן אדם מבין מיד, ולכן קל לחבר בין הקלט לבין
-                מה שהמודל מנסה לזהות.
-              </p>
-            </article>
-
-            <article class="mnist-why-point mnist-why-point-speed">
-              <div class="mnist-why-visual mnist-why-visual-speed" aria-hidden="true">
-                <span class="mnist-speed-ring"></span>
-                <span class="mnist-speed-streak mnist-speed-streak-a"></span>
-                <span class="mnist-speed-streak mnist-speed-streak-b"></span>
-                <span class="mnist-speed-streak mnist-speed-streak-c"></span>
-              </div>
-              <span class="mnist-reason-index">02</span>
-              <h3 class="mnist-reason-title">אפשר לרוץ מהר בין ניסויים</h3>
-              <p class="mnist-reason-copy">
-                לא צריך לחכות שעות כדי להבין מה עובד. אפשר לאמן, לשנות ולבדוק
-                שוב כמעט בזמן אמת.
-              </p>
-            </article>
-
-            <div class="mnist-why-core" aria-hidden="true">
-              <p class="mnist-why-core-kicker">MNIST</p>
-              <div class="mnist-why-core-stage">
-                <span class="mnist-why-core-grid">
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                </span>
-                <span class="mnist-why-core-arrow"></span>
-                <span class="mnist-why-core-digit">
-                  <canvas
-                    class="mnist-why-core-canvas"
-                    id="mnistWhyCoreDigit"
-                  ></canvas>
-                </span>
-              </div>
-              <div class="mnist-why-core-pills">
-                <span>28×28</span>
-                <span>60k + 10k</span>
-                <span>0–9</span>
-              </div>
+          <div class="mnist-why-lab" id="mnistWhyLab" aria-label="למה MNIST נהיה דוגמה קלאסית">
+            <div class="mnist-why-tabs" role="tablist" aria-label="ארבע סיבות לבחור ב-MNIST">
+              <button class="mnist-why-tab is-active" type="button" data-why-tab="0">
+                <span class="mnist-why-tab-index">01</span>
+                <span class="mnist-why-tab-label">רואים בעיניים</span>
+              </button>
+              <button class="mnist-why-tab" type="button" data-why-tab="1">
+                <span class="mnist-why-tab-index">02</span>
+                <span class="mnist-why-tab-label">רצים מהר</span>
+              </button>
+              <button class="mnist-why-tab" type="button" data-why-tab="2">
+                <span class="mnist-why-tab-index">03</span>
+                <span class="mnist-why-tab-label">מודדים ברור</span>
+              </button>
+              <button class="mnist-why-tab" type="button" data-why-tab="3">
+                <span class="mnist-why-tab-index">04</span>
+                <span class="mnist-why-tab-label">מבינים עקרונות</span>
+              </button>
             </div>
 
-            <article class="mnist-why-point mnist-why-point-measure">
-              <div class="mnist-why-visual mnist-why-visual-measure" aria-hidden="true">
-                <span class="mnist-measure-ring"></span>
-                <span class="mnist-measure-check"></span>
-                <span class="mnist-measure-bar mnist-measure-bar-a"></span>
-                <span class="mnist-measure-bar mnist-measure-bar-b"></span>
+            <div class="mnist-why-panel">
+              <div class="mnist-why-progress" aria-hidden="true">
+                <span id="mnistWhyProgressBar"></span>
               </div>
-              <span class="mnist-reason-index">03</span>
-              <h3 class="mnist-reason-title">קל למדוד אם באמת השתפרנו</h3>
-              <p class="mnist-reason-copy">
-                יש סט בדיקה קבוע ותשובה נכונה לכל דוגמה, ולכן קל לדעת אם המודל
-                באמת טוב יותר ולא רק נראה מרשים יותר.
-              </p>
-            </article>
 
-            <article class="mnist-why-point mnist-why-point-principles">
-              <div class="mnist-why-visual mnist-why-visual-network" aria-hidden="true">
-                <span class="mnist-why-network-links"></span>
-                <span class="mnist-why-network-column mnist-why-network-column-a">
-                  <span></span><span></span><span></span><span></span>
-                </span>
-                <span class="mnist-why-network-column mnist-why-network-column-b">
-                  <span></span><span></span><span></span>
-                </span>
-                <span class="mnist-why-network-column mnist-why-network-column-c">
-                  <span></span><span></span><span></span><span></span>
-                </span>
-              </div>
-              <span class="mnist-reason-index">04</span>
-              <h3 class="mnist-reason-title">רואים עליו את העקרונות הכי נקי</h3>
-              <p class="mnist-reason-copy">
-                בדיוק בגלל שהוא לא מסובך מדי, אפשר להבין עליו בבירור
-                preprocessing, שכבות, פלט ואימון.
-              </p>
-            </article>
+              <section class="mnist-why-mode is-active" data-why-mode="0">
+                <div class="mnist-why-mode-stage mnist-why-mode-stage-vision" aria-hidden="true">
+                  <span class="mnist-why-vision-line"></span>
+                  <span class="mnist-why-vision-card mnist-why-vision-card-back">
+                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionA"></canvas>
+                  </span>
+                  <span class="mnist-why-vision-card mnist-why-vision-card-mid">
+                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionB"></canvas>
+                  </span>
+                  <span class="mnist-why-vision-card mnist-why-vision-card-front">
+                    <canvas class="mnist-why-vision-canvas" id="mnistWhyVisionC"></canvas>
+                  </span>
+                </div>
+                <div class="mnist-why-mode-copy">
+                  <span class="mnist-reason-index">01</span>
+                  <h3 class="mnist-reason-title">רואים את הבעיה בעיניים</h3>
+                  <p class="mnist-reason-copy">
+                    כל דוגמה היא ספרה שאנחנו מבינים מיד, ולכן קל לחבר בין
+                    הקלט לבין מה שהמודל מנסה ללמוד.
+                  </p>
+                </div>
+              </section>
+
+              <section class="mnist-why-mode" data-why-mode="1">
+                <div class="mnist-why-mode-stage mnist-why-mode-stage-speed" aria-hidden="true">
+                  <div class="mnist-why-epoch-box">
+                    <span class="mnist-why-epoch-label">Epoch</span>
+                    <span class="mnist-why-epoch-value" id="mnistWhyEpochValue">12</span>
+                  </div>
+                  <div class="mnist-why-speed-bars">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="mnist-why-mode-copy">
+                  <span class="mnist-reason-index">02</span>
+                  <h3 class="mnist-reason-title">אפשר להתנסות מהר</h3>
+                  <p class="mnist-reason-copy">
+                    לא צריך לחכות שעות כדי להבין מה עובד. אפשר לשנות, להריץ
+                    ולראות תוצאה כמעט מיד.
+                  </p>
+                </div>
+              </section>
+
+              <section class="mnist-why-mode" data-why-mode="2">
+                <div class="mnist-why-mode-stage mnist-why-mode-stage-measure" aria-hidden="true">
+                  <div class="mnist-why-score-box">
+                    <span class="mnist-why-score-value">98.1%</span>
+                    <span class="mnist-why-score-label">accuracy על test set</span>
+                  </div>
+                  <div class="mnist-why-meter">
+                    <span class="mnist-why-meter-fill"></span>
+                    <span class="mnist-why-meter-marker"></span>
+                  </div>
+                  <div class="mnist-why-split-row">
+                    <span>train</span>
+                    <span>validation</span>
+                    <span>test</span>
+                  </div>
+                </div>
+                <div class="mnist-why-mode-copy">
+                  <span class="mnist-reason-index">03</span>
+                  <h3 class="mnist-reason-title">קל למדוד שיפור אמיתי</h3>
+                  <p class="mnist-reason-copy">
+                    יש תשובה נכונה לכל דוגמה וסט בדיקה קבוע, ולכן ברור אם
+                    המודל באמת משתפר ולא רק נראה מרשים יותר.
+                  </p>
+                </div>
+              </section>
+
+              <section class="mnist-why-mode" data-why-mode="3">
+                <div class="mnist-why-mode-stage mnist-why-mode-stage-principles" aria-hidden="true">
+                  <span class="mnist-why-principles-digit">
+                    <canvas
+                      class="mnist-why-principles-canvas"
+                      id="mnistWhyPrinciplesDigit"
+                    ></canvas>
+                  </span>
+                  <span class="mnist-why-principles-arrow"></span>
+                  <span class="mnist-why-principles-grid">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </span>
+                  <span class="mnist-why-principles-arrow"></span>
+                  <span class="mnist-why-principles-network">
+                    <span class="mnist-why-principles-col mnist-why-principles-col-a">
+                      <span></span><span></span><span></span><span></span>
+                    </span>
+                    <span class="mnist-why-principles-links"></span>
+                    <span class="mnist-why-principles-col mnist-why-principles-col-b">
+                      <span></span><span></span><span></span>
+                    </span>
+                  </span>
+                </div>
+                <div class="mnist-why-mode-copy">
+                  <span class="mnist-reason-index">04</span>
+                  <h3 class="mnist-reason-title">רואים את העקרונות הכי נקי</h3>
+                  <p class="mnist-reason-copy">
+                    בדיוק בגלל שהמאגר לא מסובך מדי, אפשר להבין עליו בבירור
+                    preprocessing, שכבות, פלט ואימון.
+                  </p>
+                </div>
+              </section>
+            </div>
           </div>
 
           <p class="mnist-note">
