@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupValueSection(pixels);
   setupNetworkDemoSection(model);
   setupMnistHistorySection(model);
+  setupMnistWhySection(model);
 
   const canvas = document.getElementById("heroDigitCanvas");
   if (canvas && pixels) {
@@ -401,6 +402,43 @@ function setupMnistHistorySection(model) {
     renderMnistHistoryDigit(rawCanvases[1], rawSamples[1], "smooth");
     renderMnistHistoryDigit(rawCanvases[2], rawSamples[2], "sharp");
     renderMnistHistoryDigit(standardCanvas, examples["3"] || fallbackPixels, "standard");
+  };
+
+  renderAll();
+  window.addEventListener("resize", renderAll);
+}
+
+function setupMnistWhySection(model) {
+  const visionCanvases = [
+    document.getElementById("mnistWhyVisionA"),
+    document.getElementById("mnistWhyVisionB"),
+    document.getElementById("mnistWhyVisionC"),
+  ];
+  const coreCanvas = document.getElementById("mnistWhyCoreDigit");
+
+  if (visionCanvases.some((canvas) => !canvas) || !coreCanvas) {
+    return;
+  }
+
+  const examples = model?.digitExamples || {};
+  const fallbackPixels =
+    examples["3"] || Object.values(examples).find((pixels) => Array.isArray(pixels));
+
+  if (!fallbackPixels) {
+    return;
+  }
+
+  const visionSamples = [
+    examples["2"] || fallbackPixels,
+    examples["5"] || fallbackPixels,
+    examples["8"] || fallbackPixels,
+  ];
+
+  const renderAll = () => {
+    renderMnistHistoryDigit(visionCanvases[0], visionSamples[0], "sharp");
+    renderMnistHistoryDigit(visionCanvases[1], visionSamples[1], "smooth");
+    renderMnistHistoryDigit(visionCanvases[2], visionSamples[2], "standard");
+    renderMnistHistoryDigit(coreCanvas, examples["3"] || fallbackPixels, "standard");
   };
 
   renderAll();
