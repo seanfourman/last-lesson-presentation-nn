@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNetworkDemoSection(model);
   setupMnistHistorySection(model);
   setupMnistWhySection(model);
+  setupAmbientMnistCollages(model);
 
   const canvas = document.getElementById("heroDigitCanvas");
   if (canvas && pixels) {
@@ -561,6 +562,27 @@ function setupMnistWhySection(model) {
     if (epochRafId) {
       window.cancelAnimationFrame(epochRafId);
     }
+  });
+}
+
+function setupAmbientMnistCollages(model) {
+  const canvases = Array.from(document.querySelectorAll(".mnist-ambient-canvas"));
+
+  if (!canvases.length || !model?.digitExamples) {
+    return;
+  }
+
+  canvases.forEach((canvas, index) => {
+    const digit = canvas.dataset.digit ?? String(index % 10);
+    const pixels =
+      model.digitExamples?.[digit] ??
+      model.digitExamples?.[String(index % 10)];
+
+    if (!pixels) {
+      return;
+    }
+
+    drawSampleDigitToCanvas(canvas, pixels);
   });
 }
 

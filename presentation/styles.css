@@ -3015,10 +3015,17 @@ svg {
 }
 
 .mnist-why-measure-row {
+  --measure-name-width: 6.2rem;
+  --measure-value-width: 4.8rem;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns:
+    var(--measure-name-width)
+    minmax(0, 1fr)
+    var(--measure-value-width);
   gap: 0.8rem;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.72rem 0.82rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
@@ -3040,14 +3047,18 @@ svg {
 
 .mnist-why-measure-name {
   color: rgba(255, 255, 255, 0.8);
+  text-align: right;
 }
 
 .mnist-why-measure-value {
   color: rgba(255, 248, 190, 0.98);
+  text-align: left;
 }
 
 .mnist-why-measure-bar {
   position: relative;
+  width: 100%;
+  min-width: 0;
   height: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
@@ -3068,15 +3079,15 @@ svg {
 }
 
 .mnist-why-measure-row[data-kind="train"] {
-  --measure-width: 99%;
+  --measure-width: calc(100% - 2px);
 }
 
 .mnist-why-measure-row[data-kind="validation"] {
-  --measure-width: 98.4%;
+  --measure-width: calc(100% - 2px);
 }
 
 .mnist-why-measure-row[data-kind="test"] {
-  --measure-width: 98.1%;
+  --measure-width: calc(100% - 2px);
 }
 
 .mnist-why-mode-stage-principles {
