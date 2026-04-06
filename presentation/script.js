@@ -3821,12 +3821,19 @@ function setupSolutionSpaceSections(model) {
   };
 
   const renderFlexibleLab = (points = flexibleState.points, closePath = true) => {
+    updateSolutionPathVisual(flexiblePath, points, closePath);
+
+    if (!Array.isArray(points) || points.length < 3) {
+      resetSolutionPlotState(flexibleNodes);
+      flexibleAccuracy.textContent = "0.0%";
+      return;
+    }
+
     const evaluation = evaluateFreeformSolutionBoundary(
       dataset.points,
       points,
       dataset.labels,
     );
-    updateSolutionPathVisual(flexiblePath, points, closePath);
     updateSolutionPlotState(flexibleNodes, evaluation);
     flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
   };
@@ -3841,20 +3848,21 @@ function setupSolutionSpaceSections(model) {
   });
   const stopFlexibleDraw = bindSolutionFreeformDraw(flexiblePlot, {
     onPreview(points) {
-      if (points.length < 2) {
+      updateSolutionPathVisual(flexiblePath, points, false);
+
+      if (points.length < 3) {
+        resetSolutionPlotState(flexibleNodes);
+        flexibleAccuracy.textContent = "0.0%";
         return;
       }
 
-      updateSolutionPathVisual(flexiblePath, points, false);
-      if (points.length >= 3) {
-        const evaluation = evaluateFreeformSolutionBoundary(
-          dataset.points,
-          points,
-          dataset.labels,
-        );
-        updateSolutionPlotState(flexibleNodes, evaluation);
-        flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
-      }
+      const evaluation = evaluateFreeformSolutionBoundary(
+        dataset.points,
+        points,
+        dataset.labels,
+      );
+      updateSolutionPlotState(flexibleNodes, evaluation);
+      flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
     },
     onCommit(points) {
       flexibleState.points = normalizeSolutionBoundaryPoints(points);
@@ -4197,6 +4205,12 @@ function updateSolutionPlotState(nodes, evaluation) {
     const isCorrect = stateById.get(point.id) !== false;
     element.classList.toggle("is-correct", isCorrect);
     element.classList.toggle("is-wrong", !isCorrect);
+  }
+}
+
+function resetSolutionPlotState(nodes) {
+  for (const { element } of nodes) {
+    element.classList.remove("is-correct", "is-wrong");
   }
 }
 
