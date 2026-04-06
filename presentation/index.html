@@ -1329,9 +1329,9 @@
               אבל מרחב פתרונות אחר נותן תוצאה אחרת לגמרי.
             </h2>
             <p class="solution-copy">
-              משמאל המודל מוגבל לקו ישר.
+              כאן שתי קבוצות של דוגמאות מוקרנות לשני ממדים רק כדי שנוכל לראות את הגבול.
               <br />
-              מימין הוא כבר יכול לעטוף אזור שלם בגבול סגור, ולכן לקבל פתרון מדויק יותר.
+              השאלה היא לא כמה טוב אימנו את המודל, אלא אילו צורות החלטה בכלל זמינות לו.
             </p>
           </div>
 
@@ -1370,14 +1370,14 @@
                   <circle
                     class="solution-boundary-handle"
                     id="solutionLinearHandleA"
-                    r="2.9"
+                    r="2.45"
                     cx="8"
                     cy="74"
                   ></circle>
                   <circle
                     class="solution-boundary-handle"
                     id="solutionLinearHandleB"
-                    r="2.9"
+                    r="2.45"
                     cx="92"
                     cy="28"
                   ></circle>
@@ -1390,9 +1390,9 @@
               </div>
 
               <p class="solution-model-copy">
-                כאן המודל יכול להזיז רק קו אחד.
+                כאן המודל יכול רק להזיז ולסובב קו ישר.
                 <br />
-                אם הדוגמאות מסודרות בצורה מורכבת יותר, הוא פשוט נתקע.
+                אם הדוגמאות מסתדרות בענן מורכב יותר, אין לו איך לעקוב אחריו.
               </p>
             </article>
 
@@ -1400,7 +1400,7 @@
               <div class="solution-model-head">
                 <div>
                   <p class="solution-model-kicker">מודל גמיש יותר</p>
-                  <h3 class="solution-model-title">גבול סגור</h3>
+                  <h3 class="solution-model-title">גבול חופשי</h3>
                 </div>
                 <div class="solution-model-score">
                   <span id="solutionFlexibleAccuracy">0%</span>
@@ -1409,46 +1409,22 @@
               </div>
 
               <div
-                class="solution-plot solution-plot-interactive"
+                class="solution-plot solution-plot-interactive solution-plot-draw"
                 id="solutionFlexiblePlot"
               >
-                <svg
-                  class="solution-boundary-svg"
-                  id="solutionFlexibleSvg"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
-                  <ellipse
-                    class="solution-boundary-ellipse"
-                    id="solutionFlexibleEllipse"
-                    cx="49"
-                    cy="48"
-                    rx="21"
-                    ry="15"
-                  ></ellipse>
-                  <circle
-                    class="solution-boundary-handle"
-                    id="solutionFlexibleHandleCenter"
-                    r="2.9"
-                    cx="49"
-                    cy="48"
-                  ></circle>
-                  <circle
-                    class="solution-boundary-handle"
-                    id="solutionFlexibleHandleX"
-                    r="2.9"
-                    cx="70"
-                    cy="48"
-                  ></circle>
-                  <circle
-                    class="solution-boundary-handle"
-                    id="solutionFlexibleHandleY"
-                    r="2.9"
-                    cx="49"
-                    cy="63"
-                  ></circle>
-                </svg>
+                  <svg
+                    class="solution-boundary-svg"
+                    id="solutionFlexibleSvg"
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      class="solution-boundary-path"
+                      id="solutionFlexiblePath"
+                      d=""
+                    ></path>
+                  </svg>
                 <div
                   class="solution-plot-points"
                   id="solutionFlexiblePoints"
@@ -1457,18 +1433,17 @@
               </div>
 
               <p class="solution-model-copy">
-                כאן המודל כבר יכול לעצב גבול שמגיב לענן הדוגמאות.
+                כאן הגבול כבר לא מוגבל לקו אחד.
                 <br />
-                ברגע שמרחב הפתרונות גדל, הדיוק יכול לקפוץ בצורה משמעותית.
+                אפשר לצייר צורה חופשית, ולראות איך דיוק המודל משתנה בהתאם.
               </p>
             </article>
           </div>
 
           <p class="solution-note">
-            ב־MNIST האמיתי ההפרדה לא מתרחשת בשני ממדים,
+            במציאות לא מציירים את הגבול ביד.
             <br />
-            אלא במרחב ענק של 784 פיקסלים. אבל העיקרון נשאר אותו עיקרון:
-            מרחב פתרונות עשיר יותר נותן למודל יותר דרכים למצוא גבול החלטה טוב.
+            זו רק המחשה לכך שמודל עם מרחב פתרונות גמיש יותר יכול לייצג גבולות החלטה מורכבים יותר, והרשת לומדת אותם מהנתונים.
           </p>
         </div>
       </section>

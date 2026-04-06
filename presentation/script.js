@@ -3667,12 +3667,7 @@ function setupSolutionSpaceSections(model) {
   const linearHandleA = document.getElementById("solutionLinearHandleA");
   const linearHandleB = document.getElementById("solutionLinearHandleB");
   const linearPoints = document.getElementById("solutionLinearPoints");
-  const flexibleEllipse = document.getElementById("solutionFlexibleEllipse");
-  const flexibleHandleCenter = document.getElementById(
-    "solutionFlexibleHandleCenter",
-  );
-  const flexibleHandleX = document.getElementById("solutionFlexibleHandleX");
-  const flexibleHandleY = document.getElementById("solutionFlexibleHandleY");
+  const flexiblePath = document.getElementById("solutionFlexiblePath");
   const flexiblePoints = document.getElementById("solutionFlexiblePoints");
 
   if (
@@ -3684,10 +3679,7 @@ function setupSolutionSpaceSections(model) {
     !linearHandleA ||
     !linearHandleB ||
     !linearPoints ||
-    !flexibleEllipse ||
-    !flexibleHandleCenter ||
-    !flexibleHandleX ||
-    !flexibleHandleY ||
+    !flexiblePath ||
     !flexiblePoints
   ) {
     return;
@@ -3708,31 +3700,27 @@ function setupSolutionSpaceSections(model) {
     y2: 31,
   };
   const flexibleState = {
-    cx: 50,
-    cy: 50,
-    rx: 21,
-    ry: 16.5,
+    points: createDefaultSolutionBoundaryPoints(),
   };
 
   const renderLinearLab = () => {
-    const evaluation = evaluateLinearSolutionBoundary(dataset.points, linearState);
+    const evaluation = evaluateLinearSolutionBoundary(
+      dataset.points,
+      linearState,
+      dataset.labels,
+    );
     updateSolutionLineVisual(linearLine, linearState, linearHandleA, linearHandleB);
     updateSolutionPlotState(linearNodes, evaluation);
     linearAccuracy.textContent = formatPercent(evaluation.accuracy);
   };
 
-  const renderFlexibleLab = () => {
-    const evaluation = evaluateEllipseSolutionBoundary(
+  const renderFlexibleLab = (points = flexibleState.points, closePath = true) => {
+    const evaluation = evaluateFreeformSolutionBoundary(
       dataset.points,
-      flexibleState,
+      points,
+      dataset.labels,
     );
-    updateSolutionEllipseVisual(
-      flexibleEllipse,
-      flexibleState,
-      flexibleHandleCenter,
-      flexibleHandleX,
-      flexibleHandleY,
-    );
+    updateSolutionPathVisual(flexiblePath, points, closePath);
     updateSolutionPlotState(flexibleNodes, evaluation);
     flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
   };
@@ -3745,58 +3733,56 @@ function setupSolutionSpaceSections(model) {
     linearState.y2 = clamp(position.y, 8, 92);
     renderLinearLab();
   });
-  const stopFlexibleCenter = bindSolutionHandleDrag(
-    flexibleHandleCenter,
-    flexiblePlot,
-    (position) => {
-      flexibleState.cx = clamp(position.x, flexibleState.rx + 8, 92 - flexibleState.rx);
-      flexibleState.cy = clamp(position.y, flexibleState.ry + 8, 92 - flexibleState.ry);
-      renderFlexibleLab();
+  const stopFlexibleDraw = bindSolutionFreeformDraw(flexiblePlot, {
+    onPreview(points) {
+      if (points.length < 2) {
+        return;
+      }
+
+      updateSolutionPathVisual(flexiblePath, points, false);
+      if (points.length >= 3) {
+        const evaluation = evaluateFreeformSolutionBoundary(
+          dataset.points,
+          points,
+          dataset.labels,
+        );
+        updateSolutionPlotState(flexibleNodes, evaluation);
+        flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
+      }
     },
-  );
-  const stopFlexibleX = bindSolutionHandleDrag(
-    flexibleHandleX,
-    flexiblePlot,
-    (position) => {
-      flexibleState.rx = clamp(position.x - flexibleState.cx, 8, 34);
-      flexibleState.cx = clamp(flexibleState.cx, flexibleState.rx + 8, 92 - flexibleState.rx);
-      renderFlexibleLab();
+    onCommit(points) {
+      flexibleState.points = normalizeSolutionBoundaryPoints(points);
+      renderFlexibleLab(flexibleState.points, true);
     },
-  );
-  const stopFlexibleY = bindSolutionHandleDrag(
-    flexibleHandleY,
-    flexiblePlot,
-    (position) => {
-      flexibleState.ry = clamp(position.y - flexibleState.cy, 8, 30);
-      flexibleState.cy = clamp(flexibleState.cy, flexibleState.ry + 8, 92 - flexibleState.ry);
-      renderFlexibleLab();
+    onCancel() {
+      renderFlexibleLab(flexibleState.points, true);
     },
-  );
+  });
 
   renderLinearLab();
-  renderFlexibleLab();
+  renderFlexibleLab(flexibleState.points, true);
 
   window.addEventListener(
     "beforeunload",
     () => {
       stopLinearDragA();
       stopLinearDragB();
-      stopFlexibleCenter();
-      stopFlexibleX();
-      stopFlexibleY();
+      stopFlexibleDraw();
     },
     { once: true },
   );
 }
 
 function buildSolutionSpaceDataset(model) {
-  const zeroCount = 12;
-  const sixCount = 9;
-  const zeroSamples = getSolutionSpaceSamples(model, 0, zeroCount, 8);
-  const sixSamples = getSolutionSpaceSamples(model, 6, sixCount, 4);
-  const zeroAngles = [3, 26, 54, 82, 114, 148, 176, 208, 238, 270, 302, 334];
-  const zeroRadii = [31, 29, 30.5, 29, 30, 31, 29.5, 30.5, 30, 29, 31, 30];
-  const sixPositions = [
+  const outerLabel = 1;
+  const innerLabel = 8;
+  const outerCount = 12;
+  const innerCount = 9;
+  const outerSamples = getSolutionSpaceSamples(model, outerLabel, outerCount, 10);
+  const innerSamples = getSolutionSpaceSamples(model, innerLabel, innerCount, 6);
+  const outerAngles = [3, 26, 54, 82, 114, 148, 176, 208, 238, 270, 302, 334];
+  const outerRadii = [31, 29, 30.5, 29, 30, 31, 29.5, 30.5, 30, 29, 31, 30];
+  const innerPositions = [
     { x: 50, y: 38.5 },
     { x: 41.5, y: 44.5 },
     { x: 58.5, y: 44 },
@@ -3808,28 +3794,31 @@ function buildSolutionSpaceDataset(model) {
     { x: 56, y: 66 },
   ];
 
-  const zeros = zeroSamples.map((pixels, index) => {
-    const angle = (zeroAngles[index] * Math.PI) / 180;
-    const radius = zeroRadii[index];
+  const outerPoints = outerSamples.map((pixels, index) => {
+    const angle = (outerAngles[index] * Math.PI) / 180;
+    const radius = outerRadii[index];
     return {
-      id: `zero-${index}`,
-      label: 0,
+      id: `outer-${index}`,
+      label: outerLabel,
+      tone: "outer",
       pixels,
       x: 50 + Math.cos(angle) * radius,
       y: 50 + Math.sin(angle) * radius,
     };
   });
 
-  const sixes = sixSamples.map((pixels, index) => ({
-    id: `six-${index}`,
-    label: 6,
+  const innerPoints = innerSamples.map((pixels, index) => ({
+    id: `inner-${index}`,
+    label: innerLabel,
+    tone: "inner",
     pixels,
-    x: sixPositions[index]?.x ?? 50,
-    y: sixPositions[index]?.y ?? 50,
+    x: innerPositions[index]?.x ?? 50,
+    y: innerPositions[index]?.y ?? 50,
   }));
 
   return {
-    points: [...zeros, ...sixes],
+    labels: [outerLabel, innerLabel],
+    points: [...outerPoints, ...innerPoints],
   };
 }
 
@@ -3873,7 +3862,7 @@ function getSolutionSpaceSamples(model, label, count, offset = 0) {
 function mountSolutionPlotPoints(container, points) {
   const nodes = points.map((point) => {
     const element = document.createElement("div");
-    element.className = `solution-point solution-point-${point.label === 0 ? "zero" : "six"}`;
+    element.className = `solution-point solution-point-${point.tone ?? "outer"}`;
     element.style.setProperty("--x", point.x.toFixed(2));
     element.style.setProperty("--y", point.y.toFixed(2));
     element.dataset.pointId = point.id;
@@ -3881,7 +3870,7 @@ function mountSolutionPlotPoints(container, points) {
     const canvas = document.createElement("canvas");
     canvas.width = 28;
     canvas.height = 28;
-    drawSolutionPointCanvas(canvas, point.pixels, point.label);
+    drawSolutionPointCanvas(canvas, point.pixels, point.tone);
 
     element.append(canvas);
     return { point, element };
@@ -3891,32 +3880,83 @@ function mountSolutionPlotPoints(container, points) {
   return nodes;
 }
 
-function drawSolutionPointCanvas(canvas, pixels, label) {
+function drawSolutionPointCanvas(canvas, pixels, tone = "outer") {
   const ctx = canvas.getContext("2d");
   const sourceCanvas =
-    label === 6
+    tone === "inner"
       ? createTintedPixelCanvas(pixels, "#ffe900", {
           alphaBoost: 1.18,
         })
       : createPixelCanvas(pixels, {
           transparentBackground: true,
         });
+  const bounds = getSolutionDigitBounds(pixels);
+  const padding = 2.5;
+  const targetSize = canvas.width - padding * 2;
+  const maxDimension = Math.max(bounds.width, bounds.height, 1);
+  const drawWidth = targetSize * (bounds.width / maxDimension);
+  const drawHeight = targetSize * (bounds.height / maxDimension);
+  const drawX = (canvas.width - drawWidth) * 0.5;
+  const drawY = (canvas.height - drawHeight) * 0.5;
 
   clearCanvas(ctx, canvas.width, canvas.height);
   ctx.save();
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(sourceCanvas, 1, 1, canvas.width - 2, canvas.height - 2);
+  ctx.drawImage(
+    sourceCanvas,
+    bounds.x,
+    bounds.y,
+    bounds.width,
+    bounds.height,
+    drawX,
+    drawY,
+    drawWidth,
+    drawHeight,
+  );
   ctx.restore();
 }
 
-function evaluateLinearSolutionBoundary(points, line) {
+function getSolutionDigitBounds(pixels) {
+  let minX = 28;
+  let minY = 28;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let y = 0; y < 28; y += 1) {
+    for (let x = 0; x < 28; x += 1) {
+      const value = pixels[y * 28 + x] ?? 0;
+      if (value < 18) {
+        continue;
+      }
+
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+    }
+  }
+
+  if (maxX < minX || maxY < minY) {
+    return { x: 0, y: 0, width: 28, height: 28 };
+  }
+
+  return {
+    x: Math.max(0, minX - 1),
+    y: Math.max(0, minY - 1),
+    width: Math.min(28, maxX - minX + 3),
+    height: Math.min(28, maxY - minY + 3),
+  };
+}
+
+function evaluateLinearSolutionBoundary(points, line, labels = [0, 6]) {
+  const [primaryLabel, secondaryLabel] = labels;
   const dx = line.x2 - line.x1;
   const dy = line.y2 - line.y1;
 
   const evaluateOrientation = (positiveLabel) => {
     const classifications = points.map((point) => {
       const signedSide = dx * (point.y - line.y1) - dy * (point.x - line.x1);
-      const predicted = signedSide >= 0 ? positiveLabel : positiveLabel === 0 ? 6 : 0;
+      const predicted = signedSide >= 0 ? positiveLabel : positiveLabel === primaryLabel ? secondaryLabel : primaryLabel;
       return {
         id: point.id,
         correct: predicted === point.label,
@@ -3934,21 +3974,36 @@ function evaluateLinearSolutionBoundary(points, line) {
     };
   };
 
-  const orientationZero = evaluateOrientation(0);
-  const orientationSix = evaluateOrientation(6);
+  const orientationZero = evaluateOrientation(primaryLabel);
+  const orientationSix = evaluateOrientation(secondaryLabel);
 
   return orientationZero.accuracy >= orientationSix.accuracy
     ? orientationZero
     : orientationSix;
 }
 
-function evaluateEllipseSolutionBoundary(points, ellipseState) {
+function createDefaultSolutionBoundaryPoints() {
+  return [
+    { x: 30, y: 43 },
+    { x: 35, y: 31 },
+    { x: 47, y: 25 },
+    { x: 60, y: 27 },
+    { x: 68, y: 35 },
+    { x: 70, y: 48 },
+    { x: 67, y: 59 },
+    { x: 57, y: 68 },
+    { x: 44, y: 69 },
+    { x: 33, y: 61 },
+    { x: 28, y: 52 },
+  ];
+}
+
+function evaluateFreeformSolutionBoundary(points, polygonPoints, labels = [0, 6]) {
+  const [primaryLabel, secondaryLabel] = labels;
   const evaluateOrientation = (insideLabel) => {
     const classifications = points.map((point) => {
-      const normalizedX = (point.x - ellipseState.cx) / Math.max(ellipseState.rx, 1);
-      const normalizedY = (point.y - ellipseState.cy) / Math.max(ellipseState.ry, 1);
-      const inside = normalizedX * normalizedX + normalizedY * normalizedY <= 1;
-      const predicted = inside ? insideLabel : insideLabel === 0 ? 6 : 0;
+      const inside = pointInSolutionPolygon(point.x, point.y, polygonPoints);
+      const predicted = inside ? insideLabel : insideLabel === primaryLabel ? secondaryLabel : primaryLabel;
 
       return {
         id: point.id,
@@ -3967,12 +4022,47 @@ function evaluateEllipseSolutionBoundary(points, ellipseState) {
     };
   };
 
-  const orientationZero = evaluateOrientation(0);
-  const orientationSix = evaluateOrientation(6);
+  const orientationZero = evaluateOrientation(primaryLabel);
+  const orientationSix = evaluateOrientation(secondaryLabel);
 
   return orientationZero.accuracy >= orientationSix.accuracy
     ? orientationZero
     : orientationSix;
+}
+
+function pointInSolutionPolygon(x, y, polygonPoints) {
+  if (!Array.isArray(polygonPoints) || polygonPoints.length < 3) {
+    return false;
+  }
+
+  let inside = false;
+
+  for (
+    let currentIndex = 0, previousIndex = polygonPoints.length - 1;
+    currentIndex < polygonPoints.length;
+    previousIndex = currentIndex, currentIndex += 1
+  ) {
+    const current = polygonPoints[currentIndex];
+    const previous = polygonPoints[previousIndex];
+    const denominator = previous.y - current.y;
+    const safeDenominator =
+      Math.abs(denominator) < 0.0001
+        ? denominator >= 0
+          ? 0.0001
+          : -0.0001
+        : denominator;
+    const intersects =
+      (current.y > y) !== (previous.y > y) &&
+      x <
+        ((previous.x - current.x) * (y - current.y)) / safeDenominator +
+          current.x;
+
+    if (intersects) {
+      inside = !inside;
+    }
+  }
+
+  return inside;
 }
 
 function updateSolutionPlotState(nodes, evaluation) {
@@ -4007,32 +4097,8 @@ function updateSolutionLineVisual(lineElement, lineState, handleA = null, handle
   }
 }
 
-function updateSolutionEllipseVisual(
-  ellipseElement,
-  ellipseState,
-  centerHandle = null,
-  xHandle = null,
-  yHandle = null,
-) {
-  ellipseElement.setAttribute("cx", ellipseState.cx.toFixed(2));
-  ellipseElement.setAttribute("cy", ellipseState.cy.toFixed(2));
-  ellipseElement.setAttribute("rx", ellipseState.rx.toFixed(2));
-  ellipseElement.setAttribute("ry", ellipseState.ry.toFixed(2));
-
-  if (centerHandle) {
-    centerHandle.setAttribute("cx", ellipseState.cx.toFixed(2));
-    centerHandle.setAttribute("cy", ellipseState.cy.toFixed(2));
-  }
-
-  if (xHandle) {
-    xHandle.setAttribute("cx", (ellipseState.cx + ellipseState.rx).toFixed(2));
-    xHandle.setAttribute("cy", ellipseState.cy.toFixed(2));
-  }
-
-  if (yHandle) {
-    yHandle.setAttribute("cx", ellipseState.cx.toFixed(2));
-    yHandle.setAttribute("cy", (ellipseState.cy + ellipseState.ry).toFixed(2));
-  }
+function updateSolutionPathVisual(pathElement, points, closePath = true) {
+  pathElement.setAttribute("d", createSolutionPathD(points, closePath));
 }
 
 function bindSolutionHandleDrag(handle, plot, onMove) {
@@ -4066,6 +4132,142 @@ function bindSolutionHandleDrag(handle, plot, onMove) {
     cleanup();
     handle.removeEventListener("pointerdown", startDrag);
   };
+}
+
+function bindSolutionFreeformDraw(plot, { onPreview, onCommit, onCancel }) {
+  let cleanup = () => {};
+
+  const startDraw = (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    plot.classList.add("is-drawing");
+
+    const points = [solutionEventToPlotPosition(plot, event)];
+
+    if (typeof plot.setPointerCapture === "function") {
+      try {
+        plot.setPointerCapture(event.pointerId);
+      } catch {}
+    }
+
+    const move = (moveEvent) => {
+      const position = solutionEventToPlotPosition(plot, moveEvent);
+      const lastPoint = points[points.length - 1];
+
+      if (!lastPoint || Math.hypot(position.x - lastPoint.x, position.y - lastPoint.y) >= 1.2) {
+        points.push(position);
+        onPreview?.(cloneSolutionBoundaryPoints(points));
+      }
+    };
+
+    const stop = () => {
+      plot.classList.remove("is-drawing");
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+
+      if (points.length >= 3) {
+        onCommit?.(cloneSolutionBoundaryPoints(points));
+      } else {
+        onCancel?.();
+      }
+    };
+
+    cleanup = stop;
+    onPreview?.(cloneSolutionBoundaryPoints(points));
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
+  };
+
+  plot.addEventListener("pointerdown", startDraw);
+
+  return () => {
+    cleanup();
+    plot.removeEventListener("pointerdown", startDraw);
+  };
+}
+
+function cloneSolutionBoundaryPoints(points) {
+  return points.map((point) => ({
+    x: point.x,
+    y: point.y,
+  }));
+}
+
+function normalizeSolutionBoundaryPoints(points) {
+  const deduped = [];
+
+  for (const point of points) {
+    const normalizedPoint = {
+      x: clamp(point.x, 6, 94),
+      y: clamp(point.y, 6, 94),
+    };
+    const lastPoint = deduped[deduped.length - 1];
+
+    if (
+      !lastPoint ||
+      Math.hypot(normalizedPoint.x - lastPoint.x, normalizedPoint.y - lastPoint.y) >= 1.3
+    ) {
+      deduped.push(normalizedPoint);
+    }
+  }
+
+  if (deduped.length < 3) {
+    return createDefaultSolutionBoundaryPoints();
+  }
+
+  const maxPoints = 26;
+  if (deduped.length <= maxPoints) {
+    return deduped;
+  }
+
+  const sampled = [];
+
+  for (let index = 0; index < maxPoints; index += 1) {
+    const sourceIndex = Math.floor((index / maxPoints) * deduped.length);
+    sampled.push(deduped[sourceIndex]);
+  }
+
+  return sampled;
+}
+
+function createSolutionPathD(points, closePath = true) {
+  if (!Array.isArray(points) || !points.length) {
+    return "";
+  }
+
+  if (points.length === 1) {
+    const [point] = points;
+    return `M ${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+  }
+
+  if (!closePath || points.length < 3) {
+    return points.reduce((path, point, index) => {
+      const command = index === 0 ? "M" : "L";
+      return `${path}${command} ${point.x.toFixed(2)} ${point.y.toFixed(2)} `;
+    }, "").trim();
+  }
+
+  const lastPoint = points[points.length - 1];
+  const firstPoint = points[0];
+  const startX = ((lastPoint.x + firstPoint.x) * 0.5).toFixed(2);
+  const startY = ((lastPoint.y + firstPoint.y) * 0.5).toFixed(2);
+  let path = `M ${startX} ${startY}`;
+
+  for (let index = 0; index < points.length; index += 1) {
+    const current = points[index];
+    const next = points[(index + 1) % points.length];
+    const endX = ((current.x + next.x) * 0.5).toFixed(2);
+    const endY = ((current.y + next.y) * 0.5).toFixed(2);
+
+    path += ` Q ${current.x.toFixed(2)} ${current.y.toFixed(2)} ${endX} ${endY}`;
+  }
+
+  return `${path} Z`;
 }
 
 function solutionEventToPlotPosition(plot, event) {
