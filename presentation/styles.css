@@ -4578,23 +4578,8 @@ svg {
 
 .solution-takeaway {
   position: relative;
-  padding-top: 0.95rem;
   display: grid;
   gap: 0.62rem;
-}
-
-.solution-takeaway::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 72px;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 238, 0, 0.94),
-    rgba(255, 238, 0, 0.14)
-  );
 }
 
 .solution-takeaway-copy {
@@ -4602,6 +4587,29 @@ svg {
   font-size: 1rem;
   line-height: 1.78;
   color: var(--muted);
+}
+
+.solution-takeaway-kicker {
+  position: relative;
+  display: inline-block;
+  justify-self: start;
+  margin-top: 0.95rem;
+}
+
+.solution-takeaway-kicker::before {
+  content: "";
+  position: absolute;
+  top: -1.16rem;
+  left: 50%;
+  width: calc(100% + 1.15rem);
+  height: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 238, 0, 0.14),
+    rgba(255, 238, 0, 0.94),
+    rgba(255, 238, 0, 0.14)
+  );
 }
 
 .solution-card,
@@ -5152,8 +5160,12 @@ svg {
     gap: 0.9rem;
   }
 
-  .solution-takeaway {
-    padding-top: 0.82rem;
+  .solution-takeaway-kicker {
+    margin-top: 0.82rem;
+  }
+
+  .solution-takeaway-kicker::before {
+    top: -1rem;
   }
 
   .solution-card,
