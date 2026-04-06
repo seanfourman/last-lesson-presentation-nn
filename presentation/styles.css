@@ -55,7 +55,8 @@ svg {
 .mnist-history-section,
 .mnist-why-section,
 .feature-story-section,
-.solution-space-section {
+.solution-space-section,
+.closing-section {
   min-height: 100vh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -4965,6 +4966,203 @@ svg {
   filter: drop-shadow(0 0 8px rgba(255, 238, 0, 0.18));
 }
 
+.closing-section {
+  position: relative;
+  width: min(1460px, calc(100vw - 36px));
+  margin: 0 auto;
+  padding: 18px 0 24px;
+  display: grid;
+  justify-items: center;
+  overflow: hidden;
+}
+
+.closing-section::before {
+  content: "";
+  position: absolute;
+  inset: 6% 5% 10%;
+  pointer-events: none;
+  filter: blur(48px);
+  background:
+    radial-gradient(
+      ellipse 44% 30% at 52% 28%,
+      rgba(255, 238, 0, 0.14),
+      rgba(255, 238, 0, 0) 70%
+    ),
+    radial-gradient(
+      ellipse 36% 26% at 18% 78%,
+      rgba(255, 238, 0, 0.11),
+      rgba(255, 238, 0, 0) 74%
+    ),
+    radial-gradient(
+      ellipse 30% 22% at 86% 74%,
+      rgba(255, 238, 0, 0.1),
+      rgba(255, 238, 0, 0) 76%
+    ),
+    radial-gradient(
+      ellipse 26% 22% at 82% 20%,
+      rgba(255, 238, 0, 0.06),
+      rgba(255, 238, 0, 0) 76%
+    );
+}
+
+.closing-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1160px, 100%);
+  min-height: calc(100vh - 48px);
+  min-height: calc(100dvh - 48px);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1.45rem;
+  text-align: center;
+}
+
+.closing-head {
+  width: min(940px, 100%);
+  display: grid;
+  gap: 0.68rem;
+}
+
+.closing-kicker {
+  margin: 0;
+  color: rgba(255, 238, 0, 0.98);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.closing-title {
+  margin: 0;
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: clamp(1.95rem, 3.8vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+}
+
+.closing-title span {
+  display: block;
+  color: #ffee00;
+  text-shadow: 0 0 24px rgba(255, 238, 0, 0.18);
+}
+
+.closing-lead {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.04rem;
+  line-height: 1.72;
+}
+
+.closing-journey {
+  position: relative;
+  width: min(100%, 1030px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.05rem;
+  padding-top: 1.05rem;
+}
+
+.closing-journey::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 8%;
+  left: 8%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 238, 0, 0),
+    rgba(255, 238, 0, 0.6),
+    rgba(255, 238, 0, 0)
+  );
+}
+
+.closing-step {
+  position: relative;
+  padding: 1.18rem 1rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.015)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 38px rgba(0, 0, 0, 0.26);
+}
+
+.closing-step::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -17px;
+  width: 14px;
+  height: 14px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #000;
+  border: 3px solid rgba(255, 238, 0, 0.95);
+  box-shadow: 0 0 16px rgba(255, 238, 0, 0.24);
+}
+
+.closing-step-index {
+  margin: 0;
+  color: rgba(255, 238, 0, 0.92);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.closing-step h3 {
+  margin: 0;
+  margin-top: 0.24rem;
+  color: var(--text);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 1.14rem;
+  line-height: 1.3;
+}
+
+.closing-step p {
+  margin: 0.42rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.62;
+}
+
+.closing-thanks-wrap {
+  margin-top: 0.2rem;
+  display: grid;
+  gap: 0.2rem;
+  justify-items: center;
+}
+
+.closing-thanks {
+  margin: 0;
+  color: #fff1a1;
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-shadow:
+    0 0 32px rgba(255, 238, 0, 0.24),
+    0 0 72px rgba(255, 238, 0, 0.12);
+}
+
+.closing-signoff {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-family: "Rubik", "Heebo", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 760px) {
   .intro-section {
     width: min(100vw - 20px, 1200px);
@@ -5138,6 +5336,11 @@ svg {
     padding: 18px 0 24px;
   }
 
+  .closing-section {
+    width: min(100vw - 20px, 1460px);
+    padding: 18px 0 24px;
+  }
+
   .network-shell {
     min-height: calc(100vh - 42px);
     min-height: calc(100dvh - 42px);
@@ -5157,6 +5360,12 @@ svg {
     gap: 0.95rem;
   }
 
+  .closing-shell {
+    min-height: calc(100vh - 42px);
+    min-height: calc(100dvh - 42px);
+    gap: 0.95rem;
+  }
+
   .network-title {
     font-size: clamp(1.28rem, 6vw, 1.72rem);
   }
@@ -5168,6 +5377,14 @@ svg {
   .solution-title {
     font-size: clamp(1.28rem, 6vw, 1.78rem);
     line-height: 1.12;
+  }
+
+  .closing-title {
+    font-size: clamp(1.42rem, 8vw, 2.2rem);
+  }
+
+  .closing-title span {
+    margin-top: 0.15rem;
   }
 
   .mnist-english-name {
@@ -5202,6 +5419,52 @@ svg {
   .solution-note {
     font-size: 0.95rem;
     line-height: 1.62;
+  }
+
+  .closing-lead {
+    font-size: 0.92rem;
+    line-height: 1.56;
+  }
+
+  .closing-journey {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding-top: 0.2rem;
+  }
+
+  .closing-journey::before {
+    display: none;
+  }
+
+  .closing-step {
+    padding: 0.92rem 0.88rem;
+    text-align: right;
+  }
+
+  .closing-step::before {
+    display: none;
+  }
+
+  .closing-step-index {
+    font-size: 0.72rem;
+  }
+
+  .closing-step h3 {
+    font-size: 1rem;
+  }
+
+  .closing-step p {
+    font-size: 0.92rem;
+    line-height: 1.58;
+  }
+
+  .closing-thanks {
+    font-size: clamp(1.9rem, 11vw, 2.8rem);
+  }
+
+  .closing-signoff {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
   }
 
   .solution-explain-grid,
