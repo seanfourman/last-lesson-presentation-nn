@@ -1337,6 +1337,8 @@ function setupFeatureStorySection(model) {
 
     const stageMeta = getStageMeta(state.digit);
     const isSpecialZero = state.digit === "special-zero";
+    const shouldMaskStoryLabels =
+      isSpecialZero && state.stage < stageMeta.length - 1;
     state.stage = clamp(state.stage, 0, stageMeta.length - 1);
     const displaySourcePixels =
       isSpecialZero && state.stage < stageMeta.length - 1
@@ -1344,7 +1346,7 @@ function setupFeatureStorySection(model) {
         : sourcePixels;
 
     drawSampleDigitToCanvas(sourceCanvas, displaySourcePixels);
-    sourceLabel.textContent = definition.sourceLabel;
+    sourceLabel.textContent = shouldMaskStoryLabels ? "?" : definition.sourceLabel;
 
     const meta = stageMeta[state.stage];
     stageTitle.textContent = meta.title;
@@ -1389,7 +1391,7 @@ function setupFeatureStorySection(model) {
       const maskedPixels = extractFeaturePixels(sourcePixels, component.masks);
       wrap.style.display = "grid";
       wrap.style.setProperty("--component-color", component.color);
-      label.textContent = component.label;
+      label.textContent = shouldMaskStoryLabels ? "?" : component.label;
       drawTintedDigitToCanvas(canvas, maskedPixels, component.color);
       wrap.classList.toggle("is-visible", state.stage >= 1);
     });
@@ -1408,7 +1410,7 @@ function setupFeatureStorySection(model) {
       const maskedPixels = extractFeaturePixels(sourcePixels, pattern.masks);
       wrap.style.display = "grid";
       wrap.style.setProperty("--component-color", pattern.color);
-      label.textContent = pattern.label;
+      label.textContent = shouldMaskStoryLabels ? "?" : pattern.label;
       drawTintedDigitToCanvas(canvas, maskedPixels, pattern.color, {
         drawRatio: 0.8,
         glowStrength: 0.12,
