@@ -4434,9 +4434,9 @@ svg {
 }
 
 .solution-spectrum-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  justify-items: center;
+  align-content: start;
   text-align: center;
   gap: 0.5rem;
   position: relative;
@@ -4444,9 +4444,21 @@ svg {
 }
 
 .solution-spectrum-marker {
-  width: 18px;
+  width: 116px;
   height: 18px;
   display: block;
+  justify-self: center;
+  position: relative;
+}
+
+.solution-spectrum-marker::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   border: 3px solid rgba(255, 238, 0, 0.88);
   background: rgba(5, 5, 5, 0.96);
@@ -4472,41 +4484,36 @@ svg {
   height: 74px;
   display: grid;
   place-items: center;
+  justify-self: center;
   margin-top: 0.55rem;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 92px 60px;
 }
 
 .solution-spectrum-node::before,
 .solution-spectrum-node::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  inset: auto;
-  transform: translate(-50%, -50%);
-  width: 92px;
-  height: 60px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  content: none;
 }
 
 .solution-spectrum-node::after {
   content: none;
 }
 
-.solution-spectrum-node-line::before {
+.solution-spectrum-node-line {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 60'%3E%3Cpath d='M30 42L66 18' fill='none' stroke='%23ffee00' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-.solution-spectrum-node-bent::before {
+.solution-spectrum-node-bent {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 60'%3E%3Cpath d='M28 48C28 26 38 14 56 14C66 14 72 16 78 19' fill='none' stroke='%23ffee00' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-.solution-spectrum-node-loop::before {
+.solution-spectrum-node-loop {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 60'%3E%3Cellipse cx='48' cy='30' rx='25' ry='17' transform='rotate(-10 48 30)' fill='none' stroke='%23ffee00' stroke-width='8'/%3E%3C/svg%3E");
 }
 
-.solution-spectrum-node-network::before {
+.solution-spectrum-node-network {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 60'%3E%3Cpath d='M24 18C18 26 18 38 24 46C32 54 46 54 54 49C61 45 67 46 74 40C80 34 79 24 72 19C65 14 56 16 50 13C42 9 30 10 24 18Z' fill='none' stroke='%23ffee00' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
@@ -5096,6 +5103,11 @@ svg {
   .solution-spectrum-node {
     width: 92px;
     height: 62px;
+    background-size: 74px 48px;
+  }
+
+  .solution-spectrum-marker {
+    width: 92px;
   }
 
   .solution-takeaways {
