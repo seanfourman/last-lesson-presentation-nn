@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMnistHistorySection(model);
   setupMnistWhySection(model);
   setupFeatureStorySection(model);
+  setupSolutionSpaceSections(model);
   setupAmbientMnistCollages(model);
 
   const canvas = document.getElementById("heroDigitCanvas");
@@ -3655,6 +3656,427 @@ function softmaxWithTemperature(values, temperature = 1) {
 function pseudoRandom01(value) {
   const result = Math.sin(value * 12.9898 + 78.233) * 43758.5453;
   return result - Math.floor(result);
+}
+
+function setupSolutionSpaceSections(model) {
+  const linearAccuracy = document.getElementById("solutionLinearAccuracy");
+  const flexibleAccuracy = document.getElementById("solutionFlexibleAccuracy");
+  const linearPlot = document.getElementById("solutionLinearPlot");
+  const flexiblePlot = document.getElementById("solutionFlexiblePlot");
+  const linearLine = document.getElementById("solutionLinearLine");
+  const linearHandleA = document.getElementById("solutionLinearHandleA");
+  const linearHandleB = document.getElementById("solutionLinearHandleB");
+  const linearPoints = document.getElementById("solutionLinearPoints");
+  const flexibleEllipse = document.getElementById("solutionFlexibleEllipse");
+  const flexibleHandleCenter = document.getElementById(
+    "solutionFlexibleHandleCenter",
+  );
+  const flexibleHandleX = document.getElementById("solutionFlexibleHandleX");
+  const flexibleHandleY = document.getElementById("solutionFlexibleHandleY");
+  const flexiblePoints = document.getElementById("solutionFlexiblePoints");
+
+  if (
+    !linearAccuracy ||
+    !flexibleAccuracy ||
+    !linearPlot ||
+    !flexiblePlot ||
+    !linearLine ||
+    !linearHandleA ||
+    !linearHandleB ||
+    !linearPoints ||
+    !flexibleEllipse ||
+    !flexibleHandleCenter ||
+    !flexibleHandleX ||
+    !flexibleHandleY ||
+    !flexiblePoints
+  ) {
+    return;
+  }
+
+  const dataset = buildSolutionSpaceDataset(model);
+  if (!dataset.points.length) {
+    return;
+  }
+
+  const linearNodes = mountSolutionPlotPoints(linearPoints, dataset.points);
+  const flexibleNodes = mountSolutionPlotPoints(flexiblePoints, dataset.points);
+
+  const linearState = {
+    x1: 8,
+    y1: 73,
+    x2: 92,
+    y2: 31,
+  };
+  const flexibleState = {
+    cx: 50,
+    cy: 50,
+    rx: 21,
+    ry: 16.5,
+  };
+
+  const renderLinearLab = () => {
+    const evaluation = evaluateLinearSolutionBoundary(dataset.points, linearState);
+    updateSolutionLineVisual(linearLine, linearState, linearHandleA, linearHandleB);
+    updateSolutionPlotState(linearNodes, evaluation);
+    linearAccuracy.textContent = formatPercent(evaluation.accuracy);
+  };
+
+  const renderFlexibleLab = () => {
+    const evaluation = evaluateEllipseSolutionBoundary(
+      dataset.points,
+      flexibleState,
+    );
+    updateSolutionEllipseVisual(
+      flexibleEllipse,
+      flexibleState,
+      flexibleHandleCenter,
+      flexibleHandleX,
+      flexibleHandleY,
+    );
+    updateSolutionPlotState(flexibleNodes, evaluation);
+    flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
+  };
+
+  const stopLinearDragA = bindSolutionHandleDrag(linearHandleA, linearPlot, (position) => {
+    linearState.y1 = clamp(position.y, 8, 92);
+    renderLinearLab();
+  });
+  const stopLinearDragB = bindSolutionHandleDrag(linearHandleB, linearPlot, (position) => {
+    linearState.y2 = clamp(position.y, 8, 92);
+    renderLinearLab();
+  });
+  const stopFlexibleCenter = bindSolutionHandleDrag(
+    flexibleHandleCenter,
+    flexiblePlot,
+    (position) => {
+      flexibleState.cx = clamp(position.x, flexibleState.rx + 8, 92 - flexibleState.rx);
+      flexibleState.cy = clamp(position.y, flexibleState.ry + 8, 92 - flexibleState.ry);
+      renderFlexibleLab();
+    },
+  );
+  const stopFlexibleX = bindSolutionHandleDrag(
+    flexibleHandleX,
+    flexiblePlot,
+    (position) => {
+      flexibleState.rx = clamp(position.x - flexibleState.cx, 8, 34);
+      flexibleState.cx = clamp(flexibleState.cx, flexibleState.rx + 8, 92 - flexibleState.rx);
+      renderFlexibleLab();
+    },
+  );
+  const stopFlexibleY = bindSolutionHandleDrag(
+    flexibleHandleY,
+    flexiblePlot,
+    (position) => {
+      flexibleState.ry = clamp(position.y - flexibleState.cy, 8, 30);
+      flexibleState.cy = clamp(flexibleState.cy, flexibleState.ry + 8, 92 - flexibleState.ry);
+      renderFlexibleLab();
+    },
+  );
+
+  renderLinearLab();
+  renderFlexibleLab();
+
+  window.addEventListener(
+    "beforeunload",
+    () => {
+      stopLinearDragA();
+      stopLinearDragB();
+      stopFlexibleCenter();
+      stopFlexibleX();
+      stopFlexibleY();
+    },
+    { once: true },
+  );
+}
+
+function buildSolutionSpaceDataset(model) {
+  const zeroCount = 12;
+  const sixCount = 9;
+  const zeroSamples = getSolutionSpaceSamples(model, 0, zeroCount, 8);
+  const sixSamples = getSolutionSpaceSamples(model, 6, sixCount, 4);
+  const zeroAngles = [3, 26, 54, 82, 114, 148, 176, 208, 238, 270, 302, 334];
+  const zeroRadii = [31, 29, 30.5, 29, 30, 31, 29.5, 30.5, 30, 29, 31, 30];
+  const sixPositions = [
+    { x: 50, y: 38.5 },
+    { x: 41.5, y: 44.5 },
+    { x: 58.5, y: 44 },
+    { x: 46, y: 50.5 },
+    { x: 54.5, y: 51.5 },
+    { x: 39.5, y: 57.5 },
+    { x: 60.5, y: 58.5 },
+    { x: 48.5, y: 63.5 },
+    { x: 56, y: 66 },
+  ];
+
+  const zeros = zeroSamples.map((pixels, index) => {
+    const angle = (zeroAngles[index] * Math.PI) / 180;
+    const radius = zeroRadii[index];
+    return {
+      id: `zero-${index}`,
+      label: 0,
+      pixels,
+      x: 50 + Math.cos(angle) * radius,
+      y: 50 + Math.sin(angle) * radius,
+    };
+  });
+
+  const sixes = sixSamples.map((pixels, index) => ({
+    id: `six-${index}`,
+    label: 6,
+    pixels,
+    x: sixPositions[index]?.x ?? 50,
+    y: sixPositions[index]?.y ?? 50,
+  }));
+
+  return {
+    points: [...zeros, ...sixes],
+  };
+}
+
+function getSolutionSpaceSamples(model, label, count, offset = 0) {
+  const pool = [];
+
+  if (Array.isArray(model?.samples)) {
+    for (const sample of model.samples) {
+      if (Number(sample?.label) !== label || !Array.isArray(sample?.pixels)) {
+        continue;
+      }
+
+      pool.push(sample.pixels);
+      if (pool.length >= Math.max(count + offset + 20, count * 3)) {
+        break;
+      }
+    }
+  }
+
+  const trimmedPool = pool.slice(offset);
+  const fallback = Array.isArray(model?.digitExamples?.[String(label)])
+    ? model.digitExamples[String(label)]
+    : null;
+
+  const result = [];
+
+  if (trimmedPool.length) {
+    const step = Math.max(1, Math.floor(trimmedPool.length / count));
+    for (let index = 0; index < trimmedPool.length && result.length < count; index += step) {
+      result.push(trimmedPool[index]);
+    }
+  }
+
+  while (result.length < count && fallback) {
+    result.push(fallback);
+  }
+
+  return result.slice(0, count);
+}
+
+function mountSolutionPlotPoints(container, points) {
+  const nodes = points.map((point) => {
+    const element = document.createElement("div");
+    element.className = `solution-point solution-point-${point.label === 0 ? "zero" : "six"}`;
+    element.style.setProperty("--x", point.x.toFixed(2));
+    element.style.setProperty("--y", point.y.toFixed(2));
+    element.dataset.pointId = point.id;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 28;
+    canvas.height = 28;
+    drawSolutionPointCanvas(canvas, point.pixels, point.label);
+
+    element.append(canvas);
+    return { point, element };
+  });
+
+  container.replaceChildren(...nodes.map(({ element }) => element));
+  return nodes;
+}
+
+function drawSolutionPointCanvas(canvas, pixels, label) {
+  const ctx = canvas.getContext("2d");
+  const sourceCanvas =
+    label === 6
+      ? createTintedPixelCanvas(pixels, "#ffe900", {
+          alphaBoost: 1.18,
+        })
+      : createPixelCanvas(pixels, {
+          transparentBackground: true,
+        });
+
+  clearCanvas(ctx, canvas.width, canvas.height);
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(sourceCanvas, 1, 1, canvas.width - 2, canvas.height - 2);
+  ctx.restore();
+}
+
+function evaluateLinearSolutionBoundary(points, line) {
+  const dx = line.x2 - line.x1;
+  const dy = line.y2 - line.y1;
+
+  const evaluateOrientation = (positiveLabel) => {
+    const classifications = points.map((point) => {
+      const signedSide = dx * (point.y - line.y1) - dy * (point.x - line.x1);
+      const predicted = signedSide >= 0 ? positiveLabel : positiveLabel === 0 ? 6 : 0;
+      return {
+        id: point.id,
+        correct: predicted === point.label,
+      };
+    });
+
+    const correctCount = classifications.reduce(
+      (sum, item) => sum + (item.correct ? 1 : 0),
+      0,
+    );
+
+    return {
+      accuracy: correctCount / Math.max(1, points.length),
+      classifications,
+    };
+  };
+
+  const orientationZero = evaluateOrientation(0);
+  const orientationSix = evaluateOrientation(6);
+
+  return orientationZero.accuracy >= orientationSix.accuracy
+    ? orientationZero
+    : orientationSix;
+}
+
+function evaluateEllipseSolutionBoundary(points, ellipseState) {
+  const evaluateOrientation = (insideLabel) => {
+    const classifications = points.map((point) => {
+      const normalizedX = (point.x - ellipseState.cx) / Math.max(ellipseState.rx, 1);
+      const normalizedY = (point.y - ellipseState.cy) / Math.max(ellipseState.ry, 1);
+      const inside = normalizedX * normalizedX + normalizedY * normalizedY <= 1;
+      const predicted = inside ? insideLabel : insideLabel === 0 ? 6 : 0;
+
+      return {
+        id: point.id,
+        correct: predicted === point.label,
+      };
+    });
+
+    const correctCount = classifications.reduce(
+      (sum, item) => sum + (item.correct ? 1 : 0),
+      0,
+    );
+
+    return {
+      accuracy: correctCount / Math.max(1, points.length),
+      classifications,
+    };
+  };
+
+  const orientationZero = evaluateOrientation(0);
+  const orientationSix = evaluateOrientation(6);
+
+  return orientationZero.accuracy >= orientationSix.accuracy
+    ? orientationZero
+    : orientationSix;
+}
+
+function updateSolutionPlotState(nodes, evaluation) {
+  const stateById = new Map(
+    evaluation.classifications.map((classification) => [
+      classification.id,
+      classification.correct,
+    ]),
+  );
+
+  for (const { point, element } of nodes) {
+    const isCorrect = stateById.get(point.id) !== false;
+    element.classList.toggle("is-correct", isCorrect);
+    element.classList.toggle("is-wrong", !isCorrect);
+  }
+}
+
+function updateSolutionLineVisual(lineElement, lineState, handleA = null, handleB = null) {
+  lineElement.setAttribute("x1", lineState.x1.toFixed(2));
+  lineElement.setAttribute("y1", lineState.y1.toFixed(2));
+  lineElement.setAttribute("x2", lineState.x2.toFixed(2));
+  lineElement.setAttribute("y2", lineState.y2.toFixed(2));
+
+  if (handleA) {
+    handleA.setAttribute("cx", lineState.x1.toFixed(2));
+    handleA.setAttribute("cy", lineState.y1.toFixed(2));
+  }
+
+  if (handleB) {
+    handleB.setAttribute("cx", lineState.x2.toFixed(2));
+    handleB.setAttribute("cy", lineState.y2.toFixed(2));
+  }
+}
+
+function updateSolutionEllipseVisual(
+  ellipseElement,
+  ellipseState,
+  centerHandle = null,
+  xHandle = null,
+  yHandle = null,
+) {
+  ellipseElement.setAttribute("cx", ellipseState.cx.toFixed(2));
+  ellipseElement.setAttribute("cy", ellipseState.cy.toFixed(2));
+  ellipseElement.setAttribute("rx", ellipseState.rx.toFixed(2));
+  ellipseElement.setAttribute("ry", ellipseState.ry.toFixed(2));
+
+  if (centerHandle) {
+    centerHandle.setAttribute("cx", ellipseState.cx.toFixed(2));
+    centerHandle.setAttribute("cy", ellipseState.cy.toFixed(2));
+  }
+
+  if (xHandle) {
+    xHandle.setAttribute("cx", (ellipseState.cx + ellipseState.rx).toFixed(2));
+    xHandle.setAttribute("cy", ellipseState.cy.toFixed(2));
+  }
+
+  if (yHandle) {
+    yHandle.setAttribute("cx", ellipseState.cx.toFixed(2));
+    yHandle.setAttribute("cy", (ellipseState.cy + ellipseState.ry).toFixed(2));
+  }
+}
+
+function bindSolutionHandleDrag(handle, plot, onMove) {
+  let cleanup = () => {};
+
+  const startDrag = (event) => {
+    event.preventDefault();
+    plot.classList.add("is-dragging");
+    onMove(solutionEventToPlotPosition(plot, event));
+
+    const move = (moveEvent) => {
+      onMove(solutionEventToPlotPosition(plot, moveEvent));
+    };
+
+    const stop = () => {
+      plot.classList.remove("is-dragging");
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+    };
+
+    cleanup = stop;
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
+  };
+
+  handle.addEventListener("pointerdown", startDrag);
+
+  return () => {
+    cleanup();
+    handle.removeEventListener("pointerdown", startDrag);
+  };
+}
+
+function solutionEventToPlotPosition(plot, event) {
+  const rect = plot.getBoundingClientRect();
+  const x = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 100;
+  const y = ((event.clientY - rect.top) / Math.max(1, rect.height)) * 100;
+
+  return {
+    x: clamp(x, 0, 100),
+    y: clamp(y, 0, 100),
+  };
 }
 
 function drawSampleDigitToCanvas(canvas, pixels) {

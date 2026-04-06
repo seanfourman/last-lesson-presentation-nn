@@ -1213,6 +1213,258 @@
           </p>
         </div>
       </section>
+
+      <section class="solution-space-section" id="solution-space">
+        <div class="solution-shell solution-shell-explain">
+          <div class="solution-head">
+            <p class="solution-kicker">Solution Space</p>
+            <h2 class="solution-title">
+              מרחב הפתרונות הוא כל הגבולות
+              <br />
+              שהמודל בכלל מסוגל לשקול.
+            </h2>
+            <p class="solution-copy">
+              לא כל מודל מסוגל לייצר כל צורת הפרדה.
+              <br />
+              הסוג של המודל קובע מראש איזה פתרונות בכלל קיימים עבורו, עוד לפני
+              האימון עצמו.
+            </p>
+          </div>
+
+          <div class="solution-explain-grid">
+            <div class="solution-definition">
+              <p class="solution-definition-kicker">העיקרון</p>
+              <h3 class="solution-definition-title">
+                מרחב הפתרונות הוא כל הצורות
+                <br />
+                שהמודל יודע בכלל לנסות.
+              </h3>
+              <p class="solution-definition-copy">
+                לפני האימון הרשת עוד לא יודעת איפה עובר הגבול הנכון,
+                <br />
+                אבל סוג המודל כבר קובע אם מותר לה לנסות רק קו ישר,
+                עיקול קטן, לולאה או גבול הרבה יותר מורכב.
+              </p>
+            </div>
+
+            <div class="solution-spectrum" aria-hidden="true">
+              <div class="solution-spectrum-track"></div>
+
+              <article class="solution-spectrum-step">
+                <div class="solution-spectrum-node solution-spectrum-node-line"></div>
+                <p class="solution-spectrum-kicker">מרחב קטן</p>
+                <h3>רק קו ישר</h3>
+                <p>מעט מאוד גבולות אפשריים.</p>
+              </article>
+
+              <article class="solution-spectrum-step">
+                <div class="solution-spectrum-node solution-spectrum-node-bent"></div>
+                <p class="solution-spectrum-kicker">מרחב קצת יותר גמיש</p>
+                <h3>אפשר כבר להתעקם</h3>
+                <p>אבל עדיין נשארים די מוגבלים.</p>
+              </article>
+
+              <article class="solution-spectrum-step">
+                <div class="solution-spectrum-node solution-spectrum-node-loop"></div>
+                <p class="solution-spectrum-kicker">מרחב עשיר יותר</p>
+                <h3>אפשר לעטוף אזור</h3>
+                <p>המודל מתחיל להגיב למבנה של הדאטה.</p>
+              </article>
+
+              <article class="solution-spectrum-step">
+                <div class="solution-spectrum-node solution-spectrum-node-network"></div>
+                <p class="solution-spectrum-kicker">רשת עם שכבות</p>
+                <h3>גבול מורכב בהרבה</h3>
+                <p>יותר דרכים למצוא פתרון שמתאים באמת.</p>
+              </article>
+            </div>
+
+            <div class="solution-takeaways">
+              <article class="solution-takeaway">
+                <p class="solution-takeaway-kicker">מה קובע את המרחב הזה?</p>
+                <p class="solution-takeaway-copy">
+                  סוג המודל, מספר השכבות והפעולות שהוא יודע להרכיב.
+                </p>
+              </article>
+
+              <article class="solution-takeaway">
+                <p class="solution-takeaway-kicker">למה זה חשוב בכלל?</p>
+                <p class="solution-takeaway-copy">
+                  אם הפתרון הנכון בכלל לא שייך למרחב הזה,
+                  גם אימון מעולה לא יוכל להגיע אליו.
+                </p>
+              </article>
+
+              <article class="solution-takeaway">
+                <p class="solution-takeaway-kicker">ואיך זה מתחבר ל־MNIST?</p>
+                <p class="solution-takeaway-copy">
+                  ספרות בכתב יד לא תמיד מסתדרות לפי גבול לינארי פשוט,
+                  ולכן מודל גמיש יותר מקבל יתרון אמיתי.
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <p class="solution-note">
+            לפני ששואלים אם המודל למד טוב,
+            <strong>צריך לשאול אם בכלל היה לו מרחב פתרונות שיכול להכיל פתרון טוב.</strong>
+          </p>
+        </div>
+      </section>
+
+      <section class="solution-space-section solution-space-lab-section" id="solution-space-lab">
+        <div class="solution-shell solution-shell-lab">
+          <div class="solution-head">
+            <p class="solution-kicker">מרחב פתרונות בלייב</p>
+            <h2 class="solution-title">
+              אותו דאטה,
+              <br />
+              אבל מרחב פתרונות אחר נותן תוצאה אחרת לגמרי.
+            </h2>
+            <p class="solution-copy">
+              משמאל המודל מוגבל לקו ישר.
+              <br />
+              מימין הוא כבר יכול לעטוף אזור שלם בגבול סגור, ולכן לקבל פתרון מדויק יותר.
+            </p>
+          </div>
+
+          <div class="solution-lab-grid">
+            <article class="solution-model-card">
+              <div class="solution-model-head">
+                <div>
+                  <p class="solution-model-kicker">מודל לינארי</p>
+                  <h3 class="solution-model-title">קו ישר בלבד</h3>
+                </div>
+                <div class="solution-model-score">
+                  <span id="solutionLinearAccuracy">0%</span>
+                  <small>דיוק</small>
+                </div>
+              </div>
+
+              <div
+                class="solution-plot solution-plot-interactive"
+                id="solutionLinearPlot"
+              >
+                <svg
+                  class="solution-boundary-svg"
+                  id="solutionLinearSvg"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <line
+                    class="solution-boundary-line"
+                    id="solutionLinearLine"
+                    x1="8"
+                    y1="74"
+                    x2="92"
+                    y2="28"
+                  ></line>
+                  <circle
+                    class="solution-boundary-handle"
+                    id="solutionLinearHandleA"
+                    r="2.9"
+                    cx="8"
+                    cy="74"
+                  ></circle>
+                  <circle
+                    class="solution-boundary-handle"
+                    id="solutionLinearHandleB"
+                    r="2.9"
+                    cx="92"
+                    cy="28"
+                  ></circle>
+                </svg>
+                <div
+                  class="solution-plot-points"
+                  id="solutionLinearPoints"
+                  aria-hidden="true"
+                ></div>
+              </div>
+
+              <p class="solution-model-copy">
+                כאן המודל יכול להזיז רק קו אחד.
+                <br />
+                אם הדוגמאות מסודרות בצורה מורכבת יותר, הוא פשוט נתקע.
+              </p>
+            </article>
+
+            <article class="solution-model-card">
+              <div class="solution-model-head">
+                <div>
+                  <p class="solution-model-kicker">מודל גמיש יותר</p>
+                  <h3 class="solution-model-title">גבול סגור</h3>
+                </div>
+                <div class="solution-model-score">
+                  <span id="solutionFlexibleAccuracy">0%</span>
+                  <small>דיוק</small>
+                </div>
+              </div>
+
+              <div
+                class="solution-plot solution-plot-interactive"
+                id="solutionFlexiblePlot"
+              >
+                <svg
+                  class="solution-boundary-svg"
+                  id="solutionFlexibleSvg"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <ellipse
+                    class="solution-boundary-ellipse"
+                    id="solutionFlexibleEllipse"
+                    cx="49"
+                    cy="48"
+                    rx="21"
+                    ry="15"
+                  ></ellipse>
+                  <circle
+                    class="solution-boundary-handle"
+                    id="solutionFlexibleHandleCenter"
+                    r="2.9"
+                    cx="49"
+                    cy="48"
+                  ></circle>
+                  <circle
+                    class="solution-boundary-handle"
+                    id="solutionFlexibleHandleX"
+                    r="2.9"
+                    cx="70"
+                    cy="48"
+                  ></circle>
+                  <circle
+                    class="solution-boundary-handle"
+                    id="solutionFlexibleHandleY"
+                    r="2.9"
+                    cx="49"
+                    cy="63"
+                  ></circle>
+                </svg>
+                <div
+                  class="solution-plot-points"
+                  id="solutionFlexiblePoints"
+                  aria-hidden="true"
+                ></div>
+              </div>
+
+              <p class="solution-model-copy">
+                כאן המודל כבר יכול לעצב גבול שמגיב לענן הדוגמאות.
+                <br />
+                ברגע שמרחב הפתרונות גדל, הדיוק יכול לקפוץ בצורה משמעותית.
+              </p>
+            </article>
+          </div>
+
+          <p class="solution-note">
+            ב־MNIST האמיתי ההפרדה לא מתרחשת בשני ממדים,
+            <br />
+            אלא במרחב ענק של 784 פיקסלים. אבל העיקרון נשאר אותו עיקרון:
+            מרחב פתרונות עשיר יותר נותן למודל יותר דרכים למצוא גבול החלטה טוב.
+          </p>
+        </div>
+      </section>
     </main>
   </body>
 </html>
