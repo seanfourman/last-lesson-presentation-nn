@@ -1484,7 +1484,7 @@ function setupNetworkDemoSection(model) {
       }
       if (result) {
         result.textContent =
-          "הציור החדש ייכנס עכשיו לרשת כקלט חדש, במקום הדוגמה הקודמת.";
+          "הקלט החדש מחליף עכשיו את הדוגמה הקודמת, והרשת מתחילה לבנות החלטה חדשה.";
       }
     },
     onChange() {
@@ -1515,7 +1515,11 @@ function setupNetworkDemoSection(model) {
 
   const setIdleMessage = (message) => {
     if (phaseLabel) {
-      phaseLabel.textContent = drawPad.isBlank() ? "מחכה לקלט" : "דוגמת MNIST";
+      phaseLabel.textContent = drawPad.isBlank()
+        ? "ללא קלט"
+        : state.userHasDrawn
+          ? "קלט חדש"
+          : "דוגמת MNIST";
     }
     if (result) {
       result.textContent = message;
@@ -1537,8 +1541,7 @@ function setupNetworkDemoSection(model) {
     if (result) {
       result.innerHTML =
         `זו דוגמה של <strong>${digit}</strong> מתוך MNIST.` +
-        ` כך נראה קלט אמיתי מהמאגר שעליו הרשת אומנה,` +
-        ` יחד עם התשובה הנכונה שממנה היא לומדת.`;
+        ` בדיוק על דוגמאות כאלה הרשת אומנה כדי לקשר בין כתב יד לבין הספרה הנכונה.`;
     }
 
     if (autorun) {
@@ -1558,54 +1561,55 @@ function setupNetworkDemoSection(model) {
   const updatePhaseCopy = (phase) => {
     if (phase === "preprocess") {
       if (phaseLabel) {
-        phaseLabel.textContent = "Pre-processing";
+        phaseLabel.textContent = "קדם-עיבוד";
       }
       if (result) {
         result.textContent =
-          "הציור מומר עכשיו לגריד של 28×28, כלומר 784 ערכים שהרשת יכולה לעבוד איתם.";
+          "הציור מצטמצם עכשיו לגריד של 28×28, כלומר 784 ערכים שהרשת יכולה לעבד.";
       }
       return;
     }
 
     if (phase === "input") {
       if (phaseLabel) {
-        phaseLabel.textContent = "שכבת input";
+        phaseLabel.textContent = "שכבת קלט";
       }
       if (result) {
         result.textContent =
-          "עכשיו כל פיקסל נטען לערך קלט, והשכבה הראשונה מקבלת את התמונה כמספרים.";
+          "עכשיו כל פיקסל מקבל ערך מספרי, ושכבת הקלט רואה את התמונה כרשימה של מספרים.";
       }
       return;
     }
 
     if (phase === "hidden-1") {
       if (phaseLabel) {
-        phaseLabel.textContent = "Hidden layer 1";
+        phaseLabel.textContent = "שכבה חבויה 1";
       }
       if (result) {
         result.textContent =
-          "השכבה החבויה הראשונה מתחילה לאסוף תבניות פשוטות מתוך הפיקסלים.";
+          "השכבה החבויה הראשונה מתחילה לזהות רכיבים פשוטים כמו קווים, קשתות וזוויות.";
       }
       return;
     }
 
     if (phase === "hidden-2") {
       if (phaseLabel) {
-        phaseLabel.textContent = "Hidden layer 2";
+        phaseLabel.textContent = "שכבה חבויה 2";
       }
       if (result) {
         result.textContent =
-          "השכבה הבאה מחברת את התבניות האלה למבנים מורכבים יותר לקראת ההחלטה.";
+          "השכבה הבאה מחברת את הרכיבים האלה למבנים רחבים יותר שכבר מתחילים להזכיר ספרה.";
       }
       return;
     }
 
     if (phase === "output") {
       if (phaseLabel) {
-        phaseLabel.textContent = "Output · 0-9";
+        phaseLabel.textContent = "שכבת פלט · 0-9";
       }
       if (result) {
-        result.textContent = "בשכבת הפלט הרשת נותנת ציון לכל אחת מהספרות 0-9.";
+        result.textContent =
+          "בשכבת הפלט הרשת בודקת עד כמה הקלט דומה לכל אחת מהספרות מ-0 עד 9.";
       }
       return;
     }
@@ -1624,7 +1628,7 @@ function setupNetworkDemoSection(model) {
       state.runId += 1;
       scene.renderIdle();
       setIdleMessage(
-        "ציירו ספרה, והרשת תראה איך היא משתמשת במה שלמדה על דוגמאות מ-MNIST.",
+        "כאן רואים איך קלט חדש נכנס לרשת, עובר דרך השכבות, ומסתיים בהחלטה.",
       );
       return;
     }
@@ -1650,10 +1654,7 @@ function setupNetworkDemoSection(model) {
           phaseLabel.textContent = "ההחלטה של הרשת";
         }
         if (result) {
-          result.innerHTML =
-            sourceKind === "sample"
-              ? `על הדוגמה הזו הרשת הכי בטוחה ב-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`
-              : `על הציור הזה הרשת הכי בטוחה ב-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
+          result.innerHTML = `בסוף התהליך הרשת הכי בטוחה שמדובר ב-<strong>${inference.predictedDigit}</strong> · ${formatPercent(inference.confidence)}`;
         }
       },
     });
@@ -1667,7 +1668,7 @@ function setupNetworkDemoSection(model) {
     drawPad.clear();
     scene.renderIdle();
     setIdleMessage(
-      "ציירו ספרה, והרשת תפעיל על הקלט החדש את מה שלמדה מתוך דוגמאות האימון של MNIST.",
+      "כאן רואים איך קלט חדש נכנס לרשת, עובר דרך השכבות, ומסתיים בהחלטה.",
     );
   });
 
@@ -1696,7 +1697,7 @@ function setupNetworkDemoSection(model) {
     loadSampleDigit(sampleDigits[state.sampleIndex], false);
   } else {
     setIdleMessage(
-      "ציירו ספרה, והרשת תפעיל על הקלט החדש את מה שלמדה מתוך דוגמאות האימון של MNIST.",
+      "כאן רואים איך קלט חדש נכנס לרשת, עובר דרך השכבות, ומסתיים בהחלטה.",
     );
   }
 

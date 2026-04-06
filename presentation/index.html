@@ -124,14 +124,13 @@
           <div class="compare-copy">
             <p class="compare-lead">גם זו, גם זו, וגם זו 3.</p>
             <p>
-              בכל אחת מהן דלוקים פיקסלים אחרים לגמרי,
+              בכל אחת מהן התמונה נראית קצת אחרת,
               <br />
-              אבל אנחנו עדיין מבינים מיד שמדובר באותה ספרה.
+              אבל אנחנו עדיין מזהים מיד שמדובר באותה ספרה.
               <br />
-              וזאת בדיוק היכולת שאנחנו רוצים ממכונה:
+              וזו בדיוק היכולת שאנחנו רוצים ממכונה:
               <br />
-              לא לזכור תמונה אחת, אלא להבין מה משותף להרבה גרסאות שונות של אותה
-              ספרה.
+              לא לזכור דוגמה אחת, אלא להבין מה משותף להרבה גרסאות של אותה ספרה.
             </p>
           </div>
         </div>
@@ -207,10 +206,11 @@
             <p class="network-copy">
               ב-MNIST יש עשרות אלפי ספרות בכתב יד, ולכל אחת מהן יש תשובה נכונה.
               <br />
-              כך הרשת לא מקבלת חוקים מוכנים מראש,
+              כך, במקום שנכתוב לרשת חוקים ידנית,
               <br />
-              אלא לומדת מתוך דוגמאות איך לקשר בין קלט של 28×28 פיקסלים לבין
-              הספרות 0-9.
+              היא לומדת מתוך דוגמאות איך לקשר בין קלט של 28×28 פיקסלים
+              <br />
+              לבין אחת הספרות מ-0 עד 9.
             </p>
           </div>
 
@@ -266,13 +266,13 @@
           <div class="network-footer">
             <p class="network-kicker">MNIST</p>
             <p class="network-caption" id="networkCaption">
-              MNIST הוא מאגר קלאסי של 60,000 דוגמאות מסומנות של ספרות בכתב יד.
+              MNIST הוא מאגר קלאסי של ספרות בכתב יד.
               <br />
-              כאן אפשר לראות בזמן אמת מה הרשת עושה עם קלט חדש:
+              כאן אפשר לראות את זה בזמן אמת:
               <br />
               הציור מומר ל-784 ערכים, עובר דרך השכבות,
               <br />
-              ובסוף מתקבל ציון לכל אחת מהספרות 0-9.
+              ובסוף כל ספרה מקבלת ציון.
             </p>
           </div>
         </div>
@@ -764,8 +764,7 @@
           <p class="mnist-note">
             במילים אחרות, MNIST לא נשאר קלאסי כי הוא הכי קשה,
             <br />
-            אלא כי הוא אחד המקומות הכי טובים להתחיל מהם כשרוצים להבין איך רשת
-            לומדת.
+            אלא כי הוא אחת מנקודות הפתיחה הכי טובות להבנת רשתות נוירונים.
           </p>
         </div>
       </section>
@@ -1139,52 +1138,82 @@
                         id="featureStoryOutputRows"
                         aria-hidden="true"
                       >
-                        <div class="feature-story-output-row" data-output-digit="0">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="0"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">0</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="1">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="1"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">1</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="2">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="2"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">2</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="3">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="3"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">3</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="4">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="4"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">4</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="5">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="5"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">5</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="6">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="6"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">6</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="7">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="7"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">7</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="8">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="8"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">8</span>
                           <span class="feature-story-output-score">0.0%</span>
                         </div>
-                        <div class="feature-story-output-row" data-output-digit="9">
+                        <div
+                          class="feature-story-output-row"
+                          data-output-digit="9"
+                        >
                           <span class="feature-story-output-node"></span>
                           <span class="feature-story-output-digit">9</span>
                           <span class="feature-story-output-score">0.0%</span>
@@ -1197,7 +1226,9 @@
                         aria-hidden="true"
                       >
                         <span class="feature-story-output-selector-box"></span>
-                        <span class="feature-story-output-selector-question">?</span>
+                        <span class="feature-story-output-selector-question"
+                          >?</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -1207,9 +1238,11 @@
           </div>
 
           <p class="feature-story-note">
-            זו אינטואיציה למה השכבות החבויות אולי לומדות,
+            זו כמובן רק אינטואיציה,
             <br />
-            מקצוות קטנים, לדפוסים רחבים יותר, ולבסוף לספרה שלמה.
+            אבל היא עוזרת לדמיין איך רשת יכולה לעבור מקווים קטנים
+            <br />
+            למבנים רחבים יותר, ולבסוף לספרה שלמה.
           </p>
         </div>
       </section>
@@ -1240,10 +1273,10 @@
                 שהמודל יודע בכלל לנסות.
               </h3>
               <p class="solution-definition-copy">
-                לפני האימון הרשת עוד לא יודעת איפה עובר הגבול הנכון,
+                לפני האימון, הרשת עוד לא יודעת איפה עובר הגבול הנכון,
                 <br />
-                אבל סוג המודל כבר קובע אם מותר לה לנסות רק קו ישר,
-                עיקול קטן, לולאה או גבול הרבה יותר מורכב.
+                אבל סוג המודל כבר קובע אם מותר לה לנסות רק קו ישר, עיקול קטן,
+                לולאה או גבול הרבה יותר מורכב.
               </p>
             </div>
 
@@ -1252,7 +1285,9 @@
 
               <article class="solution-spectrum-step">
                 <span class="solution-spectrum-marker"></span>
-                <div class="solution-spectrum-node solution-spectrum-node-line"></div>
+                <div
+                  class="solution-spectrum-node solution-spectrum-node-line"
+                ></div>
                 <p class="solution-spectrum-kicker">מרחב קטן</p>
                 <h3>רק קו ישר</h3>
                 <p>מעט מאוד גבולות אפשריים.</p>
@@ -1260,7 +1295,9 @@
 
               <article class="solution-spectrum-step">
                 <span class="solution-spectrum-marker"></span>
-                <div class="solution-spectrum-node solution-spectrum-node-bent"></div>
+                <div
+                  class="solution-spectrum-node solution-spectrum-node-bent"
+                ></div>
                 <p class="solution-spectrum-kicker">מרחב קצת יותר גמיש</p>
                 <h3>אפשר כבר להתעקם</h3>
                 <p>אבל עדיין נשארים די מוגבלים.</p>
@@ -1268,7 +1305,9 @@
 
               <article class="solution-spectrum-step">
                 <span class="solution-spectrum-marker"></span>
-                <div class="solution-spectrum-node solution-spectrum-node-loop"></div>
+                <div
+                  class="solution-spectrum-node solution-spectrum-node-loop"
+                ></div>
                 <p class="solution-spectrum-kicker">מרחב עשיר יותר</p>
                 <h3>אפשר לעטוף אזור</h3>
                 <p>המודל מתחיל להגיב למבנה של הדאטה.</p>
@@ -1276,7 +1315,9 @@
 
               <article class="solution-spectrum-step">
                 <span class="solution-spectrum-marker"></span>
-                <div class="solution-spectrum-node solution-spectrum-node-network"></div>
+                <div
+                  class="solution-spectrum-node solution-spectrum-node-network"
+                ></div>
                 <p class="solution-spectrum-kicker">רשת עם שכבות</p>
                 <h3>גבול מורכב בהרבה</h3>
                 <p>יותר דרכים למצוא פתרון שמתאים באמת.</p>
@@ -1305,8 +1346,8 @@
               <article class="solution-takeaway">
                 <p class="solution-takeaway-kicker">ואיך זה מתחבר ל־MNIST?</p>
                 <p class="solution-takeaway-copy">
-                  ספרות בכתב יד לא תמיד מסתדרות לפי גבול לינארי פשוט,
-                  ולכן מודל גמיש יותר מקבל יתרון אמיתי.
+                  ספרות בכתב יד לא תמיד מסתדרות לפי גבול לינארי פשוט, ולכן מודל
+                  גמיש יותר מקבל יתרון אמיתי.
                 </p>
               </article>
             </div>
@@ -1314,12 +1355,18 @@
 
           <p class="solution-note">
             לפני ששואלים אם המודל למד טוב,
-            <strong>צריך לשאול אם בכלל היה לו מרחב פתרונות שיכול להכיל פתרון טוב.</strong>
+            <strong
+              >צריך לשאול אם בכלל היה לו מרחב פתרונות שיכול להכיל פתרון
+              טוב.</strong
+            >
           </p>
         </div>
       </section>
 
-      <section class="solution-space-section solution-space-lab-section" id="solution-space-lab">
+      <section
+        class="solution-space-section solution-space-lab-section"
+        id="solution-space-lab"
+      >
         <div class="solution-shell solution-shell-lab">
           <div class="solution-head">
             <p class="solution-kicker">מרחב פתרונות בלייב</p>
@@ -1329,9 +1376,11 @@
               אבל מרחב פתרונות אחר נותן תוצאה אחרת לגמרי.
             </h2>
             <p class="solution-copy">
-              כאן שתי קבוצות של דוגמאות מוקרנות לשני ממדים רק כדי שנוכל לראות את הגבול.
+              כאן שתי קבוצות של דוגמאות מוקרנות לשני ממדים רק כדי שנוכל לראות את
+              הגבול.
               <br />
-              השאלה היא לא כמה טוב אימנו את המודל, אלא אילו צורות החלטה בכלל זמינות לו.
+              השאלה היא לא כמה טוב אימנו את המודל, אלא אילו צורות החלטה בכלל
+              זמינות לו.
             </p>
           </div>
 
@@ -1412,19 +1461,19 @@
                 class="solution-plot solution-plot-interactive solution-plot-draw"
                 id="solutionFlexiblePlot"
               >
-                  <svg
-                    class="solution-boundary-svg"
-                    id="solutionFlexibleSvg"
-                    viewBox="0 0 100 100"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      class="solution-boundary-path"
-                      id="solutionFlexiblePath"
-                      d=""
-                    ></path>
-                  </svg>
+                <svg
+                  class="solution-boundary-svg"
+                  id="solutionFlexibleSvg"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    class="solution-boundary-path"
+                    id="solutionFlexiblePath"
+                    d=""
+                  ></path>
+                </svg>
                 <div
                   class="solution-plot-points"
                   id="solutionFlexiblePoints"
@@ -1443,7 +1492,9 @@
           <p class="solution-note">
             במציאות לא מציירים את הגבול ביד.
             <br />
-            זו רק המחשה לכך שמודל עם מרחב פתרונות גמיש יותר יכול לייצג גבולות החלטה מורכבים יותר, והרשת לומדת אותם מהנתונים.
+            זו רק המחשה: ככל שמרחב הפתרונות גמיש יותר,
+            <br />
+            למודל יש יותר דרכים לייצג גבול החלטה טוב.
           </p>
         </div>
       </section>
