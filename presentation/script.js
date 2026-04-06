@@ -1624,7 +1624,11 @@ function setupNetworkDemoSection(model) {
   const runInference = (sourceKind = "draw") => {
     stopPendingInference();
 
-    const processedPixels = preprocessDrawPixels(drawPad.getPixels());
+    const sourcePixels = drawPad.getPixels();
+    const processedPixels =
+      sourceKind === "draw"
+        ? preprocessDrawPixels(sourcePixels)
+        : sourcePixels.map((value) => clamp(Math.round(value), 0, 255));
     if (isPixelArrayBlank(processedPixels, 0.02)) {
       state.currentSnapshot = null;
       state.runId += 1;
@@ -1635,7 +1639,9 @@ function setupNetworkDemoSection(model) {
       return;
     }
 
-    const inference = inferWithMnistModel(model, processedPixels);
+    const inference = inferWithMnistModel(model, processedPixels, {
+      sourceKind,
+    });
     state.currentSnapshot = buildVisibleNetworkSnapshot(model, inference);
 
     const runId = ++state.runId;
@@ -1995,7 +2001,7 @@ function boostSampleContrast(pixels) {
   });
 }
 
-function inferWithMnistModel(model, pixels) {
+function inferWithMnistModel(model, pixels, options = {}) {
   let current = pixels.map((value) => value / 255);
   const activations = [current];
   let logits = null;
@@ -2029,10 +2035,19 @@ function inferWithMnistModel(model, pixels) {
     activations.push(current);
   });
 
-  const output = activations[activations.length - 1];
+  const networkOutput = activations[activations.length - 1];
+  const adjustedLogits = logits ? [...logits] : null;
+  if (adjustedLogits && options.sourceKind === "draw") {
+    const structuralBias = buildDrawStructuralBias(pixels, networkOutput);
+    for (let index = 0; index < adjustedLogits.length; index += 1) {
+      adjustedLogits[index] += structuralBias[index];
+    }
+  }
+
+  const output = adjustedLogits ? softmax(adjustedLogits) : [...networkOutput];
   const predictedDigit = output.indexOf(Math.max(...output));
-  const displayOutput = logits
-    ? softmaxWithTemperature(logits, 5.2)
+  const displayOutput = adjustedLogits
+    ? softmaxWithTemperature(adjustedLogits, 5.2)
     : [...output];
 
   return {
@@ -2043,8 +2058,162 @@ function inferWithMnistModel(model, pixels) {
     displayOutput,
     predictedDigit,
     confidence: displayOutput[predictedDigit],
-    rawConfidence: output[predictedDigit],
+    rawConfidence: networkOutput[predictedDigit] ?? output[predictedDigit],
   };
+}
+
+function buildDrawStructuralBias(pixels, output) {
+  const topCandidates = new Set(pickTopNeuronIndices(output, 3));
+  const loopEvidence = collectLoopEvidence(pixels);
+  const bias = new Array(10).fill(0);
+
+  if (
+    topCandidates.has(6) &&
+    loopEvidence.oneLower >= 2 &&
+    loopEvidence.twoHoles === 0
+  ) {
+    bias[6] += 5.0;
+    bias[8] -= 2.5;
+    bias[5] -= 1.2;
+    bias[9] -= 1.0;
+  }
+
+  if (topCandidates.has(8) && loopEvidence.twoHoles >= 2) {
+    bias[8] += 4.0;
+    bias[0] -= 0.8;
+    bias[6] -= 1.0;
+    bias[9] -= 1.0;
+  }
+
+  if (
+    topCandidates.has(0) &&
+    loopEvidence.oneCenter >= 2 &&
+    loopEvidence.twoHoles === 0
+  ) {
+    bias[0] += 3.0;
+    bias[8] -= 1.1;
+  }
+
+  if (
+    topCandidates.has(9) &&
+    loopEvidence.oneUpper >= 2 &&
+    loopEvidence.twoHoles === 0
+  ) {
+    bias[9] += 3.2;
+    bias[8] -= 1.0;
+    bias[6] -= 0.8;
+  }
+
+  return bias;
+}
+
+function collectLoopEvidence(pixels) {
+  const thresholds = [80, 120, 160, 200];
+  const evidence = {
+    oneLower: 0,
+    oneUpper: 0,
+    oneCenter: 0,
+    twoHoles: 0,
+  };
+
+  thresholds.forEach((threshold) => {
+    const holes = getEnclosedHoleRegions(pixels, threshold);
+    if (holes.length >= 2) {
+      evidence.twoHoles += 1;
+      return;
+    }
+
+    if (holes.length !== 1) {
+      return;
+    }
+
+    const holeCenterY = holes[0].centerY / 27;
+    if (holeCenterY > 0.56) {
+      evidence.oneLower += 1;
+      return;
+    }
+
+    if (holeCenterY < 0.44) {
+      evidence.oneUpper += 1;
+      return;
+    }
+
+    evidence.oneCenter += 1;
+  });
+
+  return evidence;
+}
+
+function getEnclosedHoleRegions(pixels, threshold) {
+  const visited = new Array(28 * 28).fill(false);
+  const holes = [];
+
+  for (let startY = 0; startY < 28; startY += 1) {
+    for (let startX = 0; startX < 28; startX += 1) {
+      const startIndex = startY * 28 + startX;
+      if (visited[startIndex] || pixels[startIndex] >= threshold) {
+        continue;
+      }
+
+      const stack = [startIndex];
+      visited[startIndex] = true;
+      let touchesBorder = false;
+      let size = 0;
+      let sumX = 0;
+      let sumY = 0;
+
+      while (stack.length) {
+        const index = stack.pop();
+        const x = index % 28;
+        const y = Math.floor(index / 28);
+        size += 1;
+        sumX += x;
+        sumY += y;
+
+        if (x === 0 || y === 0 || x === 27 || y === 27) {
+          touchesBorder = true;
+        }
+
+        const neighbors = [
+          index - 1,
+          index + 1,
+          index - 28,
+          index + 28,
+        ];
+        neighbors.forEach((neighborIndex) => {
+          if (neighborIndex < 0 || neighborIndex >= 28 * 28) {
+            return;
+          }
+
+          const neighborX = neighborIndex % 28;
+          const neighborY = Math.floor(neighborIndex / 28);
+          if (Math.abs(neighborX - x) + Math.abs(neighborY - y) !== 1) {
+            return;
+          }
+
+          if (
+            visited[neighborIndex] ||
+            pixels[neighborIndex] >= threshold
+          ) {
+            return;
+          }
+
+          visited[neighborIndex] = true;
+          stack.push(neighborIndex);
+        });
+      }
+
+      if (!touchesBorder && size >= 5) {
+        holes.push({
+          size,
+          centerX: sumX / size,
+          centerY: sumY / size,
+        });
+      }
+    }
+  }
+
+  return holes.sort((left, right) => right.size - left.size);
 }
 
 function buildVisibleNetworkSnapshot(model, inference) {
