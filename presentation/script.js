@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const model = window.MNIST_MODEL;
   const pixels = model?.digitExamples?.["3"];
-  setupCompareSection(pixels);
+  setupCompareSection(model, pixels);
   setupValueSection(pixels);
   setupNetworkDemoSection(model);
   setupMnistHistorySection(model);
@@ -169,7 +169,7 @@ function resizeGridOverlay(state) {
   overlayCanvas.height = height;
 }
 
-function setupCompareSection(basePixels) {
+function setupCompareSection(model, basePixels) {
   const stage = document.getElementById("compareStage");
   const overlay = document.getElementById("overlayDigit");
   const overlayCanvas = document.getElementById("overlayDigitCanvas");
@@ -183,7 +183,7 @@ function setupCompareSection(basePixels) {
     return;
   }
 
-  const generatedDigits = generateCompareDigits().map((pixels) =>
+  const generatedDigits = getDiverseCompareDigits(model).map((pixels) =>
     normalizeDigitPixels(pixels, { padding: 2, threshold: 10 }),
   );
   const overlayPixels = normalizeDigitPixels(basePixels ?? generatedDigits[1], {
@@ -3253,6 +3253,109 @@ function generateCompareDigits() {
   return variants.map((variant) => rasterizeThreeVariant(variant));
 }
 
+function calculatePixelDistance(left, right) {
+  const maxLength = Math.max(left?.length ?? 0, right?.length ?? 0);
+  let total = 0;
+
+  for (let index = 0; index < maxLength; index += 1) {
+    total += Math.abs((left?.[index] ?? 0) - (right?.[index] ?? 0));
+  }
+
+  return total;
+}
+
+function getDiverseCompareDigits(model, digit = 3, count = 3) {
+  const fallback = generateCompareDigits();
+  const pool = [];
+
+  if (Array.isArray(model?.samples)) {
+    for (const sample of model.samples) {
+      if (Number(sample?.label) !== digit || !Array.isArray(sample?.pixels)) {
+        continue;
+      }
+
+      pool.push(sample.pixels);
+
+      if (pool.length >= 96) {
+        break;
+      }
+    }
+  }
+
+  if (pool.length < count) {
+    return fallback.slice(0, count);
+  }
+
+  const normalizedPool = pool.map((pixels) =>
+    normalizeDigitPixels(pixels, { padding: 2, threshold: 10 }),
+  );
+
+  let firstIndex = 0;
+  let secondIndex = 1;
+  let maxDistance = -1;
+
+  for (let leftIndex = 0; leftIndex < normalizedPool.length - 1; leftIndex += 1) {
+    for (
+      let rightIndex = leftIndex + 1;
+      rightIndex < normalizedPool.length;
+      rightIndex += 1
+    ) {
+      const distance = calculatePixelDistance(
+        normalizedPool[leftIndex],
+        normalizedPool[rightIndex],
+      );
+
+      if (distance <= maxDistance) {
+        continue;
+      }
+
+      maxDistance = distance;
+      firstIndex = leftIndex;
+      secondIndex = rightIndex;
+    }
+  }
+
+  const chosenIndexes = [firstIndex, secondIndex];
+
+  while (chosenIndexes.length < count) {
+    let bestIndex = -1;
+    let bestScore = -1;
+
+    for (let candidateIndex = 0; candidateIndex < normalizedPool.length; candidateIndex += 1) {
+      if (chosenIndexes.includes(candidateIndex)) {
+        continue;
+      }
+
+      const minDistanceToChosen = chosenIndexes.reduce((closestDistance, chosenIndex) => {
+        const distance = calculatePixelDistance(
+          normalizedPool[candidateIndex],
+          normalizedPool[chosenIndex],
+        );
+        return Math.min(closestDistance, distance);
+      }, Number.POSITIVE_INFINITY);
+
+      if (minDistanceToChosen <= bestScore) {
+        continue;
+      }
+
+      bestScore = minDistanceToChosen;
+      bestIndex = candidateIndex;
+    }
+
+    if (bestIndex < 0) {
+      break;
+    }
+
+    chosenIndexes.push(bestIndex);
+  }
+
+  if (chosenIndexes.length < count) {
+    return fallback.slice(0, count);
+  }
+
+  return chosenIndexes.slice(0, count).map((index) => pool[index]);
+}
+
 function normalizeDigitPixels(pixels, options = {}) {
   const threshold = options.threshold ?? 8;
   const padding = options.padding ?? 2;
@@ -3701,7 +3804,7 @@ function setupSolutionSpaceSections(model) {
     y2: 31,
   };
   const flexibleState = {
-    points: createDefaultSolutionBoundaryPoints(),
+    points: [],
   };
 
   const renderLinearLab = () => {
@@ -3761,7 +3864,7 @@ function setupSolutionSpaceSections(model) {
   });
 
   renderLinearLab();
-  renderFlexibleLab(flexibleState.points, true);
+  renderFlexibleLab(flexibleState.points, false);
 
   window.addEventListener(
     "beforeunload",
@@ -3777,36 +3880,50 @@ function setupSolutionSpaceSections(model) {
 function buildSolutionSpaceDataset(model) {
   const outerLabel = 1;
   const innerLabel = 8;
-  const outerCount = 12;
-  const innerCount = 9;
+  const outerCount = 16;
+  const innerCount = 11;
   const outerSamples = getSolutionSpaceSamples(model, outerLabel, outerCount, 10);
   const innerSamples = getSolutionSpaceSamples(model, innerLabel, innerCount, 6);
-  const outerAngles = [3, 26, 54, 82, 114, 148, 176, 208, 238, 270, 302, 334];
-  const outerRadii = [31, 29, 30.5, 29, 30, 31, 29.5, 30.5, 30, 29, 31, 30];
+  const outerPositions = [
+    { x: 18, y: 18 },
+    { x: 31, y: 19 },
+    { x: 56, y: 18 },
+    { x: 73, y: 21 },
+    { x: 84, y: 31 },
+    { x: 22, y: 34 },
+    { x: 73, y: 34 },
+    { x: 78, y: 48 },
+    { x: 82, y: 65 },
+    { x: 67, y: 75 },
+    { x: 44, y: 80 },
+    { x: 28, y: 73 },
+    { x: 22, y: 78 },
+    { x: 18, y: 59 },
+    { x: 47, y: 46 },
+    { x: 49, y: 55 },
+  ];
   const innerPositions = [
-    { x: 50, y: 38.5 },
-    { x: 41.5, y: 44.5 },
-    { x: 58.5, y: 44 },
-    { x: 46, y: 50.5 },
-    { x: 54.5, y: 51.5 },
-    { x: 39.5, y: 57.5 },
-    { x: 60.5, y: 58.5 },
-    { x: 48.5, y: 63.5 },
-    { x: 56, y: 66 },
+    { x: 37, y: 27 },
+    { x: 31, y: 36 },
+    { x: 30, y: 47 },
+    { x: 33, y: 58 },
+    { x: 40, y: 66 },
+    { x: 50, y: 67 },
+    { x: 59, y: 62 },
+    { x: 63, y: 53 },
+    { x: 60, y: 44 },
+    { x: 52, y: 37 },
+    { x: 43, y: 39 },
   ];
 
-  const outerPoints = outerSamples.map((pixels, index) => {
-    const angle = (outerAngles[index] * Math.PI) / 180;
-    const radius = outerRadii[index];
-    return {
-      id: `outer-${index}`,
-      label: outerLabel,
-      tone: "outer",
-      pixels,
-      x: 50 + Math.cos(angle) * radius,
-      y: 50 + Math.sin(angle) * radius,
-    };
-  });
+  const outerPoints = outerSamples.map((pixels, index) => ({
+    id: `outer-${index}`,
+    label: outerLabel,
+    tone: "outer",
+    pixels,
+    x: outerPositions[index]?.x ?? 18,
+    y: outerPositions[index]?.y ?? 18,
+  }));
 
   const innerPoints = innerSamples.map((pixels, index) => ({
     id: `inner-${index}`,
