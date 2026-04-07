@@ -593,6 +593,7 @@ function setupFeatureStorySection(model) {
   const root = document.getElementById("featureStoryLab");
   const panel = document.getElementById("featureStoryPanel");
   const sourceCanvas = document.getElementById("featureStorySourceCanvas");
+  const scanCanvas = document.getElementById("featureStoryScanCanvas");
   const sourceLabel = document.getElementById("featureStorySourceLabel");
   const outputCanvas = document.getElementById("featureStoryOutputCanvas");
   const outputStack = document.getElementById("featureStoryOutputStack");
@@ -645,6 +646,7 @@ function setupFeatureStorySection(model) {
     !root ||
     !panel ||
     !sourceCanvas ||
+    !scanCanvas ||
     !sourceLabel ||
     !outputCanvas ||
     !outputStack ||
@@ -701,6 +703,11 @@ function setupFeatureStorySection(model) {
         `כרגע ${digit} היא רק תמונה אחת של 28×28 פיקסלים, לפני שהרשת ניסתה לפרק אותה לרמזים קטנים יותר.`,
     },
     {
+      title: "פילטר קטן סורק את הקלט חלון-חלון",
+      copy: () =>
+        "אפשר לדמיין מטריצה קטנה (למשל 3×3 או 5×5) שרצה על התמונה ואוספת מידע מקומי מכל אזור.",
+    },
+    {
       title: "השכבה הראשונה תופסת קווים, קשתות וזוויות",
       copy: () =>
         "בשלב הזה אפשר לדמיין נוירונים שמגיבים לחלקים מקומיים: קו אנכי, קשת קצרה או אלכסון.",
@@ -730,6 +737,11 @@ function setupFeatureStorySection(model) {
         "במקום ספרה ברורה, הרשת מקבלת קלט מעורפל שמזכיר יותר מסימון אחד אפשרי.",
     },
     {
+      title: "גם כאן מתחילים בסריקה מקומית",
+      copy: () =>
+        "לפני שמזהים מבנים גדולים, חלון קטן עובר על הקלט ואוסף רמזים מקומיים.",
+    },
+    {
       title: "השכבה הראשונה עדיין אוספת קשתות ושברים קטנים",
       copy: () =>
         "גם כשהקלט לא חד-משמעי, נוירונים מוקדמים יכולים לזהות קטעי לולאה, קשת קצרה וחיבור מקומי.",
@@ -741,8 +753,7 @@ function setupFeatureStorySection(model) {
     },
     {
       title: "בשכבת הפלט כמה אפשרויות עדיין נשארות חזקות",
-      copy: () =>
-        "עדיין אין תשובה אחת חדה, ולכן ההכרעה מתעכבת כמעט עד הסוף.",
+      copy: () => "עדיין אין תשובה אחת חדה, ולכן ההכרעה מתעכבת כמעט עד הסוף.",
     },
     {
       title: "רק בצעד האחרון מתקבלת הכרעה",
@@ -755,10 +766,117 @@ function setupFeatureStorySection(model) {
     digit === "special-zero" ? specialZeroStageMeta : defaultStageMeta;
 
   const formatStoryPercent = (value) => `${value.toFixed(1)}%`;
+  const FILTER_SCAN_STAGE = 1;
+  const COMPONENT_STAGE = 2;
+  const PATTERN_STAGE = 3;
+  const OUTPUT_STAGE = 4;
+  const SPECIAL_SEARCH_STAGE = 4;
+  const SPECIAL_RESOLVED_STAGE = 5;
 
   let specialSelectorIndex = specialZeroOutput.finalDigit;
   let specialSelectorDirection = 1;
   let specialSelectorTimerId = 0;
+  let filterScanRafId = 0;
+
+  const clearFilterScanOverlay = () => {
+    const ctx = scanCanvas.getContext("2d");
+    ctx.clearRect(0, 0, scanCanvas.width, scanCanvas.height);
+  };
+
+  const stopFilterScanLoop = () => {
+    if (filterScanRafId) {
+      cancelAnimationFrame(filterScanRafId);
+      filterScanRafId = 0;
+    }
+
+    clearFilterScanOverlay();
+  };
+
+  const renderFilterScanOverlay = (pixels, now) => {
+    const ctx = scanCanvas.getContext("2d");
+    const width = scanCanvas.width;
+    const height = scanCanvas.height;
+    const drawSize = width * 0.72;
+    const drawX = (width - drawSize) * 0.5;
+    const drawY = (height - drawSize) * 0.5;
+    const cellSize = drawSize / 28;
+    const matrixSize = Math.floor(now / 2400) % 2 === 0 ? 3 : 5;
+    const scanCols = 28 - matrixSize + 1;
+    const scanRows = 28 - matrixSize + 1;
+    const totalSteps = scanCols * scanRows;
+    const cycleMs = 2600;
+    const progress = (now % cycleMs) / cycleMs;
+    const linearStep = Math.floor(progress * totalSteps) % totalSteps;
+    const row = Math.floor(linearStep / scanCols);
+    const rawCol = linearStep % scanCols;
+    const col = row % 2 === 0 ? rawCol : scanCols - 1 - rawCol;
+    const scanX = drawX + col * cellSize;
+    const scanY = drawY + row * cellSize;
+    const scanW = matrixSize * cellSize;
+    const scanH = matrixSize * cellSize;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "rgba(255, 248, 190, 0.06)";
+    ctx.fillRect(drawX, drawY, drawSize, drawSize);
+
+    ctx.strokeStyle = "rgba(255, 235, 130, 0.95)";
+    ctx.lineWidth = Math.max(1.4, width * 0.006);
+    ctx.strokeRect(scanX, scanY, scanW, scanH);
+
+    ctx.fillStyle = "rgba(255, 235, 130, 0.18)";
+    ctx.fillRect(scanX, scanY, scanW, scanH);
+
+    const badgeW = width * 0.36;
+    const badgeH = width * 0.21;
+    const badgeX = width - badgeW - width * 0.06;
+    const badgeY = height * 0.06;
+    ctx.fillStyle = "rgba(0, 0, 0, 0.68)";
+    ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+    ctx.strokeStyle = "rgba(255, 235, 130, 0.55)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(badgeX, badgeY, badgeW, badgeH);
+
+    ctx.fillStyle = "rgba(255, 244, 180, 0.95)";
+    ctx.font = `${Math.round(width * 0.052)}px Rubik, Heebo, sans-serif`;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillText(`Filter ${matrixSize}x${matrixSize}`, badgeX + 8, badgeY + 8);
+
+    const sampleValues = [];
+    for (let i = 0; i < Math.min(matrixSize, 3); i += 1) {
+      const pixelX = col + i;
+      const pixelY = row + i;
+      const index = pixelY * 28 + pixelX;
+      const value = (pixels[index] ?? 0) / 255;
+      sampleValues.push(value.toFixed(1));
+    }
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.84)";
+    ctx.font = `${Math.round(width * 0.045)}px Rubik, Heebo, sans-serif`;
+    ctx.fillText(
+      `[${sampleValues.join(" ")}]`,
+      badgeX + 8,
+      badgeY + badgeH * 0.53,
+    );
+  };
+
+  const startFilterScanLoop = (pixels) => {
+    if (filterScanRafId) {
+      return;
+    }
+
+    const loop = (now) => {
+      if (state.stage !== FILTER_SCAN_STAGE) {
+        stopFilterScanLoop();
+        return;
+      }
+
+      renderFilterScanOverlay(pixels, now);
+      filterScanRafId = requestAnimationFrame(loop);
+    };
+
+    filterScanRafId = requestAnimationFrame(loop);
+  };
 
   const setSpecialSelectorIndex = (index) => {
     specialSelectorIndex = clamp(index, 0, 9);
@@ -789,7 +907,10 @@ function setupFeatureStorySection(model) {
   const runSpecialSelectorLoop = () => {
     stopSpecialSelectorLoop();
 
-    if (state.digit !== "special-zero" || state.stage !== 3) {
+    if (
+      state.digit !== "special-zero" ||
+      state.stage !== SPECIAL_SEARCH_STAGE
+    ) {
       return;
     }
 
@@ -1277,7 +1398,7 @@ function setupFeatureStorySection(model) {
     outputColumn.classList.remove("has-output-list");
     outputSelector.setAttribute("aria-hidden", "true");
     outputBadge.textContent = digit;
-    outputBadge.classList.toggle("is-active", stage >= 3);
+    outputBadge.classList.toggle("is-active", stage >= OUTPUT_STAGE);
     drawTintedDigitToCanvas(outputCanvas, sourcePixels, "#f7f1c0", {
       drawRatio: 0.84,
       glowStrength: 0.08,
@@ -1285,8 +1406,8 @@ function setupFeatureStorySection(model) {
   };
 
   const renderSpecialOutput = (stage) => {
-    const isSearching = stage === 3;
-    const isResolved = stage >= 4;
+    const isSearching = stage === SPECIAL_SEARCH_STAGE;
+    const isResolved = stage >= SPECIAL_RESOLVED_STAGE;
 
     outputStack.hidden = true;
     outputCompare.setAttribute("aria-hidden", "false");
@@ -1346,7 +1467,18 @@ function setupFeatureStorySection(model) {
         : sourcePixels;
 
     drawSampleDigitToCanvas(sourceCanvas, displaySourcePixels);
-    sourceLabel.textContent = shouldMaskStoryLabels ? "?" : definition.sourceLabel;
+    sourceCanvas.parentElement?.classList.toggle(
+      "is-scanning",
+      state.stage === FILTER_SCAN_STAGE,
+    );
+    if (state.stage === FILTER_SCAN_STAGE) {
+      startFilterScanLoop(displaySourcePixels);
+    } else {
+      stopFilterScanLoop();
+    }
+    sourceLabel.textContent = shouldMaskStoryLabels
+      ? "?"
+      : definition.sourceLabel;
 
     const meta = stageMeta[state.stage];
     stageTitle.textContent = meta.title;
@@ -1359,12 +1491,15 @@ function setupFeatureStorySection(model) {
       isSpecialZero ? -16 : 0,
       isSpecialZero ? 16 : 0,
     );
-    componentColumn.classList.toggle("is-active", state.stage >= 1);
-    patternColumn.classList.toggle("is-active", state.stage >= 2);
-    outputColumn.classList.toggle("is-active", state.stage >= 3);
-    linksA.classList.toggle("is-active", state.stage >= 1);
-    linksB.classList.toggle("is-active", state.stage >= 2);
-    linksC.classList.toggle("is-active", state.stage >= 3);
+    componentColumn.classList.toggle(
+      "is-active",
+      state.stage >= COMPONENT_STAGE,
+    );
+    patternColumn.classList.toggle("is-active", state.stage >= PATTERN_STAGE);
+    outputColumn.classList.toggle("is-active", state.stage >= OUTPUT_STAGE);
+    linksA.classList.toggle("is-active", state.stage >= COMPONENT_STAGE);
+    linksB.classList.toggle("is-active", state.stage >= PATTERN_STAGE);
+    linksC.classList.toggle("is-active", state.stage >= OUTPUT_STAGE);
     progressBar.style.transform = `scaleX(${(state.stage + 1) / stageMeta.length})`;
 
     if (isSpecialZero) {
@@ -1393,7 +1528,7 @@ function setupFeatureStorySection(model) {
       wrap.style.setProperty("--component-color", component.color);
       label.textContent = shouldMaskStoryLabels ? "?" : component.label;
       drawTintedDigitToCanvas(canvas, maskedPixels, component.color);
-      wrap.classList.toggle("is-visible", state.stage >= 1);
+      wrap.classList.toggle("is-visible", state.stage >= COMPONENT_STAGE);
     });
 
     patternWraps.forEach((wrap, index) => {
@@ -1415,7 +1550,7 @@ function setupFeatureStorySection(model) {
         drawRatio: 0.8,
         glowStrength: 0.12,
       });
-      wrap.classList.toggle("is-visible", state.stage >= 2);
+      wrap.classList.toggle("is-visible", state.stage >= PATTERN_STAGE);
     });
   };
 
@@ -1444,6 +1579,15 @@ function setupFeatureStorySection(model) {
     const stageMeta = getStageMeta(state.digit);
     setStage((state.stage + 1) % stageMeta.length);
   });
+
+  window.addEventListener(
+    "beforeunload",
+    () => {
+      stopFilterScanLoop();
+      stopSpecialSelectorLoop();
+    },
+    { once: true },
+  );
 
   setSpecialSelectorIndex(specialZeroOutput.finalDigit);
   render();
@@ -2174,12 +2318,7 @@ function getEnclosedHoleRegions(pixels, threshold) {
           touchesBorder = true;
         }
 
-        const neighbors = [
-          index - 1,
-          index + 1,
-          index - 28,
-          index + 28,
-        ];
+        const neighbors = [index - 1, index + 1, index - 28, index + 28];
         neighbors.forEach((neighborIndex) => {
           if (neighborIndex < 0 || neighborIndex >= 28 * 28) {
             return;
@@ -2191,10 +2330,7 @@ function getEnclosedHoleRegions(pixels, threshold) {
             return;
           }
 
-          if (
-            visited[neighborIndex] ||
-            pixels[neighborIndex] >= threshold
-          ) {
+          if (visited[neighborIndex] || pixels[neighborIndex] >= threshold) {
             return;
           }
 
@@ -3465,7 +3601,11 @@ function getDiverseCompareDigits(model, digit = 3, count = 3) {
   let secondIndex = 1;
   let maxDistance = -1;
 
-  for (let leftIndex = 0; leftIndex < normalizedPool.length - 1; leftIndex += 1) {
+  for (
+    let leftIndex = 0;
+    leftIndex < normalizedPool.length - 1;
+    leftIndex += 1
+  ) {
     for (
       let rightIndex = leftIndex + 1;
       rightIndex < normalizedPool.length;
@@ -3492,18 +3632,25 @@ function getDiverseCompareDigits(model, digit = 3, count = 3) {
     let bestIndex = -1;
     let bestScore = -1;
 
-    for (let candidateIndex = 0; candidateIndex < normalizedPool.length; candidateIndex += 1) {
+    for (
+      let candidateIndex = 0;
+      candidateIndex < normalizedPool.length;
+      candidateIndex += 1
+    ) {
       if (chosenIndexes.includes(candidateIndex)) {
         continue;
       }
 
-      const minDistanceToChosen = chosenIndexes.reduce((closestDistance, chosenIndex) => {
-        const distance = calculatePixelDistance(
-          normalizedPool[candidateIndex],
-          normalizedPool[chosenIndex],
-        );
-        return Math.min(closestDistance, distance);
-      }, Number.POSITIVE_INFINITY);
+      const minDistanceToChosen = chosenIndexes.reduce(
+        (closestDistance, chosenIndex) => {
+          const distance = calculatePixelDistance(
+            normalizedPool[candidateIndex],
+            normalizedPool[chosenIndex],
+          );
+          return Math.min(closestDistance, distance);
+        },
+        Number.POSITIVE_INFINITY,
+      );
 
       if (minDistanceToChosen <= bestScore) {
         continue;
@@ -3984,12 +4131,20 @@ function setupSolutionSpaceSections(model) {
       linearState,
       dataset.labels,
     );
-    updateSolutionLineVisual(linearLine, linearState, linearHandleA, linearHandleB);
+    updateSolutionLineVisual(
+      linearLine,
+      linearState,
+      linearHandleA,
+      linearHandleB,
+    );
     updateSolutionPlotState(linearNodes, evaluation);
     linearAccuracy.textContent = formatPercent(evaluation.accuracy);
   };
 
-  const renderFlexibleLab = (points = flexibleState.points, closePath = true) => {
+  const renderFlexibleLab = (
+    points = flexibleState.points,
+    closePath = true,
+  ) => {
     updateSolutionPathVisual(flexiblePath, points, closePath);
 
     if (!Array.isArray(points) || points.length < 3) {
@@ -4007,14 +4162,22 @@ function setupSolutionSpaceSections(model) {
     flexibleAccuracy.textContent = formatPercent(evaluation.accuracy);
   };
 
-  const stopLinearDragA = bindSolutionHandleDrag(linearHandleA, linearPlot, (position) => {
-    linearState.y1 = clamp(position.y, 8, 92);
-    renderLinearLab();
-  });
-  const stopLinearDragB = bindSolutionHandleDrag(linearHandleB, linearPlot, (position) => {
-    linearState.y2 = clamp(position.y, 8, 92);
-    renderLinearLab();
-  });
+  const stopLinearDragA = bindSolutionHandleDrag(
+    linearHandleA,
+    linearPlot,
+    (position) => {
+      linearState.y1 = clamp(position.y, 8, 92);
+      renderLinearLab();
+    },
+  );
+  const stopLinearDragB = bindSolutionHandleDrag(
+    linearHandleB,
+    linearPlot,
+    (position) => {
+      linearState.y2 = clamp(position.y, 8, 92);
+      renderLinearLab();
+    },
+  );
   const stopFlexibleDraw = bindSolutionFreeformDraw(flexiblePlot, {
     onPreview(points) {
       updateSolutionPathVisual(flexiblePath, points, false);
@@ -4061,8 +4224,18 @@ function buildSolutionSpaceDataset(model) {
   const innerLabel = 8;
   const outerCount = 16;
   const innerCount = 11;
-  const outerSamples = getSolutionSpaceSamples(model, outerLabel, outerCount, 10);
-  const innerSamples = getSolutionSpaceSamples(model, innerLabel, innerCount, 6);
+  const outerSamples = getSolutionSpaceSamples(
+    model,
+    outerLabel,
+    outerCount,
+    10,
+  );
+  const innerSamples = getSolutionSpaceSamples(
+    model,
+    innerLabel,
+    innerCount,
+    6,
+  );
   const outerPositions = [
     { x: 18, y: 18 },
     { x: 31, y: 19 },
@@ -4144,7 +4317,11 @@ function getSolutionSpaceSamples(model, label, count, offset = 0) {
 
   if (trimmedPool.length) {
     const step = Math.max(1, Math.floor(trimmedPool.length / count));
-    for (let index = 0; index < trimmedPool.length && result.length < count; index += step) {
+    for (
+      let index = 0;
+      index < trimmedPool.length && result.length < count;
+      index += step
+    ) {
       result.push(trimmedPool[index]);
     }
   }
@@ -4253,7 +4430,12 @@ function evaluateLinearSolutionBoundary(points, line, labels = [0, 6]) {
   const evaluateOrientation = (positiveLabel) => {
     const classifications = points.map((point) => {
       const signedSide = dx * (point.y - line.y1) - dy * (point.x - line.x1);
-      const predicted = signedSide >= 0 ? positiveLabel : positiveLabel === primaryLabel ? secondaryLabel : primaryLabel;
+      const predicted =
+        signedSide >= 0
+          ? positiveLabel
+          : positiveLabel === primaryLabel
+            ? secondaryLabel
+            : primaryLabel;
       return {
         id: point.id,
         correct: predicted === point.label,
@@ -4295,12 +4477,20 @@ function createDefaultSolutionBoundaryPoints() {
   ];
 }
 
-function evaluateFreeformSolutionBoundary(points, polygonPoints, labels = [0, 6]) {
+function evaluateFreeformSolutionBoundary(
+  points,
+  polygonPoints,
+  labels = [0, 6],
+) {
   const [primaryLabel, secondaryLabel] = labels;
   const evaluateOrientation = (insideLabel) => {
     const classifications = points.map((point) => {
       const inside = pointInSolutionPolygon(point.x, point.y, polygonPoints);
-      const predicted = inside ? insideLabel : insideLabel === primaryLabel ? secondaryLabel : primaryLabel;
+      const predicted = inside
+        ? insideLabel
+        : insideLabel === primaryLabel
+          ? secondaryLabel
+          : primaryLabel;
 
       return {
         id: point.id,
@@ -4349,7 +4539,7 @@ function pointInSolutionPolygon(x, y, polygonPoints) {
           : -0.0001
         : denominator;
     const intersects =
-      (current.y > y) !== (previous.y > y) &&
+      current.y > y !== previous.y > y &&
       x <
         ((previous.x - current.x) * (y - current.y)) / safeDenominator +
           current.x;
@@ -4383,7 +4573,12 @@ function resetSolutionPlotState(nodes) {
   }
 }
 
-function updateSolutionLineVisual(lineElement, lineState, handleA = null, handleB = null) {
+function updateSolutionLineVisual(
+  lineElement,
+  lineState,
+  handleA = null,
+  handleB = null,
+) {
   lineElement.setAttribute("x1", lineState.x1.toFixed(2));
   lineElement.setAttribute("y1", lineState.y1.toFixed(2));
   lineElement.setAttribute("x2", lineState.x2.toFixed(2));
@@ -4460,7 +4655,10 @@ function bindSolutionFreeformDraw(plot, { onPreview, onCommit, onCancel }) {
       const position = solutionEventToPlotPosition(plot, moveEvent);
       const lastPoint = points[points.length - 1];
 
-      if (!lastPoint || Math.hypot(position.x - lastPoint.x, position.y - lastPoint.y) >= 1.2) {
+      if (
+        !lastPoint ||
+        Math.hypot(position.x - lastPoint.x, position.y - lastPoint.y) >= 1.2
+      ) {
         points.push(position);
         onPreview?.(cloneSolutionBoundaryPoints(points));
       }
@@ -4513,7 +4711,10 @@ function normalizeSolutionBoundaryPoints(points) {
 
     if (
       !lastPoint ||
-      Math.hypot(normalizedPoint.x - lastPoint.x, normalizedPoint.y - lastPoint.y) >= 1.3
+      Math.hypot(
+        normalizedPoint.x - lastPoint.x,
+        normalizedPoint.y - lastPoint.y,
+      ) >= 1.3
     ) {
       deduped.push(normalizedPoint);
     }
@@ -4549,10 +4750,12 @@ function createSolutionPathD(points, closePath = true) {
   }
 
   if (!closePath || points.length < 3) {
-    return points.reduce((path, point, index) => {
-      const command = index === 0 ? "M" : "L";
-      return `${path}${command} ${point.x.toFixed(2)} ${point.y.toFixed(2)} `;
-    }, "").trim();
+    return points
+      .reduce((path, point, index) => {
+        const command = index === 0 ? "M" : "L";
+        return `${path}${command} ${point.x.toFixed(2)} ${point.y.toFixed(2)} `;
+      }, "")
+      .trim();
   }
 
   const lastPoint = points[points.length - 1];
